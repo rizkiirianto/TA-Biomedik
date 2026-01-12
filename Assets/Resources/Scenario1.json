@@ -1,0 +1,198 @@
+{
+  "steps": [
+    {
+      "stepType": "dialog",
+      "speakerName": "Narator",
+      "instruction": "Kamu sedang dalam perjalanan pulang saat melihat keramaian di depan. Sebuah motor tergeletak hancur setelah bertabrakan dengan mobil.",
+      "narrativeImage": "Motor",
+      "options": []
+    },
+    {
+      "stepType": "dialog",
+      "speakerName": "Narator",
+      "instruction": "Seorang pria (Rizal) tergeletak di aspal, mengerang kesakitan. Ada darah mengalir deras dari pahanya. Seorang wanita (Maya) terlihat panik mondar-mandir.",
+      "narrativeImage": "Rizal_Bleeding",
+      "options": []
+    },
+    {
+      "stepType": "quiz",
+      "instruction": "Kamu baru tiba di lokasi. Sebelum lari menolong korban, apa yang PERTAMA kali harus kamu lakukan?",
+      "minigameID": "",
+      "backgroundImage": "SceneSafety_Decision",
+      "options": [
+        {
+          "text": "Periksa keamanan sekitar (Lalu Lintas)",
+          "isCorrect": true,
+          "feedback": "Benar! Pastikan aman dulu. Kita tidak mau menjadi korban kedua.",
+          "narrative": "Tepat! Lalu lintas masih ramai. Kamu meminta saksi untuk membantu menyetop kendaraan lain agar area aman.",
+          "narrativeImage": "Traffic_Stopped"
+        },
+        {
+          "text": "Langsung lari ke korban",
+          "isCorrect": false,
+          "feedback": "Bahaya! Kamu bisa tertabrak kendaraan lain yang lewat."
+        },
+        {
+          "text": "Pindahkan korban ke pinggir",
+          "isCorrect": false,
+          "feedback": "Jangan pindahkan korban sembarangan! Bisa cedera tulang belakang."
+        }
+      ]
+    },
+    {
+      "stepType": "dialog",
+      "speakerName": "Rizal (Korban)",
+      "instruction": "Aduh... tolong... kaki saya... sakit banget... darahnya nggak berhenti...",
+      "narrativeImage": "Rizal_CloseUp",
+      "options": []
+    },
+    {
+      "stepType": "dialog",
+      "speakerName": "Maya (Saksi)",
+      "instruction": "Saya takut darah! Apa yang harus saya lakukan? Saya bingung!",
+      "narrativeImage": "Maya_Panic",
+      "options": []
+    },
+    {
+      "stepType": "quiz",
+      "instruction": "Saksi (Maya) panik tapi ingin membantu. Tugas apa yang paling tepat untuk didelegasikan padanya?",
+      "minigameID": "",
+      "backgroundImage": "Maya_Panic",
+      "options": [
+        {
+          "text": "Minta dia telepon Ambulans (118/119)",
+          "isCorrect": true,
+          "feedback": "Cerdas! Delegasikan tugas memanggil bantuan agar kamu fokus menangani korban.",
+          "narrative": "Maya mengangguk, sedikit tenang karena punya tugas jelas, dan segera menelepon bantuan.",
+          "narrativeImage": "Maya_Calling"
+        },
+        {
+          "text": "Suruh dia cari air minum",
+          "isCorrect": false,
+          "feedback": "Tidak prioritas. Korban butuh medis, bukan minum."
+        },
+        {
+          "text": "Suruh dia bantu tekan luka",
+          "isCorrect": false,
+          "feedback": "Dia takut darah, nanti malah pingsan. Beri tugas yang jauh dari luka."
+        }
+      ]
+    },
+    {
+      "stepType": "quiz",
+      "instruction": "Darah mengalir deras dari paha korban (Pendarahan Aktif). Apa langkah pertamamu?",
+      "minigameID": "",
+      "backgroundImage": "Leg_Bleeding_Active",
+      "options": [
+        {
+          "text": "Lakukan Tekanan Langsung (Direct Pressure)",
+          "isCorrect": true,
+          "feedback": "Bagus! Tekan sumber pendarahan sekuat mungkin.",
+          "narrative": "Kamu mengambil kain bersih dan menekannya langsung ke atas luka korban.",
+          "narrativeImage": "Hand_Pressing"
+        },
+        {
+          "text": "Ikat kaki dengan tali",
+          "isCorrect": false,
+          "feedback": "Tourniquet sembarangan bisa merusak jaringan saraf jika tidak tepat."
+        },
+        {
+          "text": "Beri minum agar tidak syok",
+          "isCorrect": false,
+          "feedback": "Jangan beri makan/minum pada korban trauma! Bisa tersedak jika pingsan."
+        }
+      ]
+    },
+    {
+      "stepType": "minigame",
+      "instruction": "Tekan luka korban terus menerus!.",
+      "minigameID": "BleedControl",
+      "narrativeImage": "Minigame_Press_BG",
+      "goldTime": 10,
+      "silverTime": 15,
+      "options": []
+    },
+    {
+      "stepType": "quiz",
+      "instruction": "Darah masih merembes keluar dari kain pertama. Apa yang harus dilakukan?",
+      "minigameID": "",
+      "backgroundImage": "Blood_Soaking",
+      "options": [
+        {
+          "text": "Tumpuk kain baru di atasnya",
+          "isCorrect": true,
+          "feedback": "Benar! Jangan lepas kain pertama agar pembekuan darah tidak rusak.",
+          "narrative": "Kamu mengambil kain tambahan dan menumpuknya, lalu menekan kembali.",
+          "narrativeImage": "Double_Dressing"
+        },
+        {
+          "text": "Buka kain lama, ganti baru",
+          "isCorrect": false,
+          "feedback": "Jangan dibuka! Itu akan merobek bekuan darah yang sudah terbentuk."
+        }
+      ]
+    },
+    {
+      "stepType": "dialog",
+      "speakerName": "Narator",
+      "instruction": "Setelah 10 detik ditekan, darah terlihat sedikit berkurang, tapi masih merembes tembus kain.",
+      "narrativeImage": "Blood_Soaking",
+      "options": []
+    },
+    {
+      "stepType": "dialog",
+      "speakerName": "Narator",
+      "instruction": "Lakukan Wound Packing (Sumbat luka) & Balut tekan kembali!.",
+      "narrativeImage": "WoundPacking_BG",
+      "options": []
+    },
+    {
+      "stepType": "minigame",
+      "instruction": "Bagus, pendarahan sudah berhasil diatasi",
+      "minigameID": "SumbatdanBalut",
+      "narrativeImage": "WoundPacking_BG",
+      "goldTime": 20,
+      "silverTime": 30,
+      "options": []
+    },
+    {
+      "stepType": "dialog",
+      "speakerName": "Rizal (Korban)",
+      "instruction": "Saya... pusing... dingin... rasanya ngantuk...",
+      "narrativeImage": "Rizal_Pale",
+      "options": []
+    },
+    {
+      "stepType": "quiz",
+      "instruction": "Korban pucat, dingin, dan pusing. Ini tanda-tanda SYOK. Apa posisi terbaik untuknya?",
+      "minigameID": "",
+      "backgroundImage": "Shock_Symptoms",
+      "options": [
+        {
+          "text": "Selimuti & posisikan telentang (Supine)",
+          "isCorrect": true,
+          "feedback": "Tepat. Jaga suhu tubuh dan biarkan aliran darah lancar ke otak.",
+          "narrative": "Kamu menyelimuti Rizal dengan jaket agar hangat dan membaringkannya rata.",
+          "narrativeImage": "Shock_Position"
+        },
+        {
+          "text": "Dudukkan korban",
+          "isCorrect": false,
+          "feedback": "Jangan didudukkan, aliran darah ke otak bisa berkurang."
+        },
+        {
+          "text": "Tinggikan kaki setinggi mungkin",
+          "isCorrect": false,
+          "feedback": "Dulu disarankan, tapi sekarang cukup posisi datar (supine) agar lebih aman untuk cedera lain."
+        }
+      ]
+    },
+    {
+      "stepType": "dialog",
+      "speakerName": "Narator",
+      "instruction": "Tak lama kemudian, sirine ambulans terdengar. Pendarahan Rizal terkontrol berkat tindakan cepatmu.",
+      "narrativeImage": "Ambulance_Arrive",
+      "options": []
+    }
+  ]
+}

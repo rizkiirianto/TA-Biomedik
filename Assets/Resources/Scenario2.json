@@ -1,0 +1,79 @@
+{
+  "steps": [
+    {
+      "stepType": "quiz",
+      "instruction": "Apa yang harus kamu lakukan pertama kali?",
+      "minigameID": "",
+      "options": [
+        {
+          "text": "Membersihkan luka dengan air mengalir",
+          "isCorrect": true,
+          "feedback": "Betul! Luka harus dibersihkan agar kuman tidak masuk.",
+          "narrative": "Menurut WHO bla bla bla"
+        },
+        {
+          "text": " Langsung menutup luka dengan plester tanpa dibersihkan",
+          "isCorrect": false,
+          "feedback": "Hmm, kalau langsung ditempel plester, kuman bisa terjebak di dalam luka"
+        },
+        {
+          "text": "Meniup luka agar cepat kering",
+          "isCorrect": false,
+          "feedback": "Jangan ditiup, mulut kita mengandung banyak bakteri. Coba lagi"
+        }
+      ]
+    },
+    {
+      "stepType": "minigame",
+      "instruction": "Sekarang bersihkan semua kotoran dari luka dengan menyeret daun-daun ke tempat sampah!",
+      "minigameID": "BersihkanKotoran", 
+      "goldTime": 30.0,
+      "silverTime": 45.0,
+      "options": []
+    },
+    {
+      "stepType": "quiz",
+      "instruction": "Saat mimisan, hal apa yang sebaiknya tidak dilakukan?",
+      "minigameID": "",
+      "options": [
+        {
+          "text": "Mengorek hidung dengan tisu atau jari",
+          "isCorrect": true,
+          "feedback": "Betul, jangan dikorek karena bisa bikin mimisan tambah parah."
+        },
+        {
+          "text": "Membiarkan darah keluar dengan posisi condong ke depan",
+          "isCorrect": false,
+          "feedback": "Sebenarnya itu cara yang aman, coba lagi yuk."
+        },
+        {
+          "text": "Menekan hidung dengan benar",
+          "isCorrect": false,
+          "feedback": "Justru itu cara yang benar, bukan yang salah. Coba lagi."
+        }
+      ]
+    },
+    {
+      "stepType": "quiz",
+      "instruction": "Kapan sebaiknya kita memanggil bantuan medis?",
+      "minigameID": "",
+      "options": [
+        {
+          "text": "Jika mimisan tidak berhenti setelah 15 menit",
+          "isCorrect": true,
+          "feedback": "Benar, kalau tidak berhenti-berhenti, segera hubungi tenaga medis."
+        },
+        {
+          "text": "Kalau baru saja mimisan selama 1 menit",
+          "isCorrect": false,
+          "feedback": "Itu masih normal, coba lagi."
+        },
+        {
+          "text": "Setiap kali mimisan walau hanya sedikit",
+          "isCorrect": false,
+          "feedback": "Tidak perlu panik untuk mimisan ringan, coba lagi."
+        }
+      ]
+    }
+  ]
+}

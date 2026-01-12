@@ -1,0 +1,506 @@
+fileFormatVersion: 2
+guid: 7970d367bbc8035b3b43ddad0bbae9f7
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -2366791561498331216
+    second: Minigame 2 baru_0
+  - first:
+      213: 3677880235698230735
+    second: Minigame 2 baru_1
+  - first:
+      213: 8608439904766787473
+    second: Minigame 2 baru_2
+  - first:
+      213: 479773995243091332
+    second: Minigame 2 baru_3
+  - first:
+      213: -2416362942065119621
+    second: Minigame 2 baru_4
+  - first:
+      213: -7179403719846435004
+    second: Minigame 2 baru_5
+  - first:
+      213: 3318412828079674428
+    second: Minigame 2 baru_6
+  - first:
+      213: -7082954171021874754
+    second: Minigame 2 baru_7
+  - first:
+      213: -290685801557008253
+    second: Minigame 2 baru_8
+  - first:
+      213: 3351158196240526100
+    second: Minigame 2 baru_9
+  - first:
+      213: -3551694332131269336
+    second: Minigame 2 baru_10
+  - first:
+      213: 2443533214284375883
+    second: Minigame 2 baru_11
+  - first:
+      213: 8866601460544194627
+    second: Minigame 2 baru_12
+  - first:
+      213: 7693640002086704511
+    second: Minigame 2 baru_13
+  - first:
+      213: -4211117644861222626
+    second: Minigame 2 baru_14
+  - first:
+      213: -2389819941408315010
+    second: Minigame 2 baru_15
+  - first:
+      213: 3223769116007490712
+    second: Minigame 2 baru_16
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Minigame 2 baru_0
+      rect:
+        serializedVersion: 2
+        x: 47
+        y: 248
+        width: 370
+        height: 280
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0b7ff775d97772fd0800000000000000
+      internalID: -2366791561498331216
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minigame 2 baru_1
+      rect:
+        serializedVersion: 2
+        x: 492
+        y: 409
+        width: 131
+        height: 98
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc5193f86947a0330800000000000000
+      internalID: 3677880235698230735
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minigame 2 baru_2
+      rect:
+        serializedVersion: 2
+        x: 660
+        y: 417
+        width: 99
+        height: 88
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 19ffbe1eb72577770800000000000000
+      internalID: 8608439904766787473
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minigame 2 baru_3
+      rect:
+        serializedVersion: 2
+        x: 513
+        y: 293
+        width: 108
+        height: 98
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4853fee18ef78a600800000000000000
+      internalID: 479773995243091332
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minigame 2 baru_4
+      rect:
+        serializedVersion: 2
+        x: 670
+        y: 311
+        width: 72
+        height: 69
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b7e6ac5e4ba577ed0800000000000000
+      internalID: -2416362942065119621
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minigame 2 baru_5
+      rect:
+        serializedVersion: 2
+        x: 188
+        y: 248
+        width: 28
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4476f6bda52ad5c90800000000000000
+      internalID: -7179403719846435004
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minigame 2 baru_6
+      rect:
+        serializedVersion: 2
+        x: 236
+        y: 247
+        width: 21
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c34d9cba2ee5d0e20800000000000000
+      internalID: 3318412828079674428
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minigame 2 baru_7
+      rect:
+        serializedVersion: 2
+        x: 47
+        y: 43
+        width: 242
+        height: 196
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eb9aed365ba44bd90800000000000000
+      internalID: -7082954171021874754
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minigame 2 baru_8
+      rect:
+        serializedVersion: 2
+        x: 66
+        y: 42
+        width: 24
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 380e1f8bdc647fbf0800000000000000
+      internalID: -290685801557008253
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minigame 2 baru_9
+      rect:
+        serializedVersion: 2
+        x: 136
+        y: 42
+        width: 17
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 41b2e01df94b18e20800000000000000
+      internalID: 3351158196240526100
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minigame 2 baru_10
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 49
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8252c8692d8d5bec0800000000000000
+      internalID: -3551694332131269336
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minigame 2 baru_11
+      rect:
+        serializedVersion: 2
+        x: 375
+        y: 49
+        width: 222
+        height: 189
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b47e942138c29e120800000000000000
+      internalID: 2443533214284375883
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minigame 2 baru_12
+      rect:
+        serializedVersion: 2
+        x: 613
+        y: 50
+        width: 181
+        height: 188
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 34842b41d0f7c0b70800000000000000
+      internalID: 8866601460544194627
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minigame 2 baru_13
+      rect:
+        serializedVersion: 2
+        x: 816
+        y: 44
+        width: 176
+        height: 194
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f751d1ab1dc45ca60800000000000000
+      internalID: 7693640002086704511
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 2f08ce5296fbd4e318a2dd82f88fd81d
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Minigame 2 baru_0: -2366791561498331216
+      Minigame 2 baru_1: 3677880235698230735
+      Minigame 2 baru_10: -3551694332131269336
+      Minigame 2 baru_11: 2443533214284375883
+      Minigame 2 baru_12: 8866601460544194627
+      Minigame 2 baru_13: 7693640002086704511
+      Minigame 2 baru_14: -4211117644861222626
+      Minigame 2 baru_15: -2389819941408315010
+      Minigame 2 baru_16: 3223769116007490712
+      Minigame 2 baru_2: 8608439904766787473
+      Minigame 2 baru_3: 479773995243091332
+      Minigame 2 baru_4: -2416362942065119621
+      Minigame 2 baru_5: -7179403719846435004
+      Minigame 2 baru_6: 3318412828079674428
+      Minigame 2 baru_7: -7082954171021874754
+      Minigame 2 baru_8: -290685801557008253
+      Minigame 2 baru_9: 3351158196240526100
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
