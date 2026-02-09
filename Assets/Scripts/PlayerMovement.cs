@@ -24,10 +24,6 @@ public class PlayerMovement : MonoBehaviour
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
         isSprinting = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
-
-        if (isSprinting) {
-            Debug.Log("Shift dipencet");
-        }
     }
 
     void FixedUpdate()
