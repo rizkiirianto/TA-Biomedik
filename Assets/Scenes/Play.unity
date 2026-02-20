@@ -3119,7 +3119,7 @@ MonoBehaviour:
   clickAdvanceButton: {fileID: 1635994297}
   miniGameRegistry:
   - id: Walking
-    prefab: {fileID: 5661616717015492224, guid: d3601282982884bb9b1d14750f3344c3, type: 3}
+    prefab: {fileID: 2991382387542388678, guid: aa645952078915061b9d1b93221e2de8, type: 3}
   - id: BleedControl
     prefab: {fileID: 7741574043899763832, guid: 4b25b2ce62c0a84448b33b37780051e9, type: 3}
   - id: SumbatdanBalut

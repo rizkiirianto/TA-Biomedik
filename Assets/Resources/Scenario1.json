@@ -8,6 +8,15 @@
       "options": []
     },
     {
+      "stepType": "minigame",
+      "instruction": "Kamu menghampiri korban.",
+      "minigameID": "Walking",
+      "narrativeImage": "Rizal_Bleeding",
+      "goldTime": 10,
+      "silverTime": 15,
+      "options": []
+    },
+    {
       "stepType": "dialog",
       "speakerName": "Narator",
       "instruction": "Seorang pria (Rizal) tergeletak di aspal, mengerang kesakitan. Ada darah mengalir deras dari pahanya. Seorang wanita (Maya) terlihat panik mondar-mandir.",
