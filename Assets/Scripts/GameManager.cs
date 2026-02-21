@@ -30,6 +30,8 @@ public class GameManager : MonoBehaviour
     [Tooltip("Panel Button transparan untuk melanjutkan dialog")]
     public Button clickAdvanceButton;
 
+    public Camera mainSceneCamera;
+
     [Header("Registrasi Prefab Minigame")]
     public List<MiniGameRegistry> miniGameRegistry;
 
@@ -227,6 +229,7 @@ public class GameManager : MonoBehaviour
     {
         playerModel.SetActive(false);
         quizUIParent.SetActive(false);
+        mainSceneCamera.gameObject.SetActive(false);
         
         // 1. Cari prefab berdasarkan ID di Registry (tetap perlu ini untuk spawn)
         MiniGameRegistry gameToStart = miniGameRegistry.FirstOrDefault(mg => mg.id == miniGameStep.minigameID);
@@ -234,8 +237,33 @@ public class GameManager : MonoBehaviour
         if (gameToStart != null && gameToStart.prefab != null)
         {
             minigameStartTime = Time.time;
-            // Spawn Prefab
-            activeMiniGameInstance = Instantiate(gameToStart.prefab, canvasTransform);
+
+            // Cek apakah prefab memiliki komponen RectTransform (berarti ini adalah elemen UI)
+            if (gameToStart.prefab.GetComponent<RectTransform>() != null)
+            {
+                Debug.Log($"Spawning UI Minigame: {miniGameStep.minigameID}");
+                
+                // 1. Pastikan Main Camera menyala untuk merender Canvas
+                mainSceneCamera.gameObject.SetActive(true); 
+                
+                // 2. Spawn Prefab di DALAM Canvas
+                activeMiniGameInstance = Instantiate(gameToStart.prefab, canvasTransform);
+                
+                // 3. Pastikan posisinya di tengah layar
+                RectTransform rt = activeMiniGameInstance.GetComponent<RectTransform>();
+                rt.anchoredPosition = Vector2.zero; 
+                rt.localScale = Vector3.one;
+            }
+            else
+            {
+                Debug.Log($"Spawning World Minigame: {miniGameStep.minigameID}");
+                
+                // 1. Matikan Main Camera karena minigame world bawa kamera sendiri
+                mainSceneCamera.gameObject.SetActive(false); 
+                
+                // 2. Spawn Prefab di LUAR Canvas (di root)
+                activeMiniGameInstance = Instantiate(gameToStart.prefab, Vector3.zero, Quaternion.identity);
+            }
 
             // --- MAGIC HAPPENS HERE ---
             // Kita tidak peduli nama script-nya apa, kita cuma cari 'IMiniGame'
@@ -308,6 +336,7 @@ public class GameManager : MonoBehaviour
 
     public void OnMiniGameComplete(string successFeedback)
     {
+        mainSceneCamera.gameObject.SetActive(true);
         float completionTime = Time.time - minigameStartTime;
         Step currentStep = quizData.steps[currentStepIndex];
         int scoreGained = 0;

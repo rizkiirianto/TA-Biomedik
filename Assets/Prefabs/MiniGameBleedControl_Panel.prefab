@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3513944590000600071}
   - component: {fileID: 7743811791368802890}
   m_Layer: 0
-  m_Name: jawaban salah
+  m_Name: jawaban salah_audio
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -341,7 +341,7 @@ GameObject:
   - component: {fileID: 2842276041312347094}
   - component: {fileID: 5593547046104362161}
   m_Layer: 5
-  m_Name: LukaRingan
+  m_Name: LukaRingan_Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -415,7 +415,7 @@ GameObject:
   - component: {fileID: 8109275993990094428}
   - component: {fileID: 76027002619318180}
   m_Layer: 0
-  m_Name: jawaban benar
+  m_Name: jawaban benar_audio
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1056,7 +1056,7 @@ GameObject:
   - component: {fileID: 4646010139493501384}
   - component: {fileID: 2845303618781767206}
   m_Layer: 5
-  m_Name: LukaSedang
+  m_Name: LukaSedang_Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1367,7 +1367,7 @@ GameObject:
   - component: {fileID: 8643268198252695136}
   - component: {fileID: 4096028786110214586}
   m_Layer: 5
-  m_Name: LukaAgakParah
+  m_Name: LukaAgakParah_Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1442,7 +1442,7 @@ GameObject:
   - component: {fileID: 131859384849528078}
   - component: {fileID: 3771482608665916561}
   m_Layer: 5
-  m_Name: LukaBerat
+  m_Name: LukaBerat_Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -843,8 +843,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1593142128}
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &389110378
@@ -2608,7 +2607,7 @@ RectTransform:
   - {fileID: 1466306962}
   - {fileID: 1405179510}
   - {fileID: 1635994294}
-  m_Father: {fileID: 389110377}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -3117,9 +3116,10 @@ MonoBehaviour:
   scoreText: {fileID: 324255322}
   playerModel: {fileID: 333484379}
   clickAdvanceButton: {fileID: 1635994297}
+  mainSceneCamera: {fileID: 389110376}
   miniGameRegistry:
   - id: Walking
-    prefab: {fileID: 2991382387542388678, guid: aa645952078915061b9d1b93221e2de8, type: 3}
+    prefab: {fileID: 4028092344473127222, guid: fb134cbfac40fe835a24d00d81c666b9, type: 3}
   - id: BleedControl
     prefab: {fileID: 7741574043899763832, guid: 4b25b2ce62c0a84448b33b37780051e9, type: 3}
   - id: SumbatdanBalut
@@ -3556,6 +3556,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 389110377}
+  - {fileID: 1593142128}
   - {fileID: 1512365881}
   - {fileID: 1673647971}
   - {fileID: 83180212}
