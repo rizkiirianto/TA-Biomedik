@@ -1,0 +1,494 @@
+fileFormatVersion: 2
+guid: 175cd61b282295607a0891e492955181
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -3473832570355423520
+    second: Jiro_Run-removebg-preview_0
+  - first:
+      213: 749887021956698557
+    second: Jiro_Run-removebg-preview_1
+  - first:
+      213: -2687633660049233630
+    second: Jiro_Run-removebg-preview_2
+  - first:
+      213: -4196965681122530066
+    second: Jiro_Run-removebg-preview_3
+  - first:
+      213: -4580940674715302018
+    second: Jiro_Run-removebg-preview_4
+  - first:
+      213: -3730945405907761617
+    second: Jiro_Run-removebg-preview_5
+  - first:
+      213: -6960781509130891310
+    second: Jiro_Run-removebg-preview_6
+  - first:
+      213: 4127143780121285040
+    second: Jiro_Run-removebg-preview_7
+  - first:
+      213: -7560104279776415595
+    second: Jiro_Run-removebg-preview_8
+  - first:
+      213: -596610142569595147
+    second: Jiro_Run-removebg-preview_9
+  - first:
+      213: -7909047979398692892
+    second: Jiro_Run-removebg-preview_10
+  - first:
+      213: 4844045148382249587
+    second: Jiro_Run-removebg-preview_11
+  - first:
+      213: 4972176670934125667
+    second: Jiro_Run-removebg-preview_12
+  - first:
+      213: 8908331404290718956
+    second: Jiro_Run-removebg-preview_13
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Jiro_Run-removebg-preview_0
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 384
+        width: 112
+        height: 168
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e668c2bea77acfc0800000000000000
+      internalID: -3473832570355423520
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Jiro_Run-removebg-preview_1
+      rect:
+        serializedVersion: 2
+        x: 106
+        y: 374
+        width: 103
+        height: 188
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: db1976df542286a00800000000000000
+      internalID: 749887021956698557
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Jiro_Run-removebg-preview_2
+      rect:
+        serializedVersion: 2
+        x: 203
+        y: 394
+        width: 108
+        height: 178
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 229e1660d6b93bad0800000000000000
+      internalID: -2687633660049233630
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Jiro_Run-removebg-preview_3
+      rect:
+        serializedVersion: 2
+        x: 307
+        y: 394
+        width: 118
+        height: 180
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eecaf2213f161c5c0800000000000000
+      internalID: -4196965681122530066
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Jiro_Run-removebg-preview_4
+      rect:
+        serializedVersion: 2
+        x: 4
+        y: 199
+        width: 96
+        height: 164
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e77c47a2aba3d60c0800000000000000
+      internalID: -4580940674715302018
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Jiro_Run-removebg-preview_5
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 202
+        width: 94
+        height: 163
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f260e74bbe4093cc0800000000000000
+      internalID: -3730945405907761617
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Jiro_Run-removebg-preview_6
+      rect:
+        serializedVersion: 2
+        x: 164
+        y: 199
+        width: 97
+        height: 178
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2df4525e816566f90800000000000000
+      internalID: -6960781509130891310
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Jiro_Run-removebg-preview_7
+      rect:
+        serializedVersion: 2
+        x: 244
+        y: 191
+        width: 100
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0b19717c66f864930800000000000000
+      internalID: 4127143780121285040
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Jiro_Run-removebg-preview_8
+      rect:
+        serializedVersion: 2
+        x: 323
+        y: 202
+        width: 102
+        height: 163
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5903403763d151790800000000000000
+      internalID: -7560104279776415595
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Jiro_Run-removebg-preview_9
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 10
+        width: 98
+        height: 161
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5fe7ebe7c3a68b7f0800000000000000
+      internalID: -596610142569595147
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Jiro_Run-removebg-preview_10
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 10
+        width: 94
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4ef7b6444ca6d3290800000000000000
+      internalID: -7909047979398692892
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Jiro_Run-removebg-preview_11
+      rect:
+        serializedVersion: 2
+        x: 176
+        y: 3
+        width: 89
+        height: 168
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3724749c561893340800000000000000
+      internalID: 4844045148382249587
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Jiro_Run-removebg-preview_12
+      rect:
+        serializedVersion: 2
+        x: 264
+        y: 10
+        width: 81
+        height: 159
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 36c4387a658b00540800000000000000
+      internalID: 4972176670934125667
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Jiro_Run-removebg-preview_13
+      rect:
+        serializedVersion: 2
+        x: 327
+        y: 9
+        width: 101
+        height: 160
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cec743eb630c0ab70800000000000000
+      internalID: 8908331404290718956
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 3189f569ba4a9a2548d1b8491c98789d
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Jiro_Run-removebg-preview_0: -3473832570355423520
+      Jiro_Run-removebg-preview_1: 749887021956698557
+      Jiro_Run-removebg-preview_10: -7909047979398692892
+      Jiro_Run-removebg-preview_11: 4844045148382249587
+      Jiro_Run-removebg-preview_12: 4972176670934125667
+      Jiro_Run-removebg-preview_13: 8908331404290718956
+      Jiro_Run-removebg-preview_2: -2687633660049233630
+      Jiro_Run-removebg-preview_3: -4196965681122530066
+      Jiro_Run-removebg-preview_4: -4580940674715302018
+      Jiro_Run-removebg-preview_5: -3730945405907761617
+      Jiro_Run-removebg-preview_6: -6960781509130891310
+      Jiro_Run-removebg-preview_7: 4127143780121285040
+      Jiro_Run-removebg-preview_8: -7560104279776415595
+      Jiro_Run-removebg-preview_9: -596610142569595147
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -3119,7 +3119,7 @@ MonoBehaviour:
   mainSceneCamera: {fileID: 389110376}
   miniGameRegistry:
   - id: Walking
-    prefab: {fileID: 4028092344473127222, guid: fb134cbfac40fe835a24d00d81c666b9, type: 3}
+    prefab: {fileID: 6183496438584903537, guid: 2c280c833877f11aba3f500853d636e4, type: 3}
   - id: BleedControl
     prefab: {fileID: 7741574043899763832, guid: 4b25b2ce62c0a84448b33b37780051e9, type: 3}
   - id: SumbatdanBalut
