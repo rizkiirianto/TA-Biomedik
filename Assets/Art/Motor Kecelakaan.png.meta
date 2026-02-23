@@ -1,0 +1,598 @@
+fileFormatVersion: 2
+guid: a60e4b463b433cb6fb6fafb0879d5b29
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 8923890132876007739
+    second: Motor Kecelakaan_0
+  - first:
+      213: -3527274955779518332
+    second: Motor Kecelakaan_1
+  - first:
+      213: -2651028829541279925
+    second: Motor Kecelakaan_2
+  - first:
+      213: -303435162790418797
+    second: Motor Kecelakaan_3
+  - first:
+      213: 8559594666919446193
+    second: Motor Kecelakaan_4
+  - first:
+      213: -927443888356046522
+    second: Motor Kecelakaan_5
+  - first:
+      213: -3146088043267365888
+    second: Motor Kecelakaan_6
+  - first:
+      213: -7422111049253759951
+    second: Motor Kecelakaan_7
+  - first:
+      213: 910661088578682916
+    second: Motor Kecelakaan_8
+  - first:
+      213: -517253680050613443
+    second: Motor Kecelakaan_9
+  - first:
+      213: 3038093674680469363
+    second: Motor Kecelakaan_10
+  - first:
+      213: 6102191535108178178
+    second: Motor Kecelakaan_11
+  - first:
+      213: -1762816158658033394
+    second: Motor Kecelakaan_12
+  - first:
+      213: -8138864316087587078
+    second: Motor Kecelakaan_13
+  - first:
+      213: 8046206644715165755
+    second: Motor Kecelakaan_14
+  - first:
+      213: 7668668149248400595
+    second: Motor Kecelakaan_15
+  - first:
+      213: 1713675332853688769
+    second: Motor Kecelakaan_16
+  - first:
+      213: 3851463429298853691
+    second: Motor Kecelakaan_17
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Motor Kecelakaan_0
+      rect:
+        serializedVersion: 2
+        x: 255
+        y: 751
+        width: 34
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b3910b88bc608db70800000000000000
+      internalID: 8923890132876007739
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Motor Kecelakaan_1
+      rect:
+        serializedVersion: 2
+        x: 367
+        y: 751
+        width: 18
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 48051a3bd1a9c0fc0800000000000000
+      internalID: -3527274955779518332
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Motor Kecelakaan_2
+      rect:
+        serializedVersion: 2
+        x: 383
+        y: 751
+        width: 226
+        height: 178
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b475fd54357a53bd0800000000000000
+      internalID: -2651028829541279925
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Motor Kecelakaan_3
+      rect:
+        serializedVersion: 2
+        x: 671
+        y: 607
+        width: 1346
+        height: 722
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 396a38db35bf9cbf0800000000000000
+      internalID: -303435162790418797
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Motor Kecelakaan_4
+      rect:
+        serializedVersion: 2
+        x: 2031
+        y: 767
+        width: 17
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1b6cf07bff9c9c670800000000000000
+      internalID: 8559594666919446193
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Motor Kecelakaan_5
+      rect:
+        serializedVersion: 2
+        x: 31
+        y: 639
+        width: 210
+        height: 114
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6494e6582be0123f0800000000000000
+      internalID: -927443888356046522
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Motor Kecelakaan_6
+      rect:
+        serializedVersion: 2
+        x: 303
+        y: 703
+        width: 18
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 004e1f4e799d654d0800000000000000
+      internalID: -3146088043267365888
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Motor Kecelakaan_7
+      rect:
+        serializedVersion: 2
+        x: 351
+        y: 703
+        width: 34
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1345ab1235d5ff890800000000000000
+      internalID: -7422111049253759951
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Motor Kecelakaan_8
+      rect:
+        serializedVersion: 2
+        x: 591
+        y: 703
+        width: 18
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 420c0876f6153ac00800000000000000
+      internalID: 910661088578682916
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Motor Kecelakaan_9
+      rect:
+        serializedVersion: 2
+        x: 623
+        y: 671
+        width: 18
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d33d1ddb48852d8f0800000000000000
+      internalID: -517253680050613443
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Motor Kecelakaan_10
+      rect:
+        serializedVersion: 2
+        x: 1071
+        y: 543
+        width: 194
+        height: 130
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 377c0b1c91a792a20800000000000000
+      internalID: 3038093674680469363
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Motor Kecelakaan_11
+      rect:
+        serializedVersion: 2
+        x: 271
+        y: 639
+        width: 34
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 201c481ded65fa450800000000000000
+      internalID: 6102191535108178178
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Motor Kecelakaan_12
+      rect:
+        serializedVersion: 2
+        x: 479
+        y: 623
+        width: 50
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e098ed22b083987e0800000000000000
+      internalID: -1762816158658033394
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Motor Kecelakaan_13
+      rect:
+        serializedVersion: 2
+        x: 623
+        y: 623
+        width: 18
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: afe2f7ca602fc0f80800000000000000
+      internalID: -8138864316087587078
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Motor Kecelakaan_14
+      rect:
+        serializedVersion: 2
+        x: 591
+        y: 591
+        width: 18
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b3892af005ed9af60800000000000000
+      internalID: 8046206644715165755
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Motor Kecelakaan_15
+      rect:
+        serializedVersion: 2
+        x: 623
+        y: 575
+        width: 18
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3dc9d482d059c6a60800000000000000
+      internalID: 7668668149248400595
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Motor Kecelakaan_16
+      rect:
+        serializedVersion: 2
+        x: 1727
+        y: 559
+        width: 50
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c9e713c2a238c710800000000000000
+      internalID: 1713675332853688769
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Motor Kecelakaan_17
+      rect:
+        serializedVersion: 2
+        x: 1679
+        y: 559
+        width: 18
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b3714c04595237530800000000000000
+      internalID: 3851463429298853691
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Motor Kecelakaan_0: 8923890132876007739
+      Motor Kecelakaan_1: -3527274955779518332
+      Motor Kecelakaan_10: 3038093674680469363
+      Motor Kecelakaan_11: 6102191535108178178
+      Motor Kecelakaan_12: -1762816158658033394
+      Motor Kecelakaan_13: -8138864316087587078
+      Motor Kecelakaan_14: 8046206644715165755
+      Motor Kecelakaan_15: 7668668149248400595
+      Motor Kecelakaan_16: 1713675332853688769
+      Motor Kecelakaan_17: 3851463429298853691
+      Motor Kecelakaan_2: -2651028829541279925
+      Motor Kecelakaan_3: -303435162790418797
+      Motor Kecelakaan_4: 8559594666919446193
+      Motor Kecelakaan_5: -927443888356046522
+      Motor Kecelakaan_6: -3146088043267365888
+      Motor Kecelakaan_7: -7422111049253759951
+      Motor Kecelakaan_8: 910661088578682916
+      Motor Kecelakaan_9: -517253680050613443
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
