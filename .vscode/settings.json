@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "Tugas-Akhir-Project-BME-main.slnx"
+    "dotnet.defaultSolution": "TA-Biomedik.slnx"
 }
