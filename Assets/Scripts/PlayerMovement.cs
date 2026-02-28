@@ -1,53 +1,109 @@
-using System.Drawing;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    // Movement constants
+    private const float RUN_SCALE_REDUCTION = 0.01f;
+
+    // Cached components
     private Rigidbody2D rb;
+    
+    // Input state
     private float horizontalInput;
     private bool isSprinting;
+    private bool isMoving;
+    private bool isWalking;
 
+    [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float sprintMultiplier = 1.5f;
 
-    [SerializeField] public Animator myAnimator;
+    [Header("Visual Settings")]
+    [SerializeField] private Animator myAnimator;
     [SerializeField] private float baseScale = 0.1f;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        // Konsep 2.5D 
         rb.gravityScale = 0f; 
         rb.freezeRotation = true;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        horizontalInput = Input.GetAxisRaw("Horizontal");
-        isSprinting = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
-        // Set isRunning to true if horizontalInput is not 0
-        myAnimator.SetBool("isRunning", horizontalInput != 0);
-        // Handle Sprite Flipping based on your asset scale (0.1)
-        if (horizontalInput > 0)
-            transform.localScale = new Vector3(baseScale - 0.01f, baseScale, baseScale);
-        else if (horizontalInput < 0)
-            transform.localScale = new Vector3(-baseScale-0.01f, baseScale, baseScale);
+        HandleInput();
+        UpdateAnimations();
+        UpdateScale();
     }
 
     void FixedUpdate()
     {
-        // Only use horizontalInput, set Y to 0
+        HandleMovement();
+    }
+
+    private void HandleInput()
+    {
+        horizontalInput = Input.GetAxisRaw("Horizontal");
+        isSprinting = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+        isMoving = Mathf.Abs(horizontalInput) > 0f;
+        isWalking = isMoving && !isSprinting;
+    }
+
+    private void UpdateAnimations()
+    {
+        myAnimator.SetBool("isWalking", isWalking);
+        myAnimator.SetBool("isRunning", isMoving && isSprinting);
+    }
+
+    private void UpdateScale()
+    {
+        Vector3 finalScale = CalculateScale();
+        ApplySpriteDirection(finalScale);
+    }
+
+    private Vector3 CalculateScale()
+    {
+        if (isWalking)
+        {
+            return new Vector3(baseScale, baseScale, baseScale);
+        }
+        else
+        {
+            // Running/Idle: only reduce X axis
+            return new Vector3(baseScale - RUN_SCALE_REDUCTION, baseScale, baseScale);
+        }
+    }
+
+    private void ApplySpriteDirection(Vector3 scale)
+    {
+        if (horizontalInput > 0)
+        {
+            scale.x = Mathf.Abs(scale.x); // Face right
+        }
+        else if (horizontalInput < 0)
+        {
+            scale.x = -Mathf.Abs(scale.x); // Face left
+        }
+        else
+        {
+            // Maintain current direction when idle
+            bool facingRight = transform.localScale.x > 0;
+            scale.x = facingRight ? Mathf.Abs(scale.x) : -Mathf.Abs(scale.x);
+        }
+
+        transform.localScale = scale;
+    }
+
+    private void HandleMovement()
+    {
         Vector2 moveDirection = new Vector2(horizontalInput, 0f);
 
-        // Normalize if you want to keep it consistent (though less critical for 1D)
         if (moveDirection.sqrMagnitude > 1f)
         {
             moveDirection = moveDirection.normalized;
         }
 
-        float speed = isSprinting ? moveSpeed * sprintMultiplier : moveSpeed;
-        rb.linearVelocity = moveDirection * speed;
+        float currentSpeed = isSprinting ? moveSpeed * sprintMultiplier : moveSpeed;
+        rb.linearVelocity = moveDirection * currentSpeed;
     }
-    
 }
