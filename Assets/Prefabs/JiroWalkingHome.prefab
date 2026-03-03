@@ -83,7 +83,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: -2815751828485476437, guid: 8117925884e34fdf99d058b0ef157a9f, type: 3}
+  m_Sprite: {fileID: 3355475896494809547, guid: f587e0bdc432cb04aae48508c4cafc97, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -192,7 +192,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6b593431b589ffc2a9e2997e91e476a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
-  moveSpeed: 2
+  moveSpeed: 1.5
   sprintMultiplier: 1.5
   myAnimator: {fileID: 1129370686945159212}
   baseScale: 0.1

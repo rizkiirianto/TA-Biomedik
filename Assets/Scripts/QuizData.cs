@@ -20,6 +20,7 @@ public class Step
     public string stepType;
     public string speakerName;
     public string minigameID;
+    public string cutsceneID;
     public string narrativeImage;
     public float goldTime;
     public float silverTime;

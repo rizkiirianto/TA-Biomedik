@@ -12,6 +12,12 @@ public class MiniGameRegistry
     public string id;
     public GameObject prefab;
 }
+[System.Serializable]
+public class CutsceneRegistry
+{
+    public string id;
+    public GameObject prefab;
+}
 
 public class GameManager : MonoBehaviour
 {
@@ -29,16 +35,19 @@ public class GameManager : MonoBehaviour
     public GameObject playerModel;
     [Tooltip("Panel Button transparan untuk melanjutkan dialog")]
     public Button clickAdvanceButton;
+    public GameObject clickAdvancePanel;
 
     public Camera mainSceneCamera;
 
     [Header("Registrasi Prefab Minigame")]
     public List<MiniGameRegistry> miniGameRegistry;
+    public List<CutsceneRegistry> cutsceneRegistry;
 
     // Variabel Logika Game
     private QuizData quizData;
     private int currentStepIndex = 0;
     private GameObject activeMiniGameInstance;
+    private GameObject activeCutsceneInstance;
     private bool isWaitingForAdvance;
     private bool isQuizFinished = false;
     private int totalScore = 0; // --- TAMBAHAN: Menyimpan total skor pemain
@@ -138,6 +147,7 @@ public class GameManager : MonoBehaviour
     private void ShowStep(int stepIndex)
     {
         if (activeMiniGameInstance != null) Destroy(activeMiniGameInstance);
+        if (activeCutsceneInstance != null) Destroy(activeCutsceneInstance);
 
         if (quizData == null || stepIndex >= quizData.steps.Count)
         {
@@ -159,12 +169,18 @@ public class GameManager : MonoBehaviour
         {
             ShowDialog(currentStep);
         }
+        else if (currentStep.stepType == "cutscene")
+        {
+            ShowCutscene(currentStep);
+        }
     }
+    
     private void ShowDialog(Step step)
     {
         playerModel.SetActive(false);
         quizUIParent.SetActive(true);
         feedbackPanel.SetActive(false);
+        clickAdvancePanel.SetActive(true); 
 
         LoadNarrativeImage(step.narrativeImage);
         
@@ -198,6 +214,7 @@ public class GameManager : MonoBehaviour
         playerModel.SetActive(false);
         quizUIParent.SetActive(true);
         feedbackPanel.SetActive(false);
+        
         questionText.text = quizStep.instruction;
 
         LoadBackgroundImage(quizStep.backgroundImage);
@@ -360,7 +377,8 @@ public class GameManager : MonoBehaviour
         
         // Kembalikan player model dan UI
         playerModel.SetActive(true);
-        quizUIParent.SetActive(true); // Tampilkan kembali UI untuk feedback/instruksi
+        quizUIParent.SetActive(true); 
+        clickAdvancePanel.SetActive(false); 
         narrativeText.text = quizData.steps[currentStepIndex].instruction; // Tampilkan instruksi minigame sebagai narasi
         foreach (var btn in optionButtons) btn.gameObject.SetActive(false); // Pastikan tombol pilihan tersembunyi
 
@@ -373,6 +391,85 @@ public class GameManager : MonoBehaviour
         
         Debug.Log("Memanggil PrepareToAdvance untuk lanjut ke step berikutnya");
         PrepareToAdvance();
+    }
+
+    private void ShowCutscene(Step cutsceneStep)
+    {
+        playerModel.SetActive(false);
+        quizUIParent.SetActive(false);
+        feedbackPanel.SetActive(false);
+        clickAdvancePanel.SetActive(false);
+        clickAdvanceButton.gameObject.SetActive(false);
+        isWaitingForAdvance = false;
+
+        // Cari prefab cutscene berdasarkan ID
+        CutsceneRegistry cutsceneToStart = cutsceneRegistry
+            .FirstOrDefault(cs => cs.id == cutsceneStep.cutsceneID);
+
+        if (cutsceneToStart == null || cutsceneToStart.prefab == null)
+        {
+            Debug.LogError($"Prefab cutscene ID '{cutsceneStep.cutsceneID}' tidak ditemukan di Cutscene Registry!");
+            PrepareToAdvance();
+            return;
+        }
+
+        // Spawn: logika sama seperti minigame (UI vs world)
+        if (cutsceneToStart.prefab.GetComponent<RectTransform>() != null)
+        {
+            Debug.Log($"Spawning UI Cutscene: {cutsceneStep.cutsceneID}");
+
+            // Pastikan camera ON untuk render Canvas
+            mainSceneCamera.gameObject.SetActive(true);
+
+            activeCutsceneInstance = Instantiate(cutsceneToStart.prefab, canvasTransform);
+
+            RectTransform rt = activeCutsceneInstance.GetComponent<RectTransform>();
+            rt.anchoredPosition = Vector2.zero;
+            rt.localScale = Vector3.one;
+        }
+        else
+        {
+            Debug.Log($"Spawning World Cutscene: {cutsceneStep.cutsceneID}");
+
+            // Kalau cutscene world bawa kamera sendiri, matikan main camera (opsional).
+            // Kalau cutscene world TIDAK bawa kamera sendiri, biarkan main camera tetap aktif.
+            // Untuk konsisten dengan minigame kamu:
+            mainSceneCamera.gameObject.SetActive(false);
+
+            activeCutsceneInstance = Instantiate(cutsceneToStart.prefab, Vector3.zero, Quaternion.identity);
+        }
+
+        // Cari komponen ICutscene dan jalankan
+        ICutscene cutsceneScript = activeCutsceneInstance.GetComponent<ICutscene>();
+        if (cutsceneScript != null)
+        {
+            cutsceneScript.BeginCutscene(this);
+        }
+        else
+        {
+            Debug.LogError($"Prefab Cutscene {cutsceneStep.cutsceneID} tidak punya script yang implement ICutscene!");
+            PrepareToAdvance();
+        }
+    }
+
+    public void OnCutsceneComplete(string optionalFeedback = "")
+    {
+        // Kembalikan main camera (kalau tadi dimatikan)
+        mainSceneCamera.gameObject.SetActive(true);
+
+        // (opsional) tampilkan feedback singkat
+        if (!string.IsNullOrEmpty(optionalFeedback))
+        {
+            quizUIParent.SetActive(true);
+            feedbackText.text = optionalFeedback;
+            feedbackPanel.SetActive(true);
+        }
+        else
+        {
+            feedbackPanel.SetActive(false);
+        }
+
+        GoToNextStep();
     }
 
     private void PrepareToAdvance()
