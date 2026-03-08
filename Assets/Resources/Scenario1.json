@@ -1,10 +1,9 @@
 {
   "steps": [
     {
-      "stepType": "dialog",
-      "speakerName": "Narator",
-      "instruction": "Kamu sedang dalam perjalanan pulang saat melihat keramaian di depan. Sebuah motor tergeletak hancur setelah bertabrakan dengan mobil.",
-      "narrativeImage": "Motor",
+      "stepType": "cutscene",
+      "cutsceneID": "JiroPulang",
+      "instruction": "",
       "options": []
     },
     {
@@ -109,6 +108,15 @@
           "feedback": "Jangan beri makan/minum pada korban trauma! Bisa tersedak jika pingsan."
         }
       ]
+    },
+    {
+      "stepType": "minigame",
+      "instruction": "Ambil barang yang bisa dipakai.",
+      "minigameID": "AmbilBarangdariTas",
+      "narrativeImage": "Minigame_Press_BG",
+      "goldTime": 10,
+      "silverTime": 15,
+      "options": []
     },
     {
       "stepType": "minigame",
