@@ -24,7 +24,9 @@
       "stepType": "quiz",
       "instruction": "Kamu baru tiba di lokasi. Sebelum lari menolong korban, apa yang PERTAMA kali harus kamu lakukan?",
       "minigameID": "",
-      "backgroundImage": "SceneSafety_Decision",
+      "backgroundImage": "JiroQuiz1",
+      "gambarPortrait": 2,
+      "optionParentPosX": -165.0,
       "options": [
         {
           "text": "Periksa keamanan sekitar (Lalu Lintas)",

@@ -25,6 +25,9 @@ public class GameManager : MonoBehaviour
     public GameObject quizUIParent;
     public TextMeshProUGUI questionText;
     public Button[] optionButtons;
+    public Sprite[] gambarPortraitKarakter;
+    public Image gambarPortraitDialog;
+    public GameObject optionParents;
     public GameObject feedbackPanel;
     public TextMeshProUGUI feedbackText;
     public Transform canvasTransform;
@@ -36,6 +39,7 @@ public class GameManager : MonoBehaviour
     [Tooltip("Panel Button transparan untuk melanjutkan dialog")]
     public Button clickAdvanceButton;
     public GameObject clickAdvancePanel;
+    public RectTransform optionParentRect;
 
     public Camera mainSceneCamera;
 
@@ -53,6 +57,7 @@ public class GameManager : MonoBehaviour
     private int totalScore = 0; // --- TAMBAHAN: Menyimpan total skor pemain
     private int currentQuestionAttempts = 0; // --- TAMBAHAN: Melacak percobaan di kuis saat ini
     private float minigameStartTime = 0f; // --- TAMBAHAN: Mencatat waktu mulai minigame
+    private Coroutine revealOptionsCoroutine;
 
     void Start()
     {
@@ -180,9 +185,10 @@ public class GameManager : MonoBehaviour
         playerModel.SetActive(false);
         quizUIParent.SetActive(true);
         feedbackPanel.SetActive(false);
-        clickAdvancePanel.SetActive(true); 
+        clickAdvancePanel.SetActive(true);
 
         LoadNarrativeImage(step.narrativeImage);
+        LoadPortraitImage(-1); // Sembunyikan portrait di dialog
         
         // Tampilkan teks dialog
         // Jika ada speakerName, formatnya: "Nama: Teks"
@@ -209,37 +215,75 @@ public class GameManager : MonoBehaviour
         // Langsung siapkan tombol advance agar pemain bisa klik layar untuk lanjut
         PrepareToAdvance(); 
     }
+    private void LoadPortraitImage(int index)
+    {
+        if (gambarPortraitDialog == null) return;
+        if (index >= 0 && gambarPortraitKarakter != null && index < gambarPortraitKarakter.Length)
+        {
+            gambarPortraitDialog.sprite = gambarPortraitKarakter[index];
+            gambarPortraitDialog.gameObject.SetActive(true);
+        }
+        else
+        {
+            gambarPortraitDialog.gameObject.SetActive(false);
+        }
+    }
+
     private void ShowQuiz(Step quizStep)
     {
         playerModel.SetActive(false);
         quizUIParent.SetActive(true);
         feedbackPanel.SetActive(false);
-        
+
         questionText.text = quizStep.instruction;
 
         LoadBackgroundImage(quizStep.backgroundImage);
+        LoadPortraitImage(quizStep.gambarPortrait);
+
+        if (optionParentRect != null)
+        {
+            Vector2 currentPos = optionParentRect.anchoredPosition;
+            currentPos.x = quizStep.optionParentPosX;
+            optionParentRect.anchoredPosition = currentPos;
+        }
 
         currentQuestionAttempts = 0;
 
-        // --- PERBAIKAN UTAMA ADA DI SINI ---
         // Selalu pastikan tombol pilihan aktif setiap kali step kuis baru ditampilkan.
         SetOptionButtonsInteractable(true);
 
+        // Setup semua tombol, tapi sembunyikan dulu — akan muncul satu per satu
+        int activeCount = 0;
         for (int i = 0; i < optionButtons.Length; i++)
         {
             if (i < quizStep.options.Count)
             {
-                optionButtons[i].gameObject.SetActive(true);
+                optionButtons[i].gameObject.SetActive(false);
                 optionButtons[i].GetComponentInChildren<TextMeshProUGUI>().text = quizStep.options[i].text;
                 int optionIndex = i;
                 optionButtons[i].onClick.RemoveAllListeners();
                 optionButtons[i].onClick.AddListener(() => OnOptionSelected(optionIndex));
+                activeCount++;
             }
             else
             {
                 optionButtons[i].gameObject.SetActive(false);
             }
         }
+
+        // Mulai efek muncul satu per satu
+        if (revealOptionsCoroutine != null) StopCoroutine(revealOptionsCoroutine);
+        revealOptionsCoroutine = StartCoroutine(RevealOptionsOneByOne(activeCount));
+    }
+
+    private IEnumerator RevealOptionsOneByOne(int count)
+    {
+        for (int i = 0; i < count && i < optionButtons.Length; i++)
+        {
+            yield return new WaitForSeconds(Random.Range(0.4f, 0.9f));
+            optionButtons[i].gameObject.SetActive(true);
+        }
+        revealOptionsCoroutine = null;
     }
 
     private void StartMiniGame(Step miniGameStep)
@@ -346,8 +390,10 @@ public class GameManager : MonoBehaviour
         {
             // Tampilkan feedback panel hanya untuk jawaban salah
             feedbackPanel.SetActive(true);
+            optionParents.SetActive(false);
             // Otomatis sembunyikan feedback panel setelah 2 detik
             StartCoroutine(HideFeedbackPanelAfterDelay(2f));
+            StartCoroutine(ShowOptionParentPanelAfterDelay(2f));
         }
     }
 
@@ -401,6 +447,7 @@ public class GameManager : MonoBehaviour
         clickAdvancePanel.SetActive(false);
         clickAdvanceButton.gameObject.SetActive(false);
         isWaitingForAdvance = false;
+        LoadPortraitImage(-1); // Sembunyikan portrait di cutscene
 
         // Cari prefab cutscene berdasarkan ID
         CutsceneRegistry cutsceneToStart = cutsceneRegistry
@@ -545,5 +592,11 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         feedbackPanel.SetActive(false);
+    }
+
+    private IEnumerator ShowOptionParentPanelAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        optionParents.SetActive(true);
     }
 }

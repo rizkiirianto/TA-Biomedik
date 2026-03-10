@@ -25,6 +25,8 @@ public class Step
     public float goldTime;
     public float silverTime;
     public string backgroundImage;
+    public float optionParentPosX;
+    public int gambarPortrait = -1; // Indeks ke array gambarPortraitKarakter, -1 = sembunyikan
 }
 
 [System.Serializable]

@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class CutsceneJiroPulang : MonoBehaviour, ICutscene
+public class Cutscene1JiroPulang : MonoBehaviour, ICutscene
 {
     [Header("UI References")]
     [SerializeField] private TextMeshProUGUI textNarasi;
@@ -18,8 +18,8 @@ public class CutsceneJiroPulang : MonoBehaviour, ICutscene
     [Header("Settings")]
     [Tooltip("Kecepatan teks muncul per huruf")]
     [SerializeField] private float typingSpeed = 0.04f;
-    [Tooltip("Jeda sebelum lanjut ke kalimat berikutnya")]
-    [SerializeField] private float delayBetweenLines = 1.5f;
+    [Tooltip("Jeda sebelum lanjut otomatis (jika pemain tidak menekan spasi)")]
+    [SerializeField] private float delayBetweenLines = 2.0f;
     [Tooltip("Kalau true, object cutscene akan dihancurkan setelah selesai.")]
     [SerializeField] private bool destroyOnFinish = true;
 
@@ -27,64 +27,104 @@ public class CutsceneJiroPulang : MonoBehaviour, ICutscene
     private Coroutine routine;
     private bool finished;
 
-    // Fungsi ini dipanggil oleh sistemmu saat cutscene di-instantiate
+    // --- Variabel untuk fitur Skip ---
+    private bool isTyping = false;
+    private bool skipTyping = false;
+    private bool skipDelay = false;
+
     public void BeginCutscene(GameManager gm)
     {
         this.gameManager = gm;
-
-        // Reset UI di awal
         jiroPortraitObj.SetActive(false);
         textNarasi.text = "";
-
-        // Mulai sequence ceritanya
+        
         routine = StartCoroutine(PlayCutsceneSequence());
+    }
+
+    private void Update()
+    {
+        // Mengecek input Spasi setiap frame
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (isTyping)
+            {
+                // Kondisi 1: Teks sedang mengetik, paksa selesai
+                skipTyping = true;
+            }
+            else
+            {
+                // Kondisi 2: Teks sudah selesai, lewati waktu tunggu (delay)
+                skipDelay = true;
+            }
+        }
     }
 
     private IEnumerator PlayCutsceneSequence()
     {
-        // --- 1. Narasi Awal ---
-        yield return StartCoroutine(TypeText("Malam yang sunyi. Jiro berjalan pulang dengan langkah gontai setelah hari yang panjang."));
-        yield return new WaitForSeconds(delayBetweenLines);
+        // --- Urutan Cerita ---
+        // Format: yield return StartCoroutine(PlayDialog("Teks", EkspresiSprite, SembunyikanPortrait?));
+        
+        yield return StartCoroutine(PlayDialog("Malam yang sunyi. Jiro berjalan pulang dengan langkah gontai setelah hari yang panjang.", null, true));
 
-        // --- 2. Jiro Monolog (Ekspresi Normal) ---
-        jiroPortraitObj.SetActive(true);
-        jiroPortraitImage.sprite = jiroNormal;
-        yield return StartCoroutine(TypeText("Jiro: \"Hah... lelahnya. Aku cuma mau cepat rebahan di kasur...\""));
-        yield return new WaitForSeconds(delayBetweenLines);
+        yield return StartCoroutine(PlayDialog("Jiro: \"Hah... lelahnya. Aku cuma mau cepat rebahan di kasur...\"", jiroNormal));
 
-        // --- 3. Decitan dan Tabrakan ---
-        jiroPortraitObj.SetActive(false); // Sembunyikan portrait biar dramatis
-        yield return StartCoroutine(TypeText("*CKIIIIITTT!!! BRAAAAKKKK!!!*"));
-        yield return new WaitForSeconds(delayBetweenLines);
+        yield return StartCoroutine(PlayDialog("*CKIIIIITTT!!! BRAAAAKKKK!!!*", null, true));
 
-        // --- 4. Jiro Kaget (Ekspresi Kaget) ---
-        jiroPortraitObj.SetActive(true);
-        jiroPortraitImage.sprite = jiroKaget;
-        yield return StartCoroutine(TypeText("Jiro: \"Astaga! Suara apa itu?! Keras sekali dari arah perempatan!\""));
-        yield return new WaitForSeconds(delayBetweenLines);
+        yield return StartCoroutine(PlayDialog("Jiro: \"Astaga! Suara apa itu?! Keras sekali dari arah perempatan!\"", jiroKaget));
 
-        // --- 5. Jiro Takut & Harus Menolong (Ekspresi Takut) ---
-        jiroPortraitImage.sprite = jiroTakut;
-        yield return StartCoroutine(TypeText("Jiro: \"Kecelakaan...? A-aku takut melihat darah... Tapi jalanan ini sepi, tidak ada orang lain. Aku harus menolongnya!\""));
-        yield return new WaitForSeconds(delayBetweenLines + 1f);
+        yield return StartCoroutine(PlayDialog("Jiro: \"Kecelakaan...? A-aku takut... Tapi jalanan ini sepi, tidak ada orang lain. Aku harus menolongnya!\"", jiroTakut));
 
-        // --- 6. Cutscene Selesai ---
+        // --- Selesai ---
         Complete();
     }
 
-    private IEnumerator TypeText(string line)
+    // Fungsi pembantu untuk memproses satu baris dialog
+    private IEnumerator PlayDialog(string line, Sprite expression, bool hidePortrait = false)
     {
+        // Mengatur tampilan portrait
+        if (hidePortrait)
+        {
+            jiroPortraitObj.SetActive(false);
+        }
+        else if (expression != null)
+        {
+            jiroPortraitObj.SetActive(true);
+            jiroPortraitImage.sprite = expression;
+        }
+
+        // Persiapan mengetik
         textNarasi.text = "";
+        isTyping = true;
+        skipTyping = false;
+
+        // Proses Typewriter
         foreach (char letter in line.ToCharArray())
         {
+            if (skipTyping)
+            {
+                // Jika ditekan spasi, langsung tampilkan semua teks dan hentikan loop
+                textNarasi.text = line;
+                break;
+            }
+
             textNarasi.text += letter;
             yield return new WaitForSeconds(typingSpeed);
+        }
+
+        isTyping = false;
+        skipDelay = false; // Reset skipDelay sebelum masuk waktu tunggu
+
+        // Proses Menunggu (Delay otomatis ATAU ditekan spasi)
+        float timer = 0;
+        while (timer < delayBetweenLines && !skipDelay)
+        {
+            timer += Time.deltaTime;
+            yield return null; // Tunggu ke frame berikutnya
         }
     }
 
     private void OnDisable()
     {
-        // Hentikan coroutine kalau object tiba-tiba dimatikan biar aman
         if (routine != null)
         {
             StopCoroutine(routine);
@@ -100,10 +140,6 @@ public class CutsceneJiroPulang : MonoBehaviour, ICutscene
         if (gameManager != null)
         {
             gameManager.OnCutsceneComplete();
-        }
-        else
-        {
-            Debug.LogWarning("Cutscene1JiroPulang: GameManager is null, cannot signal completion.");
         }
 
         if (destroyOnFinish)
