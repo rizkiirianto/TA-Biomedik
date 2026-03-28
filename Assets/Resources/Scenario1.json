@@ -64,7 +64,7 @@
       "optionParentPosX": -150.0,
       "options": [
         {
-          "text": "Minta dia telepon Ambulans (118/119)",
+          "text": "Minta dia telepon 112 sekarang",
           "isCorrect": true,
           "feedback": "Cerdas! Delegasikan tugas memanggil bantuan agar kamu fokus menangani korban.",
           "narrative": "Maya mengangguk, sedikit tenang karena punya tugas jelas, dan segera menelepon bantuan.",
@@ -84,10 +84,104 @@
       ]
     },
     {
+      "stepType": "dialog",
+      "speakerName": "Operator 112",
+      "instruction": "112, Apa yang bisa kami bantu?.",
+      "narrativeImage": "Maya Calling",
+      "options": []
+    },
+    {
       "stepType": "quiz",
-      "instruction": "Darah mengalir deras dari paha korban (Pendarahan Aktif). Apa langkah pertamamu?",
+      "instruction": "Kalau menelepon 112, informasi PALING pertama yang harus disampaikan apa?",
       "minigameID": "",
-      "backgroundImage": "Leg_Bleeding_Active",
+      "backgroundImage": "Maya Calling",
+      "optionParentTarget": "optionParents2",
+      "optionParentPosX": -150.0,
+      "options": [
+        {
+          "text": "Lokasi kejadian yang spesifik",
+          "isCorrect": true,
+          "feedback": "Benar! Lokasi adalah prioritas utama agar bantuan bisa langsung dikirim.",
+          "narrative": "Maya menyebutkan nama jalan, patokan minimarket, dan arah lajur dengan jelas.",
+          "narrativeImage": "Maya Calling"
+        },
+        {
+          "text": "Nama lengkap korban",
+          "isCorrect": false,
+          "feedback": "Belum prioritas. Operator butuh lokasi dulu sebelum detail administratif."
+        },
+        {
+          "text": "Kronologi panjang dari awal",
+          "isCorrect": false,
+          "feedback": "Terlalu panjang di awal. Mulai dari lokasi dan jenis kejadian secara singkat."
+        }
+      ]
+    },
+    {
+      "stepType": "quiz",
+      "instruction": "Pilih laporan paling efektif untuk operator 112.",
+      "minigameID": "",
+      "backgroundImage": "Maya Calling",
+      "optionParentTarget": "optionParents2",
+      "optionParentPosX": -150.0,
+      "options": [
+        {
+          "text": "Jenis kecelakaan, jumlah dan kondisi korban.",
+          "isCorrect": true,
+          "feedback": "Ada kecelakaan motor tunggal, 1 korban perdarahan paha, masih sadar, kami sedang menekan luka",
+          "narrative": "Maya : Ada kecelakaan motor tunggal, 1 korban perdarahan pada kaki, masih sadar, kami sedang menekan luka",
+          "narrativeImage": "Maya Calling"
+        },
+        {
+          "text": "Tolong cepat ke sini, ada orang berdarah parah!",
+          "isCorrect": false,
+          "feedback": "Kurang lengkap. Operator masih butuh lokasi dan kondisi korban agar respons tepat."
+        },
+        {
+          "text": "Dia teman saya, tolong ya, saya panik sekali!",
+          "isCorrect": false,
+          "feedback": "Perasaanmu valid, tapi operator butuh data inti yang bisa ditindaklanjuti."
+        }
+      ]
+    },
+    {
+      "stepType": "quiz",
+      "instruction": "Operator bertanya: 'Apakah ada bahaya di sekitar?' Jawaban terbaik?",
+      "minigameID": "",
+      "backgroundImage": "Maya Calling",
+      "optionParentTarget": "optionParents2",
+      "optionParentPosX": -150.0,
+      "options": [
+        {
+          "text": "Lokasi kecelakaan ada di bahu jalan.",
+          "isCorrect": true,
+          "feedback": "Tepat! Informasi bahaya membantu operator memberi instruksi keselamatan yang benar.",
+          "narrativeImage": "Maya Calling"
+        },
+        {
+          "text": "Aman kok, tidak ada apa-apa.",
+          "isCorrect": false,
+          "feedback": "Jangan menebak. Jika ada potensi bahaya lalu lintas, harus disebutkan."
+        },
+        {
+          "text": "Saya tidak tahu, pokoknya cepat datang.",
+          "isCorrect": false,
+          "feedback": "Kurang membantu. Jawaban spesifik mempercepat keputusan operator."
+        }
+      ]
+    },
+    {
+      "stepType": "dialog",
+      "speakerName": "Operator 112",
+      "instruction": "Bantuan sedang menuju lokasi. Tetap di telepon, lanjutkan tekanan langsung pada luka, dan beri tahu jika kondisi korban berubah.",
+      "narrativeImage": "Maya Calling",
+      "options": []
+    },
+    {
+      "stepType": "quiz",
+      "instruction": "Kembali ke Jiro. Darah mengalir deras dari paha dan lutut korban. Apa langkah pertamamu?",
+      "minigameID": "",
+      "backgroundImage": "dengkul korban",
       "optionParentTarget": "optionParents2",
       "optionParentPosX": -150.0,
       "optionParentPosY": 50.0,
@@ -96,8 +190,8 @@
           "text": "Lakukan Tekanan Langsung (Direct Pressure)",
           "isCorrect": true,
           "feedback": "Bagus! Tekan sumber pendarahan sekuat mungkin.",
-          "narrative": "Kamu mengambil kain bersih dan menekannya langsung ke atas luka korban.",
-          "narrativeImage": "Hand_Pressing"
+          "narrative": "Jiro : Benar, aku harus cari sesuatu yang bisa aku gunakan.",
+          "narrativeImage": "dengkul korban"
         },
         {
           "text": "Ikat kaki dengan tali",
@@ -115,7 +209,7 @@
       "stepType": "minigame",
       "instruction": "Ambil barang yang bisa dipakai.",
       "minigameID": "AmbilBarangdariTas",
-      "narrativeImage": "Minigame_Press_BG",
+      "narrativeImage": "saputangan",
       "goldTime": 10,
       "silverTime": 15,
       "options": []
@@ -124,7 +218,7 @@
       "stepType": "minigame",
       "instruction": "Tekan luka korban terus menerus!.",
       "minigameID": "BleedControl",
-      "narrativeImage": "Minigame_Press_BG",
+      "narrativeImage": "minigamebleeding",
       "goldTime": 10,
       "silverTime": 15,
       "options": []
@@ -133,14 +227,17 @@
       "stepType": "quiz",
       "instruction": "Darah masih merembes keluar dari kain pertama. Apa yang harus dilakukan?",
       "minigameID": "",
-      "backgroundImage": "Blood_Soaking",
+      "backgroundImage": "bocorlagi",
+      "optionParentTarget": "optionParents2",
+      "optionParentPosX": -150.0,
+      "optionParentPosY": 50.0,
       "options": [
         {
           "text": "Tumpuk kain baru di atasnya",
           "isCorrect": true,
           "feedback": "Benar! Jangan lepas kain pertama agar pembekuan darah tidak rusak.",
           "narrative": "Kamu mengambil kain tambahan dan menumpuknya, lalu menekan kembali.",
-          "narrativeImage": "Double_Dressing"
+          "narrativeImage": "bocorditumpuk"
         },
         {
           "text": "Buka kain lama, ganti baru",
@@ -152,24 +249,8 @@
     {
       "stepType": "dialog",
       "speakerName": "Narator",
-      "instruction": "Setelah 10 detik ditekan, darah terlihat sedikit berkurang, tapi masih merembes tembus kain.",
-      "narrativeImage": "Blood_Soaking",
-      "options": []
-    },
-    {
-      "stepType": "dialog",
-      "speakerName": "Narator",
-      "instruction": "Lakukan Wound Packing (Sumbat luka) & Balut tekan kembali!.",
-      "narrativeImage": "WoundPacking_BG",
-      "options": []
-    },
-    {
-      "stepType": "minigame",
-      "instruction": "Bagus, pendarahan sudah berhasil diatasi",
-      "minigameID": "SumbatdanBalut",
-      "narrativeImage": "WoundPacking_BG",
-      "goldTime": 20,
-      "silverTime": 30,
+      "instruction": "Setelah ditambahkan kain dan tetap ditekan beberapa lama, darah yang keluar terlihat sudah berkurang.",
+      "narrativeImage": "bocorditumpuk",
       "options": []
     },
     {
