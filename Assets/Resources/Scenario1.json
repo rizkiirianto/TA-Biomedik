@@ -25,6 +25,7 @@
       "instruction": "Kamu baru tiba di lokasi. Sebelum lari menolong korban, apa yang PERTAMA kali harus kamu lakukan?",
       "minigameID": "",
       "backgroundImage": "JiroQuiz1",
+      "optionParentTarget": "optionParents",
       "gambarPortrait": 2,
       "optionParentPosX": -165.0,
       "options": [
@@ -32,8 +33,7 @@
           "text": "Periksa keamanan sekitar (Lalu Lintas)",
           "isCorrect": true,
           "feedback": "Benar! Pastikan aman dulu. Kita tidak mau menjadi korban kedua.",
-          "narrative": "Tepat! Lalu lintas masih ramai. Kamu meminta saksi untuk membantu menyetop kendaraan lain agar area aman.",
-          "narrativeImage": "Traffic_Stopped"
+          "narrativeImage": "Mobil Speeding"
         },
         {
           "text": "Langsung lari ke korban",
@@ -49,30 +49,27 @@
     },
     {
       "stepType": "dialog",
-      "speakerName": "Rizal (Korban)",
-      "instruction": "Aduh... tolong... kaki saya... sakit banget... darahnya nggak berhenti...",
-      "narrativeImage": "Rizal_CloseUp",
-      "options": []
-    },
-    {
-      "stepType": "dialog",
       "speakerName": "Maya (Saksi)",
-      "instruction": "Saya takut darah! Apa yang harus saya lakukan? Saya bingung!",
-      "narrativeImage": "Maya_Panic",
+      "instruction": "Aduh... i-itu darahnya banyak banget... aku nggak berani lihat. Tolong, harus gimana ini?!",
+      "gambarPortrait": 3,
+      "narrativeImage": "Maya Panik",
       "options": []
     },
     {
       "stepType": "quiz",
       "instruction": "Saksi (Maya) panik tapi ingin membantu. Tugas apa yang paling tepat untuk didelegasikan padanya?",
       "minigameID": "",
-      "backgroundImage": "Maya_Panic",
+      "backgroundImage": "Maya Panik",
+      "optionParentTarget": "optionParents2",
+      "optionParentPosX": -150.0,
       "options": [
         {
           "text": "Minta dia telepon Ambulans (118/119)",
           "isCorrect": true,
           "feedback": "Cerdas! Delegasikan tugas memanggil bantuan agar kamu fokus menangani korban.",
           "narrative": "Maya mengangguk, sedikit tenang karena punya tugas jelas, dan segera menelepon bantuan.",
-          "narrativeImage": "Maya_Calling"
+          "narrativeImage": "Maya Calling",
+          "gambarPortrait": 4
         },
         {
           "text": "Suruh dia cari air minum",
@@ -91,6 +88,9 @@
       "instruction": "Darah mengalir deras dari paha korban (Pendarahan Aktif). Apa langkah pertamamu?",
       "minigameID": "",
       "backgroundImage": "Leg_Bleeding_Active",
+      "optionParentTarget": "optionParents2",
+      "optionParentPosX": -150.0,
+      "optionParentPosY": 50.0,
       "options": [
         {
           "text": "Lakukan Tekanan Langsung (Direct Pressure)",

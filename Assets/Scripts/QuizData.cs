@@ -10,6 +10,7 @@ public class Option
     public string narrative;
     public string narrativeImage;
     public string backgroundImage;
+    public int gambarPortrait = -1; // Indeks ke array gambarPortraitKarakter, -1 = tidak mengubah portrait
 }
 
 [System.Serializable]
@@ -26,6 +27,8 @@ public class Step
     public float silverTime;
     public string backgroundImage;
     public float optionParentPosX;
+    public float optionParentPosY = float.NaN;
+    public string optionParentTarget = "optionParents"; // optionParents / optionParents2
     public int gambarPortrait = -1; // Indeks ke array gambarPortraitKarakter, -1 = sembunyikan
 }
 

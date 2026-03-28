@@ -503,7 +503,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04feb764280fb8748b7c8a0f6bfb5a4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AutoFinishCutscene
-  duration: 5
+  duration: 2.5
   destroyOnFinish: 1
 --- !u!1 &5492673469379924290
 GameObject:

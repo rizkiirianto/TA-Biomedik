@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 901e142b7e8c851608732de7d1abade2
+guid: 5084065b19718cd44b804ddf324c03a5
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -94385614002522144
-    second: Decision_0
+      213: 3340966199726053963
+    second: Maya Panik_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -109,17 +109,30 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Decision_0
+      name: Maya Panik_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 2752
-        height: 1536
+        width: 1920
+        height: 1080
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 0e7f87db8cca0bef0800000000000000
-      internalID: -94385614002522144
+      spriteID: b4a1245be0f7d5e20800000000000000
+      internalID: 3340966199726053963
       vertices: []
       indices: 
       edges: []
@@ -148,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Decision_0: -94385614002522144
+      Maya Panik_0: 3340966199726053963
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

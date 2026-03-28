@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using System.Linq;
 using UnityEngine.SceneManagement;
+using System;
 
 [System.Serializable]
 public class MiniGameRegistry
@@ -23,11 +24,15 @@ public class GameManager : MonoBehaviour
 {
     [Header("Referensi UI Utama")]
     public GameObject quizUIParent;
+    public Button skipButtonDevMode;
     public TextMeshProUGUI questionText;
     public Button[] optionButtons;
+    public Button[] optionButtons2;
     public Sprite[] gambarPortraitKarakter;
+    public Image gambarPortraitQuiz;
     public Image gambarPortraitDialog;
     public GameObject optionParents;
+    public GameObject optionParents2;
     public GameObject feedbackPanel;
     public TextMeshProUGUI feedbackText;
     public Transform canvasTransform;
@@ -35,7 +40,6 @@ public class GameManager : MonoBehaviour
     public Image narrativeImage;
     public Image backgroundImage;
     public TextMeshProUGUI scoreText;
-    public GameObject playerModel;
     [Tooltip("Panel Button transparan untuk melanjutkan dialog")]
     public Button clickAdvanceButton;
     public GameObject clickAdvancePanel;
@@ -58,6 +62,8 @@ public class GameManager : MonoBehaviour
     private int currentQuestionAttempts = 0; // --- TAMBAHAN: Melacak percobaan di kuis saat ini
     private float minigameStartTime = 0f; // --- TAMBAHAN: Mencatat waktu mulai minigame
     private Coroutine revealOptionsCoroutine;
+    private GameObject activeOptionParent;
+    private Button[] activeOptionButtons = Array.Empty<Button>();
 
     void Start()
     {
@@ -70,6 +76,15 @@ public class GameManager : MonoBehaviour
         UpdateScoreText();
         LoadQuizData();
         Application.targetFrameRate = 60;
+    }
+
+    void Update()
+    {
+        // Dev mode: tekan K untuk skip satu step
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            OnSkipButtonClicked();
+        }
     }
 
     void UpdateScoreText()
@@ -182,13 +197,14 @@ public class GameManager : MonoBehaviour
     
     private void ShowDialog(Step step)
     {
-        playerModel.SetActive(false);
         quizUIParent.SetActive(true);
         feedbackPanel.SetActive(false);
         clickAdvancePanel.SetActive(true);
+        SetActiveOptionParent(null);
+        HideAllOptionButtons();
 
         LoadNarrativeImage(step.narrativeImage);
-        LoadPortraitImage(-1); // Sembunyikan portrait di dialog
+        LoadPortraitDialogue(step.gambarPortrait);
         
         // Tampilkan teks dialog
         // Jika ada speakerName, formatnya: "Nama: Teks"
@@ -206,16 +222,23 @@ public class GameManager : MonoBehaviour
         // Sembunyikan pertanyaan kuis agar tidak bingung
         questionText.text = ""; 
 
-        // Matikan semua tombol opsi karena ini cuma dialog
-        foreach (var btn in optionButtons)
-        {
-            btn.gameObject.SetActive(false);
-        }
-
         // Langsung siapkan tombol advance agar pemain bisa klik layar untuk lanjut
         PrepareToAdvance(); 
     }
     private void LoadPortraitImage(int index)
+    {
+        if (gambarPortraitQuiz == null) return;
+        if (index >= 0 && gambarPortraitKarakter != null && index < gambarPortraitKarakter.Length)
+        {
+            gambarPortraitQuiz.sprite = gambarPortraitKarakter[index];
+            gambarPortraitQuiz.gameObject.SetActive(true);
+        }
+        else
+        {
+            gambarPortraitQuiz.gameObject.SetActive(false);
+        }
+    }
+    private void LoadPortraitDialogue(int index)
     {
         if (gambarPortraitDialog == null) return;
         if (index >= 0 && gambarPortraitKarakter != null && index < gambarPortraitKarakter.Length)
@@ -231,20 +254,32 @@ public class GameManager : MonoBehaviour
 
     private void ShowQuiz(Step quizStep)
     {
-        playerModel.SetActive(false);
         quizUIParent.SetActive(true);
         feedbackPanel.SetActive(false);
+
+        activeOptionParent = ResolveOptionParent(quizStep);
+        SetActiveOptionParent(activeOptionParent);
+        activeOptionButtons = ResolveOptionButtons(activeOptionParent);
 
         questionText.text = quizStep.instruction;
 
         LoadBackgroundImage(quizStep.backgroundImage);
+        LoadPortraitDialogue(-1);
         LoadPortraitImage(quizStep.gambarPortrait);
 
-        if (optionParentRect != null)
+        RectTransform targetOptionParentRect = activeOptionParent != null
+            ? activeOptionParent.GetComponent<RectTransform>()
+            : optionParentRect;
+
+        if (targetOptionParentRect != null)
         {
-            Vector2 currentPos = optionParentRect.anchoredPosition;
+            Vector2 currentPos = targetOptionParentRect.anchoredPosition;
             currentPos.x = quizStep.optionParentPosX;
-            optionParentRect.anchoredPosition = currentPos;
+            if (!float.IsNaN(quizStep.optionParentPosY))
+            {
+                currentPos.y = quizStep.optionParentPosY;
+            }
+            targetOptionParentRect.anchoredPosition = currentPos;
         }
 
         currentQuestionAttempts = 0;
@@ -254,20 +289,24 @@ public class GameManager : MonoBehaviour
 
         // Setup semua tombol, tapi sembunyikan dulu — akan muncul satu per satu
         int activeCount = 0;
-        for (int i = 0; i < optionButtons.Length; i++)
+        for (int i = 0; i < activeOptionButtons.Length; i++)
         {
             if (i < quizStep.options.Count)
             {
-                optionButtons[i].gameObject.SetActive(false);
-                optionButtons[i].GetComponentInChildren<TextMeshProUGUI>().text = quizStep.options[i].text;
+                activeOptionButtons[i].gameObject.SetActive(false);
+                TextMeshProUGUI buttonLabel = activeOptionButtons[i].GetComponentInChildren<TextMeshProUGUI>();
+                if (buttonLabel != null)
+                {
+                    buttonLabel.text = quizStep.options[i].text;
+                }
                 int optionIndex = i;
-                optionButtons[i].onClick.RemoveAllListeners();
-                optionButtons[i].onClick.AddListener(() => OnOptionSelected(optionIndex));
+                activeOptionButtons[i].onClick.RemoveAllListeners();
+                activeOptionButtons[i].onClick.AddListener(() => OnOptionSelected(optionIndex));
                 activeCount++;
             }
             else
             {
-                optionButtons[i].gameObject.SetActive(false);
+                activeOptionButtons[i].gameObject.SetActive(false);
             }
         }
 
@@ -278,17 +317,17 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator RevealOptionsOneByOne(int count)
     {
-        for (int i = 0; i < count && i < optionButtons.Length; i++)
+        for (int i = 0; i < count && i < activeOptionButtons.Length; i++)
         {
-            yield return new WaitForSeconds(Random.Range(0.4f, 0.9f));
-            optionButtons[i].gameObject.SetActive(true);
+            // Specify UnityEngine here
+            yield return new WaitForSeconds(UnityEngine.Random.Range(0.4f, 0.9f));
+            activeOptionButtons[i].gameObject.SetActive(true);
         }
         revealOptionsCoroutine = null;
     }
 
     private void StartMiniGame(Step miniGameStep)
     {
-        playerModel.SetActive(false);
         quizUIParent.SetActive(false);
         mainSceneCamera.gameObject.SetActive(false);
         
@@ -348,20 +387,39 @@ public class GameManager : MonoBehaviour
     public void OnOptionSelected(int optionIndex)
     {
         // Mainkan suara klik button dari AudioSource pada button yang diklik
-        AudioSource buttonAudio = optionButtons[optionIndex].GetComponent<AudioSource>();
+        Button[] buttonsForCurrentQuiz = GetCurrentOptionButtons();
+        AudioSource buttonAudio = null;
+        if (optionIndex >= 0 && optionIndex < buttonsForCurrentQuiz.Length)
+        {
+            buttonAudio = buttonsForCurrentQuiz[optionIndex].GetComponent<AudioSource>();
+        }
         if (buttonAudio != null)
         {
             buttonAudio.Play();
         }
         
         currentQuestionAttempts++;
-        Option selectedOption = quizData.steps[currentStepIndex].options[optionIndex];
+        Step currentStep = quizData.steps[currentStepIndex];
+        Option selectedOption = currentStep.options[optionIndex];
         feedbackText.text = selectedOption.feedback;
         
         narrativeText.text = selectedOption.narrative;
 
         // Load gambar naratif jika ada
         LoadNarrativeImage(selectedOption.narrativeImage);
+
+        // Jika opsi menyediakan portrait, perbarui portrait yang ditampilkan.
+        if (selectedOption.gambarPortrait >= 0)
+        {
+            LoadPortraitDialogue(selectedOption.gambarPortrait);
+            LoadPortraitImage(selectedOption.gambarPortrait);
+        }
+        else
+        {
+            // Jangan mewarisi portrait opsi sebelumnya jika opsi ini tidak punya portrait.
+            LoadPortraitDialogue(-1);
+            LoadPortraitImage(currentStep.gambarPortrait);
+        }
 
         if (selectedOption.isCorrect)
         {
@@ -390,10 +448,13 @@ public class GameManager : MonoBehaviour
         {
             // Tampilkan feedback panel hanya untuk jawaban salah
             feedbackPanel.SetActive(true);
-            optionParents.SetActive(false);
+            if (activeOptionParent != null)
+            {
+                activeOptionParent.SetActive(false);
+            }
             // Otomatis sembunyikan feedback panel setelah 2 detik
             StartCoroutine(HideFeedbackPanelAfterDelay(2f));
-            StartCoroutine(ShowOptionParentPanelAfterDelay(2f));
+            StartCoroutine(ShowOptionParentPanelAfterDelay(2f, activeOptionParent));
         }
     }
 
@@ -422,11 +483,10 @@ public class GameManager : MonoBehaviour
         UpdateScoreText();
         
         // Kembalikan player model dan UI
-        playerModel.SetActive(true);
         quizUIParent.SetActive(true); 
         clickAdvancePanel.SetActive(false); 
         narrativeText.text = quizData.steps[currentStepIndex].instruction; // Tampilkan instruksi minigame sebagai narasi
-        foreach (var btn in optionButtons) btn.gameObject.SetActive(false); // Pastikan tombol pilihan tersembunyi
+        HideAllOptionButtons(); // Pastikan tombol pilihan tersembunyi
 
         // Load gambar naratif untuk minigame jika ada
         LoadNarrativeImage(quizData.steps[currentStepIndex].narrativeImage);
@@ -440,14 +500,14 @@ public class GameManager : MonoBehaviour
     }
 
     private void ShowCutscene(Step cutsceneStep)
-    {
-        playerModel.SetActive(false);
+    {   
         quizUIParent.SetActive(false);
         feedbackPanel.SetActive(false);
         clickAdvancePanel.SetActive(false);
         clickAdvanceButton.gameObject.SetActive(false);
         isWaitingForAdvance = false;
         LoadPortraitImage(-1); // Sembunyikan portrait di cutscene
+        LoadPortraitDialogue(-1);
 
         // Cari prefab cutscene berdasarkan ID
         CutsceneRegistry cutsceneToStart = cutsceneRegistry
@@ -547,6 +607,19 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // Dev mode: method untuk skip satu step
+    private void OnSkipButtonClicked()
+    {
+        Debug.Log($"[DEV MODE] Skip button diklik - meloncati step {currentStepIndex}");
+        
+        // Pastikan mainSceneCamera hidup kembali (untuk cutscene yang meng-disable camera)
+        mainSceneCamera.gameObject.SetActive(true);
+        
+        isWaitingForAdvance = false;
+        clickAdvanceButton.gameObject.SetActive(false);
+        GoToNextStep();
+    }
+
     private void GoToNextStep()
     {
         currentStepIndex++;
@@ -556,7 +629,7 @@ public class GameManager : MonoBehaviour
 
     private void SetOptionButtonsInteractable(bool state)
     {
-        foreach (Button btn in optionButtons)
+        foreach (Button btn in GetCurrentOptionButtons())
         {
             btn.interactable = state;
         }
@@ -573,10 +646,7 @@ public class GameManager : MonoBehaviour
         narrativeText.text = "Kamu berhasil! Skenario selesai.";
         questionText.text = "Selamat!";
         feedbackPanel.SetActive(false);
-        foreach (Button btn in optionButtons)
-        {
-            btn.gameObject.SetActive(false);
-        }
+        HideAllOptionButtons();
     }
 
     // Ganti fungsi ReturnToScenarioMenu di GameManager.cs
@@ -594,9 +664,119 @@ public class GameManager : MonoBehaviour
         feedbackPanel.SetActive(false);
     }
 
-    private IEnumerator ShowOptionParentPanelAfterDelay(float delay)
+    private IEnumerator ShowOptionParentPanelAfterDelay(float delay, GameObject optionParentToShow)
     {
         yield return new WaitForSeconds(delay);
-        optionParents.SetActive(true);
+        if (optionParentToShow != null)
+        {
+            optionParentToShow.SetActive(true);
+        }
+    }
+
+    private GameObject ResolveOptionParent(Step step)
+    {
+        string target = (step.optionParentTarget ?? string.Empty).Trim().ToLowerInvariant();
+
+        if (target == "optionparents2")
+        {
+            return optionParents2 != null ? optionParents2 : optionParents;
+        }
+
+        return optionParents;
+    }
+
+    private void SetActiveOptionParent(GameObject target)
+    {
+        if (optionParents != null)
+        {
+            optionParents.SetActive(target == optionParents);
+        }
+
+        if (optionParents2 != null)
+        {
+            optionParents2.SetActive(target == optionParents2);
+        }
+    }
+
+    private Button[] ResolveOptionButtons(GameObject targetParent)
+    {
+        if (targetParent == optionParents2 && optionButtons2 != null && optionButtons2.Length > 0)
+        {
+            return optionButtons2;
+        }
+
+        if (targetParent == optionParents && optionButtons != null && optionButtons.Length > 0)
+        {
+            return optionButtons;
+        }
+
+        return DiscoverOptionButtons(targetParent);
+    }
+
+    private Button[] DiscoverOptionButtons(GameObject parent)
+    {
+        if (parent == null)
+        {
+            return Array.Empty<Button>();
+        }
+
+        return parent
+            .GetComponentsInChildren<Button>(true)
+            .OrderBy(btn => btn.transform.GetSiblingIndex())
+            .ToArray();
+    }
+
+    private Button[] GetCurrentOptionButtons()
+    {
+        if (activeOptionButtons != null && activeOptionButtons.Length > 0)
+        {
+            return activeOptionButtons;
+        }
+
+        return optionButtons ?? Array.Empty<Button>();
+    }
+
+    private void HideAllOptionButtons()
+    {
+        foreach (Button btn in GetAllConfiguredOptionButtons())
+        {
+            if (btn != null)
+            {
+                btn.gameObject.SetActive(false);
+            }
+        }
+    }
+
+    private IEnumerable<Button> GetAllConfiguredOptionButtons()
+    {
+        HashSet<Button> uniqueButtons = new HashSet<Button>();
+
+        if (optionButtons != null)
+        {
+            foreach (Button btn in optionButtons)
+            {
+                if (btn != null) uniqueButtons.Add(btn);
+            }
+        }
+
+        if (optionButtons2 != null)
+        {
+            foreach (Button btn in optionButtons2)
+            {
+                if (btn != null) uniqueButtons.Add(btn);
+            }
+        }
+
+        foreach (Button btn in DiscoverOptionButtons(optionParents))
+        {
+            if (btn != null) uniqueButtons.Add(btn);
+        }
+
+        foreach (Button btn in DiscoverOptionButtons(optionParents2))
+        {
+            if (btn != null) uniqueButtons.Add(btn);
+        }
+
+        return uniqueButtons;
     }
 }
