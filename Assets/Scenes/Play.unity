@@ -4150,6 +4150,8 @@ MonoBehaviour:
     prefab: {fileID: 7741574043899763832, guid: 4b25b2ce62c0a84448b33b37780051e9, type: 3}
   - id: SumbatdanBalut
     prefab: {fileID: 6855168719276028337, guid: 8e95f6bd7896fe72795566e7aff4714c, type: 3}
+  - id: AmbilBarangdariTas
+    prefab: {fileID: 9047134523711292841, guid: ad93b5f70242ed04fa71dd8fb92d6d31, type: 3}
   cutsceneRegistry:
   - id: RizalBerdarah
     prefab: {fileID: 5309542488858055867, guid: aff32489a6ed1f9459ff83001b7e3b07, type: 3}
