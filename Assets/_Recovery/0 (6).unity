@@ -4166,8 +4166,6 @@ MonoBehaviour:
     prefab: {fileID: 5309542488858055867, guid: aff32489a6ed1f9459ff83001b7e3b07, type: 3}
   - id: JiroPulang
     prefab: {fileID: 5785072802821742918, guid: 5d4c0fcad4b9da24ab173aff263ce8f0, type: 3}
-  - id: AmbulanDatang
-    prefab: {fileID: 5558520898912589506, guid: 8895b0ac816b5364d8d0a0f610600176, type: 3}
 --- !u!1 &1831630946
 GameObject:
   m_ObjectHideFlags: 0

@@ -229,7 +229,7 @@
       "minigameID": "",
       "backgroundImage": "bocorlagi",
       "optionParentTarget": "optionParents2",
-      "optionParentPosX": -150.0,
+      "optionParentPosX": 0.0,
       "optionParentPosY": 50.0,
       "options": [
         {
@@ -257,21 +257,26 @@
       "stepType": "dialog",
       "speakerName": "Rizal (Korban)",
       "instruction": "Saya... pusing... dingin... rasanya ngantuk...",
-      "narrativeImage": "Rizal_Pale",
+      "gambarPortrait": 5,
+      "narrativeImage": "KorbanSyok",
       "options": []
     },
     {
       "stepType": "quiz",
       "instruction": "Korban pucat, dingin, dan pusing. Ini tanda-tanda SYOK. Apa posisi terbaik untuknya?",
       "minigameID": "",
-      "backgroundImage": "Shock_Symptoms",
+      "gambarPortrait": 5,
+      "backgroundImage": "KorbanSyok",
+      "optionParentTarget": "optionParents2",
+      "optionParentPosX": -150.0,
+      "optionParentPosY": 50.0,
       "options": [
         {
           "text": "Selimuti & posisikan telentang (Supine)",
           "isCorrect": true,
           "feedback": "Tepat. Jaga suhu tubuh dan biarkan aliran darah lancar ke otak.",
           "narrative": "Kamu menyelimuti Rizal dengan jaket agar hangat dan membaringkannya rata.",
-          "narrativeImage": "Shock_Position"
+          "narrativeImage": "KOrbanSelimut"
         },
         {
           "text": "Dudukkan korban",
@@ -286,10 +291,9 @@
       ]
     },
     {
-      "stepType": "dialog",
-      "speakerName": "Narator",
-      "instruction": "Tak lama kemudian, sirine ambulans terdengar. Pendarahan Rizal terkontrol berkat tindakan cepatmu.",
-      "narrativeImage": "Ambulance_Arrive",
+      "stepType": "cutscene",
+      "cutsceneID": "AmbulanDatang",
+      "instruction": "",
       "options": []
     }
   ]
