@@ -45,6 +45,16 @@ public class GameManager : MonoBehaviour
     public GameObject clickAdvancePanel;
     public RectTransform optionParentRect;
 
+    [Header("Quiz Timer")]
+    public TextMeshProUGUI quizTimerText;
+    public Image quizTimerFillImage;
+    [Min(0f)] public float defaultQuizTimeSeconds = 15f;
+    [Min(0f)] public float defaultLowTimeCueSeconds = 5f;
+    public Color timerOverlayColor = new Color(1f, 0f, 0f, 1f);
+    [Range(0f, 1f)] public float timerOverlayBaseAlpha = 0f;
+    [Range(0f, 1f)] public float timerOverlayPulseMaxAlpha = 0.2f;
+    [Range(1f, 20f)] public float warningPulseSpeed = 8f;
+
     public Camera mainSceneCamera;
 
     [Header("Registrasi Prefab Minigame")]
@@ -64,12 +74,22 @@ public class GameManager : MonoBehaviour
     private Coroutine revealOptionsCoroutine;
     private GameObject activeOptionParent;
     private Button[] activeOptionButtons = Array.Empty<Button>();
+    private Coroutine quizTimerCoroutine;
+    private float currentQuizTimeRemaining;
+    private float currentQuizTimeLimit;
+    private float currentLowTimeCueThreshold;
+    private bool isQuizTimerRunning;
+    private Color questionTextBaseColor = Color.white;
 
     void Start()
     {
         feedbackPanel.SetActive(false);
         clickAdvanceButton.gameObject.SetActive(false);
         clickAdvanceButton.onClick.AddListener(OnAdvanceClicked);
+        if (questionText != null)
+        {
+            questionTextBaseColor = questionText.color;
+        }
         LoadQuizData();
         ShowStep(currentStepIndex);
         totalScore = 0;
@@ -166,6 +186,8 @@ public class GameManager : MonoBehaviour
 
     private void ShowStep(int stepIndex)
     {
+        StopQuizTimer(resetVisuals: true);
+
         if (activeMiniGameInstance != null) Destroy(activeMiniGameInstance);
         if (activeCutsceneInstance != null) Destroy(activeCutsceneInstance);
 
@@ -197,6 +219,7 @@ public class GameManager : MonoBehaviour
     
     private void ShowDialog(Step step)
     {
+        StopQuizTimer(resetVisuals: true);
         quizUIParent.SetActive(true);
         feedbackPanel.SetActive(false);
         clickAdvancePanel.SetActive(true);
@@ -254,6 +277,7 @@ public class GameManager : MonoBehaviour
 
     private void ShowQuiz(Step quizStep)
     {
+        StopQuizTimer(resetVisuals: true);
         quizUIParent.SetActive(true);
         feedbackPanel.SetActive(false);
 
@@ -313,6 +337,8 @@ public class GameManager : MonoBehaviour
         // Mulai efek muncul satu per satu
         if (revealOptionsCoroutine != null) StopCoroutine(revealOptionsCoroutine);
         revealOptionsCoroutine = StartCoroutine(RevealOptionsOneByOne(activeCount));
+
+        ConfigureTimerForQuizStep(quizStep);
     }
 
     private IEnumerator RevealOptionsOneByOne(int count)
@@ -323,11 +349,14 @@ public class GameManager : MonoBehaviour
             yield return new WaitForSeconds(UnityEngine.Random.Range(0.4f, 0.9f));
             activeOptionButtons[i].gameObject.SetActive(true);
         }
+
+        BeginQuizTimerIfNeeded();
         revealOptionsCoroutine = null;
     }
 
     private void StartMiniGame(Step miniGameStep)
     {
+        StopQuizTimer(resetVisuals: true);
         quizUIParent.SetActive(false);
         mainSceneCamera.gameObject.SetActive(false);
         
@@ -386,6 +415,8 @@ public class GameManager : MonoBehaviour
 
     public void OnOptionSelected(int optionIndex)
     {
+        StopQuizTimer(resetVisuals: true);
+
         // Mainkan suara klik button dari AudioSource pada button yang diklik
         Button[] buttonsForCurrentQuiz = GetCurrentOptionButtons();
         AudioSource buttonAudio = null;
@@ -460,6 +491,7 @@ public class GameManager : MonoBehaviour
 
     public void OnMiniGameComplete(string successFeedback)
     {
+        StopQuizTimer(resetVisuals: true);
         mainSceneCamera.gameObject.SetActive(true);
         float completionTime = Time.time - minigameStartTime;
         Step currentStep = quizData.steps[currentStepIndex];
@@ -501,6 +533,7 @@ public class GameManager : MonoBehaviour
 
     private void ShowCutscene(Step cutsceneStep)
     {   
+        StopQuizTimer(resetVisuals: true);
         quizUIParent.SetActive(false);
         feedbackPanel.SetActive(false);
         clickAdvancePanel.SetActive(false);
@@ -581,6 +614,7 @@ public class GameManager : MonoBehaviour
 
     private void PrepareToAdvance()
     {
+        StopQuizTimer(resetVisuals: true);
         isWaitingForAdvance = true;
         SetOptionButtonsInteractable(false);
         clickAdvanceButton.gameObject.SetActive(true);
@@ -637,6 +671,7 @@ public class GameManager : MonoBehaviour
 
     private void EndQuiz()
     {
+        StopQuizTimer(resetVisuals: true);
         isQuizFinished = true; // Set penanda bahwa skenario selesai
         quizUIParent.SetActive(true);
         clickAdvanceButton.gameObject.SetActive(true); // Tampilkan tombol untuk kembali ke menu
@@ -671,6 +706,191 @@ public class GameManager : MonoBehaviour
         {
             optionParentToShow.SetActive(true);
         }
+    }
+
+    private void ConfigureTimerForQuizStep(Step quizStep)
+    {
+        currentQuizTimeLimit = quizStep.quizTimeSeconds > 0f ? quizStep.quizTimeSeconds : defaultQuizTimeSeconds;
+        currentLowTimeCueThreshold = quizStep.lowTimeCueSeconds > 0f
+            ? quizStep.lowTimeCueSeconds
+            : defaultLowTimeCueSeconds;
+
+        if (currentLowTimeCueThreshold > currentQuizTimeLimit)
+        {
+            currentLowTimeCueThreshold = currentQuizTimeLimit;
+        }
+
+        currentQuizTimeRemaining = currentQuizTimeLimit;
+        UpdateTimerVisuals();
+    }
+
+    private void BeginQuizTimerIfNeeded()
+    {
+        if (currentQuizTimeLimit <= 0f)
+        {
+            HideTimerVisuals();
+            return;
+        }
+
+        StopQuizTimer(resetVisuals: false);
+        isQuizTimerRunning = true;
+        quizTimerCoroutine = StartCoroutine(RunQuizTimer());
+    }
+
+    private IEnumerator RunQuizTimer()
+    {
+        while (isQuizTimerRunning && currentQuizTimeRemaining > 0f)
+        {
+            currentQuizTimeRemaining -= Time.deltaTime;
+            if (currentQuizTimeRemaining < 0f)
+            {
+                currentQuizTimeRemaining = 0f;
+            }
+
+            UpdateTimerVisuals();
+            yield return null;
+        }
+
+        quizTimerCoroutine = null;
+        if (!isQuizTimerRunning)
+        {
+            yield break;
+        }
+
+        isQuizTimerRunning = false;
+        HandleQuizTimeExpired();
+    }
+
+    private void HandleQuizTimeExpired()
+    {
+        if (quizData == null || currentStepIndex < 0 || currentStepIndex >= quizData.steps.Count)
+        {
+            return;
+        }
+
+        Step currentStep = quizData.steps[currentStepIndex];
+        if (currentStep.stepType != "quiz")
+        {
+            return;
+        }
+
+        currentQuestionAttempts++;
+        SetOptionButtonsInteractable(false);
+
+        string timeoutMessage = string.IsNullOrWhiteSpace(currentStep.timeoutFeedback)
+            ? "Waktu habis! Coba lagi."
+            : currentStep.timeoutFeedback;
+
+        feedbackText.text = timeoutMessage;
+        feedbackPanel.SetActive(true);
+
+        if (activeOptionParent != null)
+        {
+            activeOptionParent.SetActive(false);
+        }
+
+        StartCoroutine(HideFeedbackPanelAfterDelay(2f));
+        StartCoroutine(ShowOptionParentPanelAfterDelay(2f, activeOptionParent));
+        StartCoroutine(RestartQuizTimerAfterDelay(2f));
+    }
+
+    private IEnumerator RestartQuizTimerAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        if (quizData == null || currentStepIndex < 0 || currentStepIndex >= quizData.steps.Count)
+        {
+            yield break;
+        }
+
+        Step currentStep = quizData.steps[currentStepIndex];
+        if (currentStep.stepType != "quiz")
+        {
+            yield break;
+        }
+
+        SetOptionButtonsInteractable(true);
+        ConfigureTimerForQuizStep(currentStep);
+        BeginQuizTimerIfNeeded();
+    }
+
+    private void StopQuizTimer(bool resetVisuals)
+    {
+        isQuizTimerRunning = false;
+
+        if (quizTimerCoroutine != null)
+        {
+            StopCoroutine(quizTimerCoroutine);
+            quizTimerCoroutine = null;
+        }
+
+        if (resetVisuals)
+        {
+            ResetTimerVisualState();
+        }
+    }
+
+    private void UpdateTimerVisuals()
+    {
+        if (currentQuizTimeLimit <= 0f)
+        {
+            HideTimerVisuals();
+            return;
+        }
+
+        float normalized = currentQuizTimeLimit > 0f
+            ? Mathf.Clamp01(currentQuizTimeRemaining / currentQuizTimeLimit)
+            : 0f;
+
+        bool isWarning = currentLowTimeCueThreshold > 0f && currentQuizTimeRemaining <= currentLowTimeCueThreshold;
+        float pulse = isWarning ? (Mathf.Sin(Time.unscaledTime * warningPulseSpeed) + 1f) * 0.5f : 0f;
+
+        if (quizTimerText != null)
+        {
+            quizTimerText.gameObject.SetActive(true);
+            quizTimerText.text = $"{Mathf.CeilToInt(currentQuizTimeRemaining)}";
+        }
+
+        if (quizTimerFillImage != null)
+        {
+            quizTimerFillImage.gameObject.SetActive(true);
+            if (quizTimerFillImage.type == Image.Type.Filled)
+            {
+                quizTimerFillImage.fillAmount = normalized;
+            }
+
+            float overlayAlpha = isWarning
+                ? Mathf.Lerp(0f, timerOverlayPulseMaxAlpha, pulse)
+                : timerOverlayBaseAlpha;
+
+            Color overlayColor = timerOverlayColor;
+            overlayColor.a = overlayAlpha;
+            quizTimerFillImage.color = overlayColor;
+        }
+    }
+
+    private void HideTimerVisuals()
+    {
+        if (quizTimerText != null)
+        {
+            quizTimerText.gameObject.SetActive(false);
+        }
+
+        if (quizTimerFillImage != null)
+        {
+            Color overlayColor = timerOverlayColor;
+            overlayColor.a = 0f;
+            quizTimerFillImage.color = overlayColor;
+            quizTimerFillImage.gameObject.SetActive(false);
+        }
+    }
+
+    private void ResetTimerVisualState()
+    {
+        currentQuizTimeLimit = 0f;
+        currentQuizTimeRemaining = 0f;
+        currentLowTimeCueThreshold = 0f;
+        HideTimerVisuals();
     }
 
     private GameObject ResolveOptionParent(Step step)

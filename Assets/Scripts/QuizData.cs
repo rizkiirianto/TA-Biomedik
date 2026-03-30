@@ -30,6 +30,9 @@ public class Step
     public float optionParentPosY = float.NaN;
     public string optionParentTarget = "optionParents"; // optionParents / optionParents2
     public int gambarPortrait = -1; // Indeks ke array gambarPortraitKarakter, -1 = sembunyikan
+    public float quizTimeSeconds = -1f; // <= 0 pakai default dari GameManager atau nonaktif jika default <= 0
+    public float lowTimeCueSeconds = -1f; // <= 0 pakai default dari GameManager
+    public string timeoutFeedback = "Waktu habis! Coba lagi.";
 }
 
 [System.Serializable]
