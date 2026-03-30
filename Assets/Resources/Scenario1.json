@@ -22,7 +22,7 @@
     },
     {
       "stepType": "quiz",
-      "instruction": "Kamu baru tiba di lokasi. Sebelum lari menolong korban, apa yang PERTAMA kali harus kamu lakukan?",
+      "instruction": "Kamu baru tiba di lokasi. Apa yang PERTAMA kali harus kamu lakukan?",
       "minigameID": "",
       "backgroundImage": "JiroQuiz1",
       "optionParentTarget": "optionParents",
@@ -35,12 +35,12 @@
           "feedback": "Bahaya! Kamu bisa tertabrak kendaraan lain yang lewat."
         },
         {
-          "text": "Pindahkan korban ke pinggir",
+          "text": "Pindahkan korban ke trotoar",
           "isCorrect": false,
-          "feedback": "Jangan pindahkan korban sembarangan! Bisa cedera tulang belakang."
+          "feedback": "Jangan pindahkan korban sembarangan! Kita tidak tau cederanya apa saja."
         },
         {
-          "text": "Periksa keamanan sekitar (Lalu Lintas)",
+          "text": "Tengok kanan dan kiri sebelum menyebrang",
           "isCorrect": true,
           "feedback": "Benar! Pastikan aman dulu. Kita tidak mau menjadi korban kedua.",
           "narrativeImage": "Mobil Speeding"
@@ -57,7 +57,7 @@
     {
       "stepType": "dialog",
       "speakerName": "Maya (Saksi)",
-      "instruction": "Aduh... i-itu darahnya banyak banget... aku nggak berani lihat. Tolong, harus gimana ini?!",
+      "instruction": "Aduh... i-itu kakinya berdarahh... aku nggak berani lihat. Tolong, harus gimana ini?!",
       "gambarPortrait": 3,
       "narrativeImage": "Maya Panik",
       "options": []
@@ -183,7 +183,7 @@
         {
           "text": "Aman kok, tidak ada apa-apa.",
           "isCorrect": false,
-          "feedback": "Jangan menebak. Jika ada potensi bahaya lalu lintas, harus disebutkan."
+          "feedback": "Jangan menebak. Jika potensi bahaya apapun harus disebutkan."
         },
         {
           "text": "Lokasi kecelakaan ada di bahu jalan.",
@@ -197,13 +197,6 @@
           "feedback": "Kurang membantu. Jawaban spesifik mempercepat keputusan operator."
         }
       ]
-    },
-    {
-      "stepType": "dialog",
-      "speakerName": "Narator",
-      "instruction": "Sebutkan potensi bahaya di sekitar kejadian secara spesifik agar operator bisa memberi instruksi yang tepat.",
-      "narrativeImage": "Maya Calling",
-      "options": []
     },
     {
       "stepType": "dialog",
@@ -222,8 +215,8 @@
     },
     {
       "stepType": "dialog",
-      "speakerName": "Rizal (Korban)",
-      "instruction": "Iya... saya dengar... nama saya Rizal...",
+      "speakerName": "Riko (Korban)",
+      "instruction": "Iya... saya dengar... nama saya Riko...",
       "gambarPortrait": 5,
       "narrativeImage": "Rizal_Berdarah",
       "options": []
@@ -272,7 +265,7 @@
           "text": "Observasi visual naik-turun dada (look)",
           "isCorrect": true,
           "feedback": "Tepat. Observasi visual sudah cukup untuk menilai ada tidaknya gangguan napas pada situasi awal.",
-          "narrative": "Kamu memperhatikan dada Rizal masih naik-turun, sehingga asesmen bisa lanjut ke C.",
+          "narrative": "Kamu memperhatikan dada Riko masih naik-turun, sehingga asesmen bisa lanjut ke C.",
           "narrativeImage": "Rizal_Berdarah"
         },
         {
@@ -424,7 +417,7 @@
           "text": "Minta korban menggerakkan jari tangan dan kaki",
           "isCorrect": true,
           "feedback": "Tepat. Ini cara aman menilai fungsi motorik awal tanpa memindahkan korban.",
-          "narrative": "Rizal masih bisa menggerakkan jari tangan dan kaki saat diminta.",
+          "narrative": "Riko masih bisa menggerakkan jari tangan dan kaki saat diminta.",
           "narrativeImage": "bocorditumpuk"
         },
         {
@@ -473,7 +466,7 @@
           "text": "Selimuti & posisikan telentang (Supine)",
           "isCorrect": true,
           "feedback": "Tepat. Jaga suhu tubuh dan biarkan aliran darah lancar ke otak.",
-          "narrative": "Kamu menyelimuti Rizal dengan jaket agar hangat dan membaringkannya rata.",
+          "narrative": "Kamu menyelimuti Riko dengan jaket agar hangat dan membaringkannya rata.",
           "narrativeImage": "KOrbanSelimut"
         }
       ]
