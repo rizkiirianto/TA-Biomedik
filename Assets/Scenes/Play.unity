@@ -2011,11 +2011,11 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 2035995751}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 241.78998, y: 204.43001}
-  m_SizeDelta: {x: 394.43, y: 408.59998}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -200, y: 408.72998}
+  m_SizeDelta: {x: 394.42993, y: 408.59998}
+  m_Pivot: {x: 1, y: 1}
 --- !u!114 &805281811
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2036,7 +2036,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 3548099112264192865, guid: 3af38052b98bd5747a839a04f2236077, type: 3}
+  m_Sprite: {fileID: -3420599817806172329, guid: 48f7ed28bcd85174fa36f300f9e6ddec, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2111,7 +2111,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: c867a0d2d67c6014f93c43e893d7386c, type: 3}
+  m_Sprite: {fileID: 2544684540565333182, guid: aaf93cda7dc07e24daef5f8c9b706e7d, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -2896,8 +2896,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Astaga... hampir aja aku yang jadi korban selanjutnya kalau tadi nggak
-    ingat ngecek jalan dulu.
+  m_text: Tolong---
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
   m_sharedMaterial: {fileID: 2140032, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
@@ -2924,7 +2923,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 43.5
+  m_fontSize: 72
   m_fontSizeBase: 50
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -4884,7 +4883,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2138810660
 RectTransform:
   m_ObjectHideFlags: 0
