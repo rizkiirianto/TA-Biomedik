@@ -415,8 +415,6 @@ public class GameManager : MonoBehaviour
 
     public void OnOptionSelected(int optionIndex)
     {
-        StopQuizTimer(resetVisuals: true);
-
         // Mainkan suara klik button dari AudioSource pada button yang diklik
         Button[] buttonsForCurrentQuiz = GetCurrentOptionButtons();
         AudioSource buttonAudio = null;
@@ -454,6 +452,8 @@ public class GameManager : MonoBehaviour
 
         if (selectedOption.isCorrect)
         {
+            StopQuizTimer(resetVisuals: true);
+
             // Jangan tampilkan feedback panel untuk jawaban benar
             feedbackPanel.SetActive(false);
             
