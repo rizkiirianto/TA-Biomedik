@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 0d5788a086a5d72d4b3657b985c1aa0c
+guid: 0802c16fac293734ba3c37f757e82e4e
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -1000790419839995576
-    second: Shock_Position_0
+      213: 5628701772335090364
+    second: Mobil_Speeding_Polos_V2_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -109,17 +109,30 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Shock_Position_0
+      name: Mobil_Speeding_Polos_V2_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1376
-        height: 768
+        width: 1920
+        height: 1080
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 841b2d26a6a7c12f0800000000000000
-      internalID: -1000790419839995576
+      spriteID: cba05a6907a2d1e40800000000000000
+      internalID: 5628701772335090364
       vertices: []
       indices: 
       edges: []
@@ -148,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Shock_Position_0: -1000790419839995576
+      Mobil_Speeding_Polos_V2_0: 5628701772335090364
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -20,6 +20,7 @@ public class Step
     public List<Option> options;
     public string stepType;
     public string speakerName;
+    public string dialogSfx;
     public string minigameID;
     public string cutsceneID;
     public string narrativeImage;

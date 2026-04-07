@@ -81,7 +81,7 @@ public class Cutscene1JiroPulang : MonoBehaviour, ICutscene
 
         yield return StartCoroutine(PlayDialog("Jiro: \"Astaga! Suara apa itu?! Keras sekali dari arah perempatan!\"", jiroKaget));
 
-        yield return StartCoroutine(PlayDialog("Jiro: \"Kecelakaan...? A-aku takut... Tapi jalanan ini sepi, tidak ada orang lain. Aku harus menolongnya!\"", jiroTakut));
+        yield return StartCoroutine(PlayDialog("Jiro: \"Kecelakaan...? A-aku takut... Tapi jalanan ini sepi. Aku harus menolongnya!\"", jiroTakut));
 
         // --- Selesai ---
         Complete();

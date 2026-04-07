@@ -13,6 +13,7 @@ public class WalkingScenario : MonoBehaviour, IMiniGame
     [SerializeField] private AudioSource ambianceAudioSource; // Suara ambien kota
     [SerializeField] private AudioSource walkingAudioSource;  // Suara jalan biasa
     [SerializeField] private AudioSource runningAudioSource;  // Suara lari (Shift)
+    [SerializeField] private AudioSource maleGroanAudioSource;
 
     [System.Serializable]
     public struct UIButtonPrompts
@@ -161,7 +162,7 @@ public class WalkingScenario : MonoBehaviour, IMiniGame
         completed = true;
         isGameActive = false;
         Debug.Log("Scenario Selesai!");
-        
+        maleGroanAudioSource.Play();
         // Matikan semua suara saat minigame selesai
         if (ambianceAudioSource != null) ambianceAudioSource.Stop();
         if (walkingAudioSource != null) walkingAudioSource.Stop();

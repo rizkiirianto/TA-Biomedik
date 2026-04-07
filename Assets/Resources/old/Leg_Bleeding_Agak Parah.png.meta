@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: c18982b80f49e86a5baa1f5fba2ec3e6
+guid: 52f967e689d6dbe83a3a88dd8990e54e
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2998555883500593926
-    second: Hand_Pressing_0
+      213: -3821586144930607886
+    second: Leg_Bleeding_Agak Parah_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -109,17 +109,30 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Hand_Pressing_0
+      name: Leg_Bleeding_Agak Parah_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 2752
-        height: 1536
+        width: 1024
+        height: 572
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: afc1acc9f4df266d0800000000000000
-      internalID: -2998555883500593926
+      spriteID: 2fc4bd816aff6fac0800000000000000
+      internalID: -3821586144930607886
       vertices: []
       indices: 
       edges: []
@@ -148,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Hand_Pressing_0: -2998555883500593926
+      Leg_Bleeding_Agak Parah_0: -3821586144930607886
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

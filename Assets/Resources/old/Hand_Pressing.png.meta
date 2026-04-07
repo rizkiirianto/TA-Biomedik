@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 72783b1bff88142998995d26f6cdeee2
+guid: c18982b80f49e86a5baa1f5fba2ec3e6
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 1694877036355679985
-    second: Rizal_Bleeding_0
+      213: -2998555883500593926
+    second: Hand_Pressing_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -109,11 +109,24 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Rizal_Bleeding_0
+      name: Hand_Pressing_0
       rect:
         serializedVersion: 2
         x: 0
@@ -128,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 1f672f94fa9658710800000000000000
-      internalID: 1694877036355679985
+      spriteID: afc1acc9f4df266d0800000000000000
+      internalID: -2998555883500593926
       vertices: []
       indices: 
       edges: []
@@ -148,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Rizal_Bleeding_0: 1694877036355679985
+      Hand_Pressing_0: -2998555883500593926
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

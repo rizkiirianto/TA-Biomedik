@@ -12,6 +12,7 @@
       "narrativeImage": "Rizal_Berdarah_Dialogue",
       "goldTime": 10,
       "silverTime": 15,
+      "dialogSfx": "Dialog/Male Groan",
       "options": []
     },
     {
@@ -28,7 +29,6 @@
       "lowTimeCueSeconds": 4,
       "backgroundImage": "JiroQuiz1",
       "optionParentTarget": "optionParents",
-      "gambarPortrait": 2,
       "optionParentPosX": -165.0,
       "options": [
         {
@@ -45,7 +45,7 @@
           "text": "Tengok kanan dan kiri sebelum menyebrang",
           "isCorrect": true,
           "feedback": "Benar! Pastikan aman dulu. Kita tidak mau menjadi korban kedua.",
-          "narrativeImage": "Mobil Speeding"
+          "narrativeImage": "Mobil_Speeding_V2"
         }
       ]
     },
@@ -54,6 +54,8 @@
       "speakerName": "Jiro",
       "instruction": "Ternyata benar prioritas pertama pastikan area aman agar penolong tidak menjadi korban kedua.",
       "narrativeImage": "Mobil_Speeding_Polos",
+      "gambarPortrait": 2,
+      "dialogSfx": "Dialog/Mobil_Speeding",
       "options": []
     },
     {
@@ -62,6 +64,7 @@
       "instruction": "Aduh... i-itu kakinya berdarahh... aku nggak berani lihat. Tolong, harus gimana ini?!",
       "gambarPortrait": 3,
       "narrativeImage": "Maya Panik",
+      "dialogSfx": "Dialog/Maya_Panik",
       "options": []
     },
     {
@@ -89,8 +92,7 @@
           "isCorrect": true,
           "feedback": "Cerdas! Delegasikan tugas memanggil bantuan agar kamu fokus menangani korban.",
           "narrative": "Maya mengangguk, sedikit tenang karena punya tugas jelas, dan segera menelepon bantuan.",
-          "narrativeImage": "Maya Calling",
-          "gambarPortrait": 4
+          "narrativeImage": "Maya Calling"
         }
       ]
     },
@@ -99,6 +101,7 @@
       "speakerName": "Narator",
       "instruction": "Delegasikan saksi untuk menelepon 112 agar kamu tetap fokus menangani korban.",
       "narrativeImage": "Maya Calling",
+      "dialogSfx": "Dialog/Call_911",
       "options": []
     },
     {
@@ -127,7 +130,8 @@
           "text": "Lokasi kejadian yang spesifik",
           "isCorrect": true,
           "feedback": "Benar! Lokasi adalah prioritas utama agar bantuan bisa langsung dikirim.",
-          "narrative": "Maya menyebutkan nama jalan, patokan minimarket, dan arah lajur dengan jelas.",
+          "narrative": "Maya : Halo, saya Maya. Ada kecelakaan di pertigaan Jalan Ahmad Yani dan Jalan Kenanga, dekat Minimarket pojok. Tolong segera kirim ambulans.",
+          "gambarPortrait": 4,
           "narrativeImage": "Maya Calling"
         },
         {
@@ -136,13 +140,6 @@
           "feedback": "Terlalu panjang di awal. Mulai dari lokasi dan jenis kejadian secara singkat."
         }
       ]
-    },
-    {
-      "stepType": "dialog",
-      "speakerName": "Narator",
-      "instruction": "Saat menghubungi 112, sampaikan lokasi spesifik lebih dulu supaya bantuan bisa langsung diarahkan.",
-      "narrativeImage": "Maya Calling",
-      "options": []
     },
     {
       "stepType": "quiz",
@@ -169,20 +166,14 @@
           "isCorrect": true,
           "feedback": "Ada kecelakaan motor tunggal, 1 korban perdarahan paha, masih sadar, kami sedang menekan luka",
           "narrative": "Maya : Ada kecelakaan motor tunggal, 1 korban perdarahan pada kaki, masih sadar, kami sedang menekan luka",
+          "gambarPortrait": 4,
           "narrativeImage": "Maya Calling"
         }
       ]
     },
     {
-      "stepType": "dialog",
-      "speakerName": "Narator",
-      "instruction": "Laporan efektif: jenis kejadian, jumlah korban, kondisi korban, dan tindakan yang sedang dilakukan.",
-      "narrativeImage": "Maya Calling",
-      "options": []
-    },
-    {
       "stepType": "quiz",
-      "instruction": "Operator bertanya: 'Apakah ada bahaya di sekitar?' Jawaban terbaik?",
+      "instruction": "Operator : Apakah ada bahaya di sekitar?",
       "minigameID": "",
       "quizTimeSeconds": 10,
       "lowTimeCueSeconds": 3,
@@ -198,6 +189,7 @@
         {
           "text": "Lokasi kecelakaan ada di bahu jalan.",
           "isCorrect": true,
+          "gambarPortrait": 4,
           "narrative": "Tepat! Informasi bahaya membantu operator memberi instruksi keselamatan yang benar.",
           "narrativeImage": "Maya Calling"
         },
@@ -221,6 +213,7 @@
       "instruction": "Mas, bisa dengar saya? Siapa nama mas?",
       "gambarPortrait": 0,
       "narrativeImage": "Rizal_Berdarah",
+      "dialogSfx": "Dialog/heartbeat2",
       "options": []
     },
     {
@@ -229,6 +222,7 @@
       "instruction": "Iya... saya dengar... nama saya Riko...",
       "gambarPortrait": 5,
       "narrativeImage": "Rizal_Berdarah",
+      "dialogSfx": "Dialog/Light Pain Groan",
       "options": []
     },
     {
@@ -280,7 +274,7 @@
         {
           "text": "Observasi visual naik-turun dada (look)",
           "isCorrect": true,
-          "narrative": "Kamu memperhatikan dada Riko masih naik-turun, sehingga asesmen bisa lanjut ke C.",
+          "narrative": "Kamu memperhatikan dada Riko masih naik-turun, sehingga asesmen bisa lanjut.",
           "narrativeImage": "Rizal_Berdarah"
         },
         {
@@ -289,13 +283,6 @@
           "feedback": "Hindari memindahkan korban trauma tanpa indikasi yang kuat."
         }
       ]
-    },
-    {
-      "stepType": "dialog",
-      "speakerName": "Narator",
-      "instruction": "Breathing cukup dinilai dengan observasi visual naik-turun dada pada asesmen awal.",
-      "narrativeImage": "Rizal_Berdarah",
-      "options": []
     },
     {
       "stepType": "quiz",
@@ -463,6 +450,7 @@
       "instruction": "Saya... pusing... dingin... rasanya ngantuk...",
       "gambarPortrait": 5,
       "narrativeImage": "KorbanSyok",
+      "dialogSfx": "Dialog/heartbeat2",
       "options": []
     },
     {
@@ -500,7 +488,7 @@
       "stepType": "dialog",
       "speakerName": "Narator",
       "instruction": "Tangani syok dengan menjaga korban tetap hangat dan posisi telentang datar sambil menunggu ambulans.",
-      "narrativeImage": "KOrbanSelimut",
+      "narrativeImage": "KorbanSelimut",
       "options": []
     },
     {

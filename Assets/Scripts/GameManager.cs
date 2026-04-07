@@ -61,6 +61,12 @@ public class GameManager : MonoBehaviour
     [Range(0f, 1f)] public float timerOverlayPulseMaxAlpha = 0.2f;
     [Range(1f, 20f)] public float warningPulseSpeed = 8f;
 
+    [Header("Quiz Timer Audio")]
+    public AudioSource clockAudioSource;
+    public AudioSource heartbeatAudioSource;
+    [Min(0.1f)] public float clockTickIntervalSeconds = 1f;
+    [Min(0.1f)] public float heartbeatTickIntervalSeconds = 1f;
+
     public Camera mainSceneCamera;
 
     [Header("Registrasi Prefab Minigame")]
@@ -70,6 +76,9 @@ public class GameManager : MonoBehaviour
     [Header("Ambiance Audio untuk Setiap Episode")]
     public AudioSource ambianceAudioSource;
     public List<AmbanceAudioRegistry> ambianceAudioRegistry;
+
+    [Header("Dialog SFX")]
+    public AudioSource dialogSfxAudioSource;
 
     // Variabel Logika Game
     private QuizData quizData;
@@ -88,8 +97,11 @@ public class GameManager : MonoBehaviour
     private float currentQuizTimeRemaining;
     private float currentQuizTimeLimit;
     private float currentLowTimeCueThreshold;
+    private float nextClockTickAtUnscaledTime;
+    private float nextHeartbeatTickAtUnscaledTime;
     private bool isQuizTimerRunning;
     private Color questionTextBaseColor = Color.white;
+    private readonly Dictionary<string, AudioClip> dialogSfxCache = new Dictionary<string, AudioClip>();
 
     void Start()
     {
@@ -238,6 +250,7 @@ public class GameManager : MonoBehaviour
         }
 
         Step currentStep = quizData.steps[stepIndex];
+        PlayDialogSfx(currentStep.dialogSfx);
 
         if (currentStep.stepType == "quiz")
         {
@@ -287,6 +300,45 @@ public class GameManager : MonoBehaviour
 
         // Langsung siapkan tombol advance agar pemain bisa klik layar untuk lanjut
         PrepareToAdvance(); 
+    }
+
+    private void PlayDialogSfx(string clipName)
+    {
+        if (dialogSfxAudioSource == null)
+        {
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(clipName))
+        {
+            if (dialogSfxAudioSource.isPlaying)
+            {
+                dialogSfxAudioSource.Stop();
+            }
+            return;
+        }
+
+        string normalizedClipName = clipName.Trim();
+        if (!dialogSfxCache.TryGetValue(normalizedClipName, out AudioClip clip))
+        {
+            string resourcePath = normalizedClipName.Replace(".mp3", "").Replace(".wav", "").Replace(".ogg", "");
+            clip = Resources.Load<AudioClip>(resourcePath);
+            dialogSfxCache[normalizedClipName] = clip;
+        }
+
+        if (clip == null)
+        {
+            Debug.LogWarning($"Dialog SFX tidak ditemukan di Resources: {normalizedClipName}");
+            return;
+        }
+
+        if (dialogSfxAudioSource.isPlaying)
+        {
+            dialogSfxAudioSource.Stop();
+        }
+
+        dialogSfxAudioSource.clip = clip;
+        dialogSfxAudioSource.Play();
     }
     private void LoadPortraitImage(int index)
     {
@@ -768,12 +820,14 @@ public class GameManager : MonoBehaviour
     {
         if (currentQuizTimeLimit <= 0f)
         {
+            StopTimerAudio();
             HideTimerVisuals();
             return;
         }
 
         StopQuizTimer(resetVisuals: false);
         isQuizTimerRunning = true;
+        ResetTimerAudioTickSchedule();
         quizTimerCoroutine = StartCoroutine(RunQuizTimer());
     }
 
@@ -803,6 +857,8 @@ public class GameManager : MonoBehaviour
 
     private void HandleQuizTimeExpired()
     {
+        StopTimerAudio();
+
         if (quizData == null || currentStepIndex < 0 || currentStepIndex >= quizData.steps.Count)
         {
             return;
@@ -857,6 +913,7 @@ public class GameManager : MonoBehaviour
     private void StopQuizTimer(bool resetVisuals)
     {
         isQuizTimerRunning = false;
+        StopTimerAudio();
 
         if (quizTimerCoroutine != null)
         {
@@ -874,6 +931,7 @@ public class GameManager : MonoBehaviour
     {
         if (currentQuizTimeLimit <= 0f)
         {
+            StopTimerAudio();
             HideTimerVisuals();
             return;
         }
@@ -884,6 +942,8 @@ public class GameManager : MonoBehaviour
 
         bool isWarning = currentLowTimeCueThreshold > 0f && currentQuizTimeRemaining <= currentLowTimeCueThreshold;
         float pulse = isWarning ? (Mathf.Sin(Time.unscaledTime * warningPulseSpeed) + 1f) * 0.5f : 0f;
+
+        UpdateTimerAudio(isWarning);
 
         if (quizTimerText != null)
         {
@@ -931,6 +991,54 @@ public class GameManager : MonoBehaviour
         currentQuizTimeRemaining = 0f;
         currentLowTimeCueThreshold = 0f;
         HideTimerVisuals();
+    }
+
+    private void ResetTimerAudioTickSchedule()
+    {
+        float now = Time.unscaledTime;
+        nextClockTickAtUnscaledTime = now;
+        nextHeartbeatTickAtUnscaledTime = now;
+    }
+
+    private void UpdateTimerAudio(bool isWarning)
+    {
+        if (!isQuizTimerRunning)
+        {
+            return;
+        }
+
+        float now = Time.unscaledTime;
+
+        if (clockAudioSource != null && clockAudioSource.clip != null && now >= nextClockTickAtUnscaledTime)
+        {
+            clockAudioSource.PlayOneShot(clockAudioSource.clip);
+            nextClockTickAtUnscaledTime = now + clockTickIntervalSeconds;
+        }
+
+        if (!isWarning)
+        {
+            nextHeartbeatTickAtUnscaledTime = now;
+            return;
+        }
+
+        if (heartbeatAudioSource != null && heartbeatAudioSource.clip != null && now >= nextHeartbeatTickAtUnscaledTime)
+        {
+            heartbeatAudioSource.PlayOneShot(heartbeatAudioSource.clip);
+            nextHeartbeatTickAtUnscaledTime = now + heartbeatTickIntervalSeconds;
+        }
+    }
+
+    private void StopTimerAudio()
+    {
+        if (clockAudioSource != null)
+        {
+            clockAudioSource.Stop();
+        }
+
+        if (heartbeatAudioSource != null)
+        {
+            heartbeatAudioSource.Stop();
+        }
     }
 
     private GameObject ResolveOptionParent(Step step)
