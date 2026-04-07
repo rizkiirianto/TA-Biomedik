@@ -279,6 +279,7 @@
         },
         {
           "text": "Observasi visual naik-turun dada (look)",
+          "isCorrect": true,
           "narrative": "Kamu memperhatikan dada Riko masih naik-turun, sehingga asesmen bisa lanjut ke C.",
           "narrativeImage": "Rizal_Berdarah"
         },
@@ -313,7 +314,7 @@
           "feedback": "Tidak aman dan berisiko hipotermia. Cukup buka seperlunya untuk inspeksi cepat."
         },
         {
-          "text": "Periksa cepat ada rembesan darah lain di balik baju/celana",
+          "text": "Periksa cepat ada pendarahan lain di balik baju/celana",
           "isCorrect": true,
           "narrative": "Benar. Exposure awal berarti mencari luka tersembunyi secara cepat dan aman.",
           "narrativeImage": "dengkul korban"

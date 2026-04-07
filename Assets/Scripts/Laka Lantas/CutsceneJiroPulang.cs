@@ -15,6 +15,14 @@ public class Cutscene1JiroPulang : MonoBehaviour, ICutscene
     [SerializeField] private Sprite jiroKaget;
     [SerializeField] private Sprite jiroTakut;
 
+    [Header("Audio Settings")]
+    [Tooltip("Komponen AudioSource untuk memutar suara")]
+    [SerializeField] private AudioSource audioSource;
+    [Tooltip("Suara ketikan mesin tik per huruf")]
+    [SerializeField] private AudioClip typewriterSound;
+    [Tooltip("Suara tabrakan mobil")]
+    [SerializeField] private AudioClip crashSound;
+
     [Header("Settings")]
     [Tooltip("Kecepatan teks muncul per huruf")]
     [SerializeField] private float typingSpeed = 0.04f;
@@ -62,13 +70,14 @@ public class Cutscene1JiroPulang : MonoBehaviour, ICutscene
     private IEnumerator PlayCutsceneSequence()
     {
         // --- Urutan Cerita ---
-        // Format: yield return StartCoroutine(PlayDialog("Teks", EkspresiSprite, SembunyikanPortrait?));
+        // Format: yield return StartCoroutine(PlayDialog("Teks", EkspresiSprite, SembunyikanPortrait?, SuaraSpesial?, CustomDelay?));
         
         yield return StartCoroutine(PlayDialog("Malam yang sunyi. Jiro berjalan pulang dengan langkah gontai setelah hari yang panjang.", null, true));
 
         yield return StartCoroutine(PlayDialog("Jiro: \"Hah... lelahnya. Aku cuma mau cepat rebahan di kasur...\"", jiroNormal));
 
-        yield return StartCoroutine(PlayDialog("*CKIIIIITTT!!! BRAAAAKKKK!!!*", null, true));
+        // Memasukkan crashSound sebagai parameter ke-4, dan angka 7f sebagai custom delay (parameter ke-5)
+        yield return StartCoroutine(PlayDialog("*CKIIIIITTT!!! BRAAAAKKKK!!!*", null, true, crashSound, 7.0f));
 
         yield return StartCoroutine(PlayDialog("Jiro: \"Astaga! Suara apa itu?! Keras sekali dari arah perempatan!\"", jiroKaget));
 
@@ -79,7 +88,8 @@ public class Cutscene1JiroPulang : MonoBehaviour, ICutscene
     }
 
     // Fungsi pembantu untuk memproses satu baris dialog
-    private IEnumerator PlayDialog(string line, Sprite expression, bool hidePortrait = false)
+    // Ditambahkan parameter opsional customDelay (default -1f artinya pakai settingan standar)
+    private IEnumerator PlayDialog(string line, Sprite expression, bool hidePortrait = false, AudioClip sfxClip = null, float customDelay = -1f)
     {
         // Mengatur tampilan portrait
         if (hidePortrait)
@@ -90,6 +100,12 @@ public class Cutscene1JiroPulang : MonoBehaviour, ICutscene
         {
             jiroPortraitObj.SetActive(true);
             jiroPortraitImage.sprite = expression;
+        }
+
+        // Putar suara spesial jika ada (misal: suara tabrakan)
+        if (sfxClip != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(sfxClip);
         }
 
         // Persiapan mengetik
@@ -108,15 +124,26 @@ public class Cutscene1JiroPulang : MonoBehaviour, ICutscene
             }
 
             textNarasi.text += letter;
+
+            // Putar suara ketikan untuk huruf dan angka (abaikan spasi agar lebih natural)
+            if (typewriterSound != null && audioSource != null && char.IsLetterOrDigit(letter))
+            {
+                audioSource.PlayOneShot(typewriterSound);
+            }
+
             yield return new WaitForSeconds(typingSpeed);
         }
 
         isTyping = false;
         skipDelay = false; // Reset skipDelay sebelum masuk waktu tunggu
 
+        // Menentukan berapa lama harus menunggu
+        // Jika customDelay lebih dari atau sama dengan 0, pakai customDelay. Jika tidak, pakai delayBetweenLines
+        float targetDelay = customDelay >= 0f ? customDelay : delayBetweenLines;
+
         // Proses Menunggu (Delay otomatis ATAU ditekan spasi)
         float timer = 0;
-        while (timer < delayBetweenLines && !skipDelay)
+        while (timer < targetDelay && !skipDelay)
         {
             timer += Time.deltaTime;
             yield return null; // Tunggu ke frame berikutnya

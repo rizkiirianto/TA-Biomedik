@@ -14,6 +14,9 @@ public class PlayerMovement : MonoBehaviour
     private bool isMoving;
     private bool isWalking;
 
+    public bool IsMoving => isMoving;
+    public bool IsSprinting => isSprinting;
+
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float sprintMultiplier = 1.5f;
@@ -51,8 +54,10 @@ public class PlayerMovement : MonoBehaviour
 
     private void UpdateAnimations()
     {
+        bool isRunning = isMoving && isSprinting;
+
         myAnimator.SetBool("isWalking", isWalking);
-        myAnimator.SetBool("isRunning", isMoving && isSprinting);
+        myAnimator.SetBool("isRunning", isRunning);
     }
 
     private void UpdateScale()

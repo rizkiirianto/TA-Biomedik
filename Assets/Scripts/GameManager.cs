@@ -19,6 +19,12 @@ public class CutsceneRegistry
     public string id;
     public GameObject prefab;
 }
+[System.Serializable]
+public class AmbanceAudioRegistry
+{
+    public string scenarioId;
+    public AudioClip ambanceClip;
+}
 
 public class GameManager : MonoBehaviour
 {
@@ -60,6 +66,10 @@ public class GameManager : MonoBehaviour
     [Header("Registrasi Prefab Minigame")]
     public List<MiniGameRegistry> miniGameRegistry;
     public List<CutsceneRegistry> cutsceneRegistry;
+
+    [Header("Ambiance Audio untuk Setiap Episode")]
+    public AudioSource ambianceAudioSource;
+    public List<AmbanceAudioRegistry> ambianceAudioRegistry;
 
     // Variabel Logika Game
     private QuizData quizData;
@@ -181,6 +191,36 @@ public class GameManager : MonoBehaviour
         else
         {
             Debug.LogError($"Gagal memuat file '{scenarioName}.json' dari folder Resources!");
+        }
+        
+        PlayAmbianceForScenario(scenarioName);
+    }
+
+    private void PlayAmbianceForScenario(string scenarioName)
+    {
+        if (ambianceAudioSource == null)
+        {
+            Debug.LogWarning("Ambiance AudioSource tidak diset di GameManager!");
+            return;
+        }
+
+        AmbanceAudioRegistry ambianceEntry = ambianceAudioRegistry
+            .FirstOrDefault(audio => audio.scenarioId == scenarioName);
+
+        if (ambianceEntry != null && ambianceEntry.ambanceClip != null)
+        {
+            ambianceAudioSource.clip = ambianceEntry.ambanceClip;
+            ambianceAudioSource.loop = true;
+            ambianceAudioSource.Play();
+            Debug.Log($"Memainkan ambiance untuk skenario: {scenarioName}");
+        }
+        else
+        {
+            Debug.LogWarning($"Ambiance audio untuk skenario '{scenarioName}' tidak ditemukan di registry!");
+            if (ambianceAudioSource.isPlaying)
+            {
+                ambianceAudioSource.Stop();
+            }
         }
     }
 
