@@ -11,6 +11,7 @@ public class NosePressMiniGame : MonoBehaviour, IMiniGame
 
     [Header("Pengaturan Mini-game")]
     [SerializeField] private float timeToHold = 10f; // Berapa detik harus menahan
+    [SerializeField] private RectTransform correctZoneRect;
 
     public Image[] gambarHidungMimisan;
     public Image[] gambarTanganPenolong;
@@ -57,9 +58,25 @@ public class NosePressMiniGame : MonoBehaviour, IMiniGame
     void Update()
     {
         if (gameManager == null) return;
+
+        UpdateTanganFollowCursor();
+
+        if (isHoldingCorrectArea && !Input.GetMouseButton(0))
+        {
+            OnPointerUp();
+            return;
+        }
+
         // Jika pemain sedang menahan di area yang benar
         if (isHoldingCorrectArea)
         {
+            if (!IsPointerInsideCorrectZone())
+            {
+                OnFailure("Kursor keluar dari area tekan. Coba lagi dan tahan tetap di pangkal hidung.");
+                jawabanSalah.Play();
+                return;
+            }
+
             currentHoldTime += Time.deltaTime;
             progressBar.value = currentHoldTime / timeToHold;
 
@@ -140,6 +157,31 @@ public class NosePressMiniGame : MonoBehaviour, IMiniGame
         if (gambarTanganAktif != null)
         {
             gambarTanganAktif.gameObject.SetActive(true);
+            UpdateTanganFollowCursor();
+        }
+    }
+
+    private void UpdateTanganFollowCursor()
+    {
+        if (gambarTanganAktif == null || !gambarTanganAktif.gameObject.activeInHierarchy)
+        {
+            return;
+        }
+
+        RectTransform handRect = gambarTanganAktif.rectTransform;
+        Canvas canvas = gambarTanganAktif.canvas;
+        RectTransform parentRect = handRect.parent as RectTransform;
+
+        if (canvas == null || parentRect == null)
+        {
+            handRect.position = Input.mousePosition;
+            return;
+        }
+
+        Camera uiCamera = canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera;
+        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(parentRect, Input.mousePosition, uiCamera, out Vector2 localPoint))
+        {
+            handRect.anchoredPosition = localPoint;
         }
     }
     
@@ -148,7 +190,7 @@ public class NosePressMiniGame : MonoBehaviour, IMiniGame
     public void OnCorrectZonePointerDown()
     {
         // Dipanggil saat mouse/jari mulai menekan di zona yang benar
-        isHoldingCorrectArea = true;
+        isHoldingCorrectArea = IsPointerInsideCorrectZone();
     }
 
     public void OnPointerUp()
@@ -167,6 +209,24 @@ public class NosePressMiniGame : MonoBehaviour, IMiniGame
     {
         // Dipanggil saat menekan zona yang salah
         OnFailure("Bukan di situ! Coba tekan di bagian pangkal hidung.");
+        jawabanSalah.Play();
+    }
+
+    private bool IsPointerInsideCorrectZone()
+    {
+        if (correctZoneRect == null)
+        {
+            return true;
+        }
+
+        Canvas canvas = correctZoneRect.GetComponentInParent<Canvas>();
+        Camera uiCamera = null;
+        if (canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay)
+        {
+            uiCamera = canvas.worldCamera;
+        }
+
+        return RectTransformUtility.RectangleContainsScreenPoint(correctZoneRect, Input.mousePosition, uiCamera);
     }
 
     // --- Logika Sukses dan Gagal ---

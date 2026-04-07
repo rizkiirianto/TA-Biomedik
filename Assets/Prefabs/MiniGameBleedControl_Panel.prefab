@@ -861,6 +861,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1222,6 +1223,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   progressBar: {fileID: 5684935365313232653}
   timeToHold: 7
+  correctZoneRect: {fileID: 1368977923705324569}
   gambarHidungMimisan:
   - {fileID: 3771482608665916561}
   - {fileID: 4096028786110214586}
