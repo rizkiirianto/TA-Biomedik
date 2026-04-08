@@ -6,6 +6,7 @@ using TMPro;
 using System.Linq;
 using UnityEngine.SceneManagement;
 using System;
+using System.Text;
 
 [System.Serializable]
 public class MiniGameRegistry
@@ -28,6 +29,14 @@ public class AmbanceAudioRegistry
 
 public class GameManager : MonoBehaviour
 {
+    [System.Serializable]
+    private class EpisodeKeyPointRecap
+    {
+        public string keyPoint;
+        public string selectedAnswer;
+        public int attempts;
+    }
+
     [Header("Referensi UI Utama")]
     public GameObject quizUIParent;
     public Button skipButtonDevMode;
@@ -50,6 +59,10 @@ public class GameManager : MonoBehaviour
     public Button clickAdvanceButton;
     public GameObject clickAdvancePanel;
     public RectTransform optionParentRect;
+
+    [Header("Episode Recap UI")]
+    public GameObject recapPanel;
+    public TextMeshProUGUI recapKeyPointsText;
 
     [Header("Quiz Timer")]
     public TextMeshProUGUI quizTimerText;
@@ -102,10 +115,21 @@ public class GameManager : MonoBehaviour
     private bool isQuizTimerRunning;
     private Color questionTextBaseColor = Color.white;
     private readonly Dictionary<string, AudioClip> dialogSfxCache = new Dictionary<string, AudioClip>();
+    private readonly List<EpisodeKeyPointRecap> episodeRecaps = new List<EpisodeKeyPointRecap>();
+    private int totalQuizAttempts = 0;
+    [Header("Quiz Scoring")]
+    [Min(0)] public int pointsFirstAttempt = 100;
+    [Min(0)] public int pointsSecondAttempt = 70;
+    [Min(0)] public int pointsThirdOrMoreAttempt = 40;
+    private int finalNormalizedScore = 0;
 
     void Start()
     {
         feedbackPanel.SetActive(false);
+        if (recapPanel != null)
+        {
+            recapPanel.SetActive(false);
+        }
         clickAdvanceButton.gameObject.SetActive(false);
         clickAdvanceButton.onClick.AddListener(OnAdvanceClicked);
         if (questionText != null)
@@ -115,6 +139,7 @@ public class GameManager : MonoBehaviour
         LoadQuizData();
         ShowStep(currentStepIndex);
         totalScore = 0;
+        ResetEpisodeRecapData();
         UpdateScoreText();
         LoadQuizData();
         Application.targetFrameRate = 60;
@@ -133,7 +158,7 @@ public class GameManager : MonoBehaviour
     {
         if (scoreText != null)
         {
-            scoreText.text = "Skor: " + totalScore;
+            scoreText.text = "Skor Quiz: " + totalScore;
         }
     }
 
@@ -194,6 +219,8 @@ public class GameManager : MonoBehaviour
 
     private void LoadQuizData()
     {
+        ResetEpisodeRecapData();
+
         string scenarioName = PlayerPrefs.GetString("SelectedScenario", "Scenario1");
         TextAsset jsonFile = Resources.Load<TextAsset>(scenarioName);
         if (jsonFile != null)
@@ -519,7 +546,7 @@ public class GameManager : MonoBehaviour
             buttonAudio.Play();
         }
         
-        currentQuestionAttempts++;
+        RegisterQuizAttempt();
         Step currentStep = quizData.steps[currentStepIndex];
         Option selectedOption = currentStep.options[optionIndex];
         feedbackText.text = selectedOption.feedback;
@@ -549,21 +576,10 @@ public class GameManager : MonoBehaviour
             // Jangan tampilkan feedback panel untuk jawaban benar
             feedbackPanel.SetActive(false);
             
-            int scoreGained = 0;
-            if (currentQuestionAttempts == 1)
-            {
-                scoreGained = 100;
-            }
-            else if (currentQuestionAttempts == 2)
-            {
-                scoreGained = 50;
-            }
-            else
-            {
-                scoreGained = 25;
-            }
+            int scoreGained = GetQuizScoreForAttempt(currentQuestionAttempts);
             totalScore += scoreGained;
             UpdateScoreText();
+            RegisterKeyPointRecap(currentStep, selectedOption, currentQuestionAttempts);
             Debug.Log($"Jawaban Benar, Dapat skor {scoreGained}. Total skor : {totalScore}");
             PrepareToAdvance();
         }
@@ -585,6 +601,7 @@ public class GameManager : MonoBehaviour
     {
         StopQuizTimer(resetVisuals: true);
         mainSceneCamera.gameObject.SetActive(true);
+        /*
         float completionTime = Time.time - minigameStartTime;
         Step currentStep = quizData.steps[currentStepIndex];
         int scoreGained = 0;
@@ -600,12 +617,12 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            scoreGained = 50; // Skor Perunggu
-            Debug.Log($"Minigame Selesai (Perunggu)! Waktu: {completionTime:F2}s. Dapat {scoreGained} poin.");
+             scoreGained = 50; // Skor Perunggu
+             Debug.Log($"Minigame Selesai (Perunggu)! Waktu: {completionTime:F2}s. Dapat {scoreGained} poin.");
         }
         totalScore += scoreGained;
         UpdateScoreText();
-        
+        */
         // Kembalikan player model dan UI
         quizUIParent.SetActive(true); 
         clickAdvancePanel.SetActive(false); 
@@ -764,16 +781,26 @@ public class GameManager : MonoBehaviour
     private void EndQuiz()
     {
         StopQuizTimer(resetVisuals: true);
+        finalNormalizedScore = CalculateFinalNormalizedScore();
         isQuizFinished = true; // Set penanda bahwa skenario selesai
         quizUIParent.SetActive(true);
+        if (recapPanel != null)
+        {
+            recapPanel.SetActive(true);
+        }
         clickAdvanceButton.gameObject.SetActive(true); // Tampilkan tombol untuk kembali ke menu
         isWaitingForAdvance = false; // Pastikan ini false agar tidak menjalankan GoToNextStep
 
-        // Tampilkan pesan selesai
-        narrativeText.text = "Kamu berhasil! Skenario selesai.";
-        questionText.text = "Selamat!";
+        // Tampilkan recap episode
+        narrativeText.text = $"Kamu berhasil! Skenario selesai. Skor akhir kamu: {finalNormalizedScore}/100. Berikut recap keputusanmu.";
+        questionText.text = "Recap Episode";
         feedbackPanel.SetActive(false);
         HideAllOptionButtons();
+        if (scoreText != null)
+        {
+            scoreText.text = $"Skor: {finalNormalizedScore}/100";
+        }
+        BuildAndShowEpisodeRecap();
     }
 
     // Ganti fungsi ReturnToScenarioMenu di GameManager.cs
@@ -870,7 +897,7 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        currentQuestionAttempts++;
+        RegisterQuizAttempt();
         SetOptionButtonsInteractable(false);
 
         string timeoutMessage = string.IsNullOrWhiteSpace(currentStep.timeoutFeedback)
@@ -1146,5 +1173,131 @@ public class GameManager : MonoBehaviour
         }
 
         return uniqueButtons;
+    }
+
+    private void RegisterQuizAttempt()
+    {
+        currentQuestionAttempts++;
+        totalQuizAttempts++;
+    }
+
+    private void RegisterKeyPointRecap(Step step, Option selectedOption, int attempts)
+    {
+        if (step == null || selectedOption == null)
+        {
+            return;
+        }
+
+        EpisodeKeyPointRecap recap = new EpisodeKeyPointRecap
+        {
+            keyPoint = string.IsNullOrWhiteSpace(step.instruction) ? "(Tanpa deskripsi pertanyaan)" : step.instruction.Trim(),
+            selectedAnswer = string.IsNullOrWhiteSpace(selectedOption.text) ? "(Tanpa jawaban)" : selectedOption.text.Trim(),
+            attempts = Mathf.Max(1, attempts)
+        };
+
+        episodeRecaps.Add(recap);
+    }
+
+    private void BuildAndShowEpisodeRecap()
+    {
+        if (recapKeyPointsText == null)
+        {
+            return;
+        }
+
+        StringBuilder builder = new StringBuilder();
+        builder.AppendLine($"Skor akhir (normalisasi): {finalNormalizedScore}/100");
+        builder.AppendLine($"Skor quiz mentah: {totalScore}");
+        builder.AppendLine($"Total percobaan menjawab: {totalQuizAttempts}");
+        builder.AppendLine();
+
+        if (episodeRecaps.Count == 0)
+        {
+            builder.AppendLine("Belum ada key point yang tercatat.");
+            recapKeyPointsText.text = builder.ToString();
+            return;
+        }
+
+        for (int i = 0; i < episodeRecaps.Count; i++)
+        {
+            EpisodeKeyPointRecap recap = episodeRecaps[i];
+            builder.AppendLine($"{i + 1}. {recap.keyPoint}");
+            builder.AppendLine($"   Jawaban benar: {recap.selectedAnswer}");
+            builder.AppendLine($"   Percobaan sampai benar: {recap.attempts}");
+            builder.AppendLine();
+        }
+
+        recapKeyPointsText.text = builder.ToString().TrimEnd();
+    }
+
+    private void ResetEpisodeRecapData()
+    {
+        episodeRecaps.Clear();
+        totalQuizAttempts = 0;
+        currentQuestionAttempts = 0;
+        finalNormalizedScore = 0;
+
+        if (recapKeyPointsText != null)
+        {
+            recapKeyPointsText.text = string.Empty;
+        }
+
+        if (recapPanel != null)
+        {
+            recapPanel.SetActive(false);
+        }
+    }
+
+    private int GetQuizScoreForAttempt(int attempts)
+    {
+        if (attempts <= 1)
+        {
+            return pointsFirstAttempt;
+        }
+
+        if (attempts == 2)
+        {
+            return pointsSecondAttempt;
+        }
+
+        return pointsThirdOrMoreAttempt;
+    }
+
+    private int CalculateFinalNormalizedScore()
+    {
+        int totalQuizQuestions = CountQuizSteps();
+        if (totalQuizQuestions <= 0 || pointsFirstAttempt <= 0)
+        {
+            return 0;
+        }
+
+        int maxPossibleRawScore = totalQuizQuestions * pointsFirstAttempt;
+        if (maxPossibleRawScore <= 0)
+        {
+            return 0;
+        }
+
+        float normalized = ((float)totalScore / maxPossibleRawScore) * 100f;
+        return Mathf.Clamp(Mathf.RoundToInt(normalized), 0, 100);
+    }
+
+    private int CountQuizSteps()
+    {
+        if (quizData == null || quizData.steps == null)
+        {
+            return 0;
+        }
+
+        int count = 0;
+        for (int i = 0; i < quizData.steps.Count; i++)
+        {
+            Step step = quizData.steps[i];
+            if (step != null && step.stepType == "quiz")
+            {
+                count++;
+            }
+        }
+
+        return count;
     }
 }
