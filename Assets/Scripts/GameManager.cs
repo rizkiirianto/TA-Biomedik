@@ -7,6 +7,7 @@ using System.Linq;
 using UnityEngine.SceneManagement;
 using System;
 using System.Text;
+using System.IO;
 
 [System.Serializable]
 public class MiniGameRegistry
@@ -1205,6 +1206,12 @@ public class GameManager : MonoBehaviour
             return;
         }
 
+        recapKeyPointsText.text = BuildEpisodeRecapText();
+    }
+
+    private string BuildEpisodeRecapText()
+    {
+
         StringBuilder builder = new StringBuilder();
         builder.AppendLine($"Skor akhir (normalisasi): {finalNormalizedScore}/100");
         builder.AppendLine($"Skor quiz mentah: {totalScore}");
@@ -1214,8 +1221,7 @@ public class GameManager : MonoBehaviour
         if (episodeRecaps.Count == 0)
         {
             builder.AppendLine("Belum ada key point yang tercatat.");
-            recapKeyPointsText.text = builder.ToString();
-            return;
+            return builder.ToString();
         }
 
         for (int i = 0; i < episodeRecaps.Count; i++)
@@ -1227,7 +1233,71 @@ public class GameManager : MonoBehaviour
             builder.AppendLine();
         }
 
-        recapKeyPointsText.text = builder.ToString().TrimEnd();
+        return builder.ToString().TrimEnd();
+    }
+
+    public void ExportRecapButtonClicked()
+    {
+        try
+        {
+            string selectedScenario = PlayerPrefs.GetString("SelectedScenario", "UnknownScenario");
+            string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+            string fileName = $"Recap_{selectedScenario}_{timestamp}.txt";
+            string exportDirectory = GetRecapExportDirectory();
+            Directory.CreateDirectory(exportDirectory);
+            string exportPath = Path.Combine(exportDirectory, fileName);
+
+            StringBuilder fileContent = new StringBuilder();
+            fileContent.AppendLine("Episode Recap Export");
+            fileContent.AppendLine($"Scenario: {selectedScenario}");
+            fileContent.AppendLine($"Exported At: {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
+            fileContent.AppendLine();
+            fileContent.AppendLine(BuildEpisodeRecapText());
+
+            File.WriteAllText(exportPath, fileContent.ToString(), Encoding.UTF8);
+
+            if (narrativeText != null)
+            {
+                narrativeText.text = "Recap berhasil diexport ke: " + exportPath;
+            }
+
+            Debug.Log("Recap berhasil diexport: " + exportPath);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError("Gagal export recap: " + ex.Message);
+            if (narrativeText != null)
+            {
+                narrativeText.text = "Export recap gagal. Cek Console untuk detail error.";
+            }
+        }
+    }
+
+    public void MainMenuButtonClicked()
+    {
+        ReturnToScenarioMenu();
+    }
+
+    private string GetRecapExportDirectory()
+    {
+#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
+        // Pada build Windows, Application.dataPath menunjuk ke folder "<NamaGame>_Data".
+        // Parent folder-nya adalah lokasi file .exe.
+        string exeDirectory = Directory.GetParent(Application.dataPath)?.FullName;
+        if (!string.IsNullOrEmpty(exeDirectory))
+        {
+            return exeDirectory;
+        }
+#endif
+
+        // Fallback saat di Editor/platform lain: simpan di root project (satu level di atas Assets).
+        string projectRoot = Directory.GetParent(Application.dataPath)?.FullName;
+        if (!string.IsNullOrEmpty(projectRoot))
+        {
+            return projectRoot;
+        }
+
+        return Application.persistentDataPath;
     }
 
     private void ResetEpisodeRecapData()

@@ -1,5 +1,8 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class MainMenuManager : MonoBehaviour
 {
@@ -33,5 +36,14 @@ public class MainMenuManager : MonoBehaviour
         PlayerPrefs.SetString("SelectedScenario", "Scenario2");
         PlayerPrefs.Save();
         SceneManager.LoadScene("Play");
+    }
+
+    public void ExitButtonClicked()
+    {
+#if UNITY_EDITOR
+        EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
     }
 }
