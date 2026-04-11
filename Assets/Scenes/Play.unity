@@ -423,7 +423,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &91150607
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5600,6 +5600,8 @@ MonoBehaviour:
     prefab: {fileID: 5785072802821742918, guid: 5d4c0fcad4b9da24ab173aff263ce8f0, type: 3}
   - id: AmbulanDatang
     prefab: {fileID: 5558520898912589506, guid: 8895b0ac816b5364d8d0a0f610600176, type: 3}
+  - id: LampFlickerRainNight
+    prefab: {fileID: 2846194184354145437, guid: 1870c4be978b975468870ebf5caa302d, type: 3}
   ambianceAudioSource: {fileID: 1236919084}
   ambianceAudioRegistry:
   - scenarioId: Scenario1
