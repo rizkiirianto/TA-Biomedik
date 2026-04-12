@@ -17,26 +17,7 @@
     "stepType": "cutscene",
     "cutsceneID": "CallTechnician",
     "instruction": "",
-    "narrativeImage": "10menitkemudian",
-    "options": []
-    },
-    {
-    "stepType": "cutscene",
-    "cutsceneID": "TeknisiDatang",
-    "instruction": "",
-    "options": []
-    },
-    {
-    "stepType": "dialog",
-    "speakerName": "Teknisi",
-    "instruction": "Santai mas, paling cuma longgar kabelnya.",
-    "narrativeImage": "TeknisiBekerja",
-    "options": []
-    },
-    {
-    "stepType": "cutscene",
-    "cutsceneID": "ElectrocutionShock",
-    "instruction": "",
+    "narrativeImage": "Korban Jatuh",
     "options": []
     },
     {

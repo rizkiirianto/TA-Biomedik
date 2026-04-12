@@ -2745,7 +2745,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 2544684540565333182, guid: aaf93cda7dc07e24daef5f8c9b706e7d, type: 3}
+  m_Sprite: {fileID: -2784939378732253258, guid: f0e0093e94bb0ae448d77c1a4d2d0c39, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -5602,6 +5602,8 @@ MonoBehaviour:
     prefab: {fileID: 5558520898912589506, guid: 8895b0ac816b5364d8d0a0f610600176, type: 3}
   - id: LampFlickerRainNight
     prefab: {fileID: 2846194184354145437, guid: 1870c4be978b975468870ebf5caa302d, type: 3}
+  - id: CallTechnician
+    prefab: {fileID: 2022727342517948407, guid: ebc9694f7b8640349b6995cba5ccfd51, type: 3}
   ambianceAudioSource: {fileID: 1236919084}
   ambianceAudioRegistry:
   - scenarioId: Scenario1
