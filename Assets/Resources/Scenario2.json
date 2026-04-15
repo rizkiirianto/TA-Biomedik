@@ -31,7 +31,7 @@
       "stepType": "minigame",
       "instruction": "Apa yang harus kamu lakukan sekarang?",
       "minigameID": "HazardRecognitionElectric",
-      "narrativeImage": "Korban Kesetrum",
+      "narrativeImage": "LampuMatiTotaldanKorban",
       "goldTime": 3,
       "silverTime": 5,
       "options": []
@@ -39,33 +39,19 @@
     {
       "stepType": "dialog",
       "speakerName": "Narator",
-      "instruction": "Benar. Jangan langsung menyentuh korban. Pastikan tidak ada aliran listrik aktif.",
-      "narrativeImage": "Korban Kesetrum",
-      "options": []
-    },
-    {
-      "stepType": "minigame",
-      "instruction": "Matikan sumber listrik terlebih dahulu!",
-      "minigameID": "FindAndFlipBreaker",
-      "narrativeImage": "Panel Listrik",
-      "goldTime": 10,
-      "silverTime": 18,
-      "options": []
-    },
-    {
-      "stepType": "dialog",
-      "speakerName": "Narator",
       "instruction": "Listrik berhasil dimatikan. Sekarang aman untuk mendekati korban.",
-      "narrativeImage": "Lampu Mati Total",
+      "narrativeImage": "LampuMatiTotaldanKorban",
       "options": []
     },
-
     {
       "stepType": "quiz",
       "instruction": "Korban tidak merespon saat dipanggil. Apa langkah selanjutnya?",
       "quizTimeSeconds": 10,
       "lowTimeCueSeconds": 3,
-      "backgroundImage": "Korban Terbaring",
+      "backgroundImage": "Korban Jatuh",
+      "optionParentTarget": "optionParents2",
+      "optionParentPosX": -150.0,
+      "optionParentPosY": -230.0,
       "options": [
         {
           "text": "Langsung melakukan CPR",
