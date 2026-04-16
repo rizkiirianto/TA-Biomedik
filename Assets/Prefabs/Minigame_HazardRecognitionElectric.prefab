@@ -1224,6 +1224,7 @@ MonoBehaviour:
   advanceButton: {fileID: 5349190565910136883}
   dialogPanel: {fileID: 6748822094201847247}
   typingSpeed: 0.035
+  introAutoAdvanceDelay: 1.2
   dialogueLines:
   - Apa yang harus kamu lakukan pertama kali?
   - Gunakan mouse untuk berinteraksi
@@ -1582,7 +1583,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &6264340689346894179
 RectTransform:
   m_ObjectHideFlags: 0

@@ -61,7 +61,8 @@
         {
           "text": "Cek pernapasan korban",
           "isCorrect": true,
-          "feedback": "Benar! Cek apakah korban bernapas normal."
+          "narrative": "Benar! Cek apakah korban bernapas dengan normal.",
+          "narrativeImage": "Tidak Bernapas"
         },
         {
           "text": "Memberi minum korban",
@@ -80,7 +81,7 @@
     },
     {
       "stepType": "minigame",
-      "instruction": "Segera hubungi bantuan darurat (112)!",
+      "instruction": "Segera hubungi bantuan darurat!",
       "minigameID": "Call112Sequence",
       "narrativeImage": "Telepon Darurat",
       "goldTime": 10,
