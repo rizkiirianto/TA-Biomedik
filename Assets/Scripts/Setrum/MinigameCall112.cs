@@ -2,25 +2,37 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class MinigameCall112 : MonoBehaviour
+public class MinigameCall112 : MonoBehaviour, IMiniGame
 {
     [SerializeField] private GameObject panelDialog;
     [SerializeField] private TextMeshProUGUI textDialog;
     [SerializeField] private GameObject panelCall112;
     [SerializeField] private GameObject gambarJiro;
+    [SerializeField] private GameObject panelDeckKartu;
     [SerializeField] private TextMeshProUGUI textLayarHP;
     [SerializeField] private List<Image> tanganImages = new List<Image>();
     [SerializeField] private List<Button> numberButtons = new List<Button>(); // Isi sesuai urutan: 0,1,2,3,4,5,6,7,8,9
     [SerializeField] private Button callButton;
     [SerializeField] private float dialogDuration = 2f;
     [SerializeField] private float pressFeedbackDuration = 0.18f;
+    [SerializeField] private float typingSpeed = 0.03f;
+    [SerializeField] private GameObject nextStepRoot;
+    [SerializeField] private bool hideDialogAtFinish = true;
+    [SerializeField] private bool disableThisObjectAtFinish = true;
+    [SerializeField] private UnityEvent onMinigameFinished;
+    [SerializeField] private string minigameSuccessFeedback = "Panggilan 112 selesai.";
 
     private const string StartDialogText = "Aku harus memanggil bantuan";
     private const string EmergencyNumber112 = "112";
     private const string OperatorReplyText = "112, layanan apa yang bisa kami bantu?";
     private const string WrongNumberText = "Nomor darurat salah";
+    private const string WaitingText = ". . . . .";
+    private const string CallDisconnectedText = "--telepon terputus";
+    private const string BatteryOutText = "SIAL KENAPA SEKARANG HABISNYA BATERAIKU!!!!";
+    private const int RequiredCardSelections = 3;
     private const int IdleHandIndex = 0;
     private const int CallHandIndex = 1;
     private const int NumberHandStartIndex = 2; // Index 2..11 = tombol 0..9
@@ -30,13 +42,70 @@ public class MinigameCall112 : MonoBehaviour
 
     private Coroutine handFeedbackRoutine;
     private Coroutine callFlowRoutine;
+    private Coroutine typingRoutine;
     private string dialedNumber = string.Empty;
     private bool isCalling;
+    private bool isCardPhaseActive;
+    private int selectedCardCount;
+    private bool isTypingDialog;
+    private bool isWaitingForDialogContinue;
+    private bool skipTypingRequested;
+    private bool continueDialogRequested;
+    private bool blockClickUntilRelease;
+    private bool isMinigameFinished;
+    private bool minigameInitialized;
+    private GameManager gameManager;
 
     void Start()
     {
+        InitializeMinigame();
+    }
+
+    public void BeginGame(GameManager gm)
+    {
+        gameManager = gm;
+        InitializeMinigame();
+    }
+
+    private void InitializeMinigame()
+    {
+        if (minigameInitialized)
+        {
+            return;
+        }
+
+        minigameInitialized = true;
         SetupButtonListeners();
         StartCoroutine(BeginMinigameFlow());
+    }
+
+    private void Update()
+    {
+        if (blockClickUntilRelease)
+        {
+            if (!Input.GetMouseButton(0))
+            {
+                blockClickUntilRelease = false;
+            }
+
+            return;
+        }
+
+        if (!Input.GetMouseButtonDown(0))
+        {
+            return;
+        }
+
+        if (isTypingDialog)
+        {
+            skipTypingRequested = true;
+            return;
+        }
+
+        if (isWaitingForDialogContinue)
+        {
+            continueDialogRequested = true;
+        }
     }
 
     private IEnumerator BeginMinigameFlow()
@@ -72,6 +141,11 @@ public class MinigameCall112 : MonoBehaviour
         {
             panelCall112.SetActive(true);
         }
+        if (panelDeckKartu != null) 
+        {
+            panelDeckKartu.SetActive(false);
+        }
+        
     }
 
     private void SetupButtonListeners()
@@ -97,7 +171,7 @@ public class MinigameCall112 : MonoBehaviour
 
     private void OnNumberPressed(int number)
     {
-        if (isCalling)
+        if (isCalling || isMinigameFinished)
         {
             return;
         }
@@ -118,7 +192,7 @@ public class MinigameCall112 : MonoBehaviour
 
     private void OnCallPressed()
     {
-        if (isCalling)
+        if (isCalling || isMinigameFinished)
         {
             return;
         }
@@ -168,8 +242,189 @@ public class MinigameCall112 : MonoBehaviour
         {
             textDialog.text = OperatorReplyText;
         }
-
         callFlowRoutine = null;
+
+        yield return new WaitForSeconds(1.5f);
+        StartCoroutine(CardSelectionPhase());
+    }
+
+    private IEnumerator CardSelectionPhase()
+    {
+        selectedCardCount = 0;
+
+        if (textDialog != null)
+        {
+            textDialog.text = WaitingText;
+        }
+
+        if (gambarJiro != null)
+        {
+            gambarJiro.SetActive(true);
+        }
+
+        yield return new WaitForSeconds(1f);
+
+        if (panelDialog != null)
+        {
+            panelDialog.SetActive(true);
+        }
+
+        if (panelDeckKartu != null)
+        {
+            panelDeckKartu.SetActive(true);
+        }
+
+        isCardPhaseActive = true;
+        SetupCardListeners();
+    }
+
+    private void SetupCardListeners()
+    {
+        CallCard[] cards = panelDeckKartu.GetComponentsInChildren<CallCard>();
+        foreach (CallCard card in cards)
+        {
+            card.SetupCard(() => OnCardSelected(card));
+        }
+    }
+
+    private void OnCardSelected(CallCard selectedCard)
+    {
+        if (!isCardPhaseActive)
+        {
+            return;
+        }
+
+        isCardPhaseActive = false;
+        selectedCard.RemoveCard();
+        selectedCardCount++;
+        blockClickUntilRelease = true;
+
+        string cardDialog = selectedCard.GetCardDialog();
+        if (typingRoutine != null)
+        {
+            StopCoroutine(typingRoutine);
+        }
+
+        typingRoutine = StartCoroutine(HandleCardDialogFlow(cardDialog));
+    }
+
+    private IEnumerator HandleCardDialogFlow(string cardDialog)
+    {
+        if (panelDialog != null)
+        {
+            panelDialog.SetActive(true);
+        }
+
+        yield return StartCoroutine(TypeDialogText(cardDialog));
+        yield return StartCoroutine(WaitForDialogContinue());
+
+        if (selectedCardCount >= RequiredCardSelections)
+        {
+            panelDeckKartu.SetActive(false);
+            gambarJiro.SetActive(false);
+            yield return StartCoroutine(TypeDialogText(CallDisconnectedText));
+            yield return StartCoroutine(WaitForDialogContinue());
+            yield return StartCoroutine(TypeDialogText(BatteryOutText));
+            yield return StartCoroutine(WaitForDialogContinue());
+
+            FinishMinigameAndProceed();
+
+            typingRoutine = null;
+            yield break;
+        }
+
+        isCardPhaseActive = true;
+        typingRoutine = null;
+    }
+
+    private IEnumerator TypeDialogText(string fullText)
+    {
+        if (textDialog == null)
+        {
+            yield break;
+        }
+
+        textDialog.text = string.Empty;
+        skipTypingRequested = false;
+        isTypingDialog = true;
+
+        float safeTypingSpeed = Mathf.Max(0.005f, typingSpeed);
+        for (int i = 0; i < fullText.Length; i++)
+        {
+            if (skipTypingRequested)
+            {
+                textDialog.text = fullText;
+                break;
+            }
+
+            textDialog.text += fullText[i];
+            yield return new WaitForSeconds(safeTypingSpeed);
+        }
+
+        isTypingDialog = false;
+        skipTypingRequested = false;
+    }
+
+    private IEnumerator WaitForDialogContinue()
+    {
+        continueDialogRequested = false;
+        isWaitingForDialogContinue = true;
+
+        while (!continueDialogRequested)
+        {
+            yield return null;
+        }
+
+        isWaitingForDialogContinue = false;
+        continueDialogRequested = false;
+    }
+
+    private void FinishMinigameAndProceed()
+    {
+        if (isMinigameFinished)
+        {
+            return;
+        }
+
+        isMinigameFinished = true;
+        isCardPhaseActive = false;
+        isCalling = false;
+
+        if (panelCall112 != null)
+        {
+            panelCall112.SetActive(false);
+        }
+
+        if (panelDeckKartu != null)
+        {
+            panelDeckKartu.SetActive(false);
+        }
+
+        if (gambarJiro != null)
+        {
+            gambarJiro.SetActive(false);
+        }
+
+        if (hideDialogAtFinish && panelDialog != null)
+        {
+            panelDialog.SetActive(false);
+        }
+
+        onMinigameFinished?.Invoke();
+
+        if (gameManager != null)
+        {
+            gameManager.OnMiniGameComplete(minigameSuccessFeedback);
+        }
+        else if (nextStepRoot != null)
+        {
+            nextStepRoot.SetActive(true);
+        }
+
+        if (disableThisObjectAtFinish)
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     private IEnumerator HandleWrongNumberCall()
@@ -240,6 +495,11 @@ public class MinigameCall112 : MonoBehaviour
         if (callFlowRoutine != null)
         {
             StopCoroutine(callFlowRoutine);
+        }
+
+        if (typingRoutine != null)
+        {
+            StopCoroutine(typingRoutine);
         }
 
         for (int i = 0; i < numberButtons.Count; i++)

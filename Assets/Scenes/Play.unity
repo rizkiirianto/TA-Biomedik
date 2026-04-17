@@ -5595,6 +5595,8 @@ MonoBehaviour:
     prefab: {fileID: 9047134523711292841, guid: ad93b5f70242ed04fa71dd8fb92d6d31, type: 3}
   - id: HazardRecognitionElectric
     prefab: {fileID: 3549544820680750177, guid: 57990d1c413c2e543b72105bc62a3aad, type: 3}
+  - id: Call112Sequence
+    prefab: {fileID: 1516539701399686886, guid: 905a664a06b3478439f16c80cc37c457, type: 3}
   cutsceneRegistry:
   - id: RizalBerdarah
     prefab: {fileID: 5309542488858055867, guid: aff32489a6ed1f9459ff83001b7e3b07, type: 3}

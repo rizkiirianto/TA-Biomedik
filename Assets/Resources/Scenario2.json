@@ -90,8 +90,8 @@
     },
     {
       "stepType": "dialog",
-      "speakerName": "Operator 112",
-      "instruction": "Bantuan sedang menuju lokasi. Tetap di tempat dan lakukan CPR sekarang!",
+      "speakerName": "Jiro",
+      "instruction": "Tidak ada waktu lagi, aku harus lakukan CPR sekarang!",
       "narrativeImage": "Telepon Darurat",
       "options": []
     },
