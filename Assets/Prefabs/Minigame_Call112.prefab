@@ -252,9 +252,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: -1815945503837597408, guid: b3f7c242f0d92a24fa814f44303d3c56, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -582,9 +582,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 4592775999355926990, guid: b3f7c242f0d92a24fa814f44303d3c56, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -1287,7 +1287,7 @@ GameObject:
   - component: {fileID: 9076821617644103035}
   - component: {fileID: 5399883212612030662}
   m_Layer: 0
-  m_Name: WrapperDataKorban
+  m_Name: WrapperLukaTangan
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1326,7 +1326,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 451114cd593015f4c995c33e73021ce6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CallCard
-  cardDialog: DataKorban
+  cardDialog: Luka Tangan
   visualChild: {fileID: 764607589302226168}
   buttonAreaChild: {fileID: 2804549483044034772}
   hoverYOffset: 150
@@ -1793,9 +1793,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 7372219047621798516, guid: b3f7c242f0d92a24fa814f44303d3c56, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -2580,7 +2580,7 @@ GameObject:
   - component: {fileID: 8577394688135841060}
   - component: {fileID: 3409180908101211015}
   m_Layer: 5
-  m_Name: KartuDataKorbanButtonArea
+  m_Name: KartuLukaTanganButtonArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4175,9 +4175,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: -7588344663466363574, guid: b3f7c242f0d92a24fa814f44303d3c56, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -4761,9 +4761,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: -2360053122600531517, guid: b3f7c242f0d92a24fa814f44303d3c56, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -4837,9 +4837,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 5769772314776814767, guid: b3f7c242f0d92a24fa814f44303d3c56, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -5940,9 +5940,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: -8982186068020239294, guid: b3f7c242f0d92a24fa814f44303d3c56, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -5962,7 +5962,7 @@ GameObject:
   - component: {fileID: 332782989777210001}
   - component: {fileID: 6734977681697238878}
   m_Layer: 5
-  m_Name: KartuDataKorbanVisual
+  m_Name: KartuLukaTanganVisual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6016,9 +6016,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: -5199716048330592142, guid: b3f7c242f0d92a24fa814f44303d3c56, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -7418,7 +7418,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 451114cd593015f4c995c33e73021ce6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CallCard
-  cardDialog: Dialog kartu
+  cardDialog: Kartu Vital
   visualChild: {fileID: 1240716278190822835}
   buttonAreaChild: {fileID: 4402134064814087190}
   hoverYOffset: 150
@@ -7600,11 +7600,11 @@ RectTransform:
   - {fileID: 5825480137813877704}
   m_Father: {fileID: 5626445702340160988}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 400}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: -40}
   m_SizeDelta: {x: 1413.4824, y: 203}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1463684001682912253
 MonoBehaviour:
   m_ObjectHideFlags: 0
