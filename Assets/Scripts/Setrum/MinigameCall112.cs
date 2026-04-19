@@ -24,6 +24,7 @@ public class MinigameCall112 : MonoBehaviour, IMiniGame
     [SerializeField] private bool disableThisObjectAtFinish = true;
     [SerializeField] private UnityEvent onMinigameFinished;
     [SerializeField] private string minigameSuccessFeedback = "Panggilan 112 selesai.";
+    [SerializeField] private List<string> correctCardIds = new List<string> { "Lokasi", "Lingkungan", "Vital" };
 
     private const string StartDialogText = "Aku harus memanggil bantuan";
     private const string EmergencyNumber112 = "112";
@@ -47,6 +48,7 @@ public class MinigameCall112 : MonoBehaviour, IMiniGame
     private bool isCalling;
     private bool isCardPhaseActive;
     private int selectedCardCount;
+    private int correctSelectedCardCount;
     private bool isTypingDialog;
     private bool isWaitingForDialogContinue;
     private bool skipTypingRequested;
@@ -251,6 +253,7 @@ public class MinigameCall112 : MonoBehaviour, IMiniGame
     private IEnumerator CardSelectionPhase()
     {
         selectedCardCount = 0;
+        correctSelectedCardCount = 0;
 
         if (textDialog != null)
         {
@@ -297,6 +300,12 @@ public class MinigameCall112 : MonoBehaviour, IMiniGame
         isCardPhaseActive = false;
         selectedCard.RemoveCard();
         selectedCardCount++;
+
+        if (IsCorrectCard(selectedCard.GetCardId()))
+        {
+            correctSelectedCardCount++;
+        }
+
         blockClickUntilRelease = true;
 
         string cardDialog = selectedCard.GetCardDialog();
@@ -414,6 +423,7 @@ public class MinigameCall112 : MonoBehaviour, IMiniGame
 
         if (gameManager != null)
         {
+            gameManager.RegisterMinigameCall112Result(correctSelectedCardCount, RequiredCardSelections);
             gameManager.OnMiniGameComplete(minigameSuccessFeedback);
         }
         else if (nextStepRoot != null)
@@ -425,6 +435,24 @@ public class MinigameCall112 : MonoBehaviour, IMiniGame
         {
             gameObject.SetActive(false);
         }
+    }
+
+    private bool IsCorrectCard(string cardId)
+    {
+        if (string.IsNullOrWhiteSpace(cardId))
+        {
+            return false;
+        }
+
+        for (int i = 0; i < correctCardIds.Count; i++)
+        {
+            if (string.Equals(correctCardIds[i], cardId, System.StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private IEnumerator HandleWrongNumberCall()

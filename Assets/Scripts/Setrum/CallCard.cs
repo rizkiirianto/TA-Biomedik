@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class CallCard : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
+    [SerializeField] private string cardId = "";
     [SerializeField] private string cardDialog = "Dialog kartu";
     [SerializeField] private Transform visualChild; // Child dengan Image (akan offset saat hover)
     [SerializeField] private Transform buttonAreaChild; // Child dengan Button (tetap static)
@@ -183,6 +184,16 @@ public class CallCard : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public string GetCardDialog()
     {
         return cardDialog;
+    }
+
+    public string GetCardId()
+    {
+        if (!string.IsNullOrWhiteSpace(cardId))
+        {
+            return cardId.Trim();
+        }
+
+        return gameObject.name;
     }
 
     private void OnDestroy()

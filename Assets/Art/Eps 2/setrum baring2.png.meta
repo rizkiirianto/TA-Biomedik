@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 989b5f6509b85cb4eae620a92b61e18d
+guid: 239278f8d2e81d0409f4dff0711d27aa
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 4779843374117145608
-    second: setrum baring_0
+      213: -421509016099548757
+    second: setrum baring2_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -75,7 +75,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -126,7 +126,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: setrum baring_0
+      name: setrum baring2_0
       rect:
         serializedVersion: 2
         x: 19
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 80cc14c593a655240800000000000000
-      internalID: 4779843374117145608
+      spriteID: ba113c978cf762af0800000000000000
+      internalID: -421509016099548757
       vertices: []
       indices: 
       edges: []
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      setrum baring_0: 4779843374117145608
+      setrum baring2_0: -421509016099548757
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -83,7 +83,7 @@
       "stepType": "minigame",
       "instruction": "Segera hubungi bantuan darurat!",
       "minigameID": "Call112Sequence",
-      "narrativeImage": "Telepon Darurat",
+      "narrativeImage": "Korban Terbaring",
       "goldTime": 10,
       "silverTime": 15,
       "options": []
@@ -91,8 +91,8 @@
     {
       "stepType": "dialog",
       "speakerName": "Jiro",
-      "instruction": "Tidak ada waktu lagi, aku harus lakukan CPR sekarang!",
-      "narrativeImage": "Telepon Darurat",
+      "instruction": "Tidak boleh ada waktu yang terbuang....",
+      "narrativeImage": "Korban Terbaring",
       "options": []
     },
     {
@@ -101,6 +101,9 @@
       "quizTimeSeconds": 8,
       "lowTimeCueSeconds": 3,
       "backgroundImage": "Korban Terbaring",
+      "optionParentTarget": "optionParents2",
+      "optionParentPosX": -150.0,
+      "optionParentPosY": -230.0,
       "options": [
         {
           "text": "Menunggu ambulans datang",

@@ -118,6 +118,9 @@ public class GameManager : MonoBehaviour
     private readonly Dictionary<string, AudioClip> dialogSfxCache = new Dictionary<string, AudioClip>();
     private readonly List<EpisodeKeyPointRecap> episodeRecaps = new List<EpisodeKeyPointRecap>();
     private int totalQuizAttempts = 0;
+    private bool hasCall112Recap;
+    private int call112CorrectCards;
+    private int call112TotalSelections;
     [Header("Quiz Scoring")]
     [Min(0)] public int pointsFirstAttempt = 100;
     [Min(0)] public int pointsSecondAttempt = 70;
@@ -639,6 +642,13 @@ public class GameManager : MonoBehaviour
         
         Debug.Log("Memanggil PrepareToAdvance untuk lanjut ke step berikutnya");
         PrepareToAdvance();
+    }
+
+    public void RegisterMinigameCall112Result(int correctCards, int totalSelections)
+    {
+        hasCall112Recap = true;
+        call112CorrectCards = Mathf.Max(0, correctCards);
+        call112TotalSelections = Mathf.Max(1, totalSelections);
     }
 
     private void ShowCutscene(Step cutsceneStep)
@@ -1216,6 +1226,10 @@ public class GameManager : MonoBehaviour
         builder.AppendLine($"Skor akhir (normalisasi): {finalNormalizedScore}/100");
         builder.AppendLine($"Skor quiz mentah: {totalScore}");
         builder.AppendLine($"Total percobaan menjawab: {totalQuizAttempts}");
+        if (hasCall112Recap)
+        {
+            builder.AppendLine($"Minigame Call 112: {call112CorrectCards}/{call112TotalSelections} kartu benar yang dipilih");
+        }
         builder.AppendLine();
 
         if (episodeRecaps.Count == 0)
@@ -1306,6 +1320,9 @@ public class GameManager : MonoBehaviour
         totalQuizAttempts = 0;
         currentQuestionAttempts = 0;
         finalNormalizedScore = 0;
+        hasCall112Recap = false;
+        call112CorrectCards = 0;
+        call112TotalSelections = 0;
 
         if (recapKeyPointsText != null)
         {
