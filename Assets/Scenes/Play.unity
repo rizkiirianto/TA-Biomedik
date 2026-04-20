@@ -5597,6 +5597,8 @@ MonoBehaviour:
     prefab: {fileID: 3549544820680750177, guid: 57990d1c413c2e543b72105bc62a3aad, type: 3}
   - id: Call112Sequence
     prefab: {fileID: 1516539701399686886, guid: 905a664a06b3478439f16c80cc37c457, type: 3}
+  - id: CPRCoreGameplay
+    prefab: {fileID: 3306360705634286469, guid: 7393539453ad20c43bcb0a22f48a77d9, type: 3}
   cutsceneRegistry:
   - id: RizalBerdarah
     prefab: {fileID: 5309542488858055867, guid: aff32489a6ed1f9459ff83001b7e3b07, type: 3}
@@ -5608,6 +5610,8 @@ MonoBehaviour:
     prefab: {fileID: 2846194184354145437, guid: 1870c4be978b975468870ebf5caa302d, type: 3}
   - id: CallTechnician
     prefab: {fileID: 2022727342517948407, guid: ebc9694f7b8640349b6995cba5ccfd51, type: 3}
+  - id: AmbulanceArrivalNight
+    prefab: {fileID: 9000922053294694422, guid: 8e414745a8328784bba5de97197bcd8d, type: 3}
   ambianceAudioSource: {fileID: 1236919084}
   ambianceAudioRegistry:
   - scenarioId: Scenario1

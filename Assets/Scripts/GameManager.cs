@@ -121,6 +121,12 @@ public class GameManager : MonoBehaviour
     private bool hasCall112Recap;
     private int call112CorrectCards;
     private int call112TotalSelections;
+    private bool hasCPRRecap;
+    private int cprPerfectCount;
+    private int cprShallowCount;
+    private int cprTooLongCount;
+    private int cprMissCount;
+    private int cprLateCount;
     [Header("Quiz Scoring")]
     [Min(0)] public int pointsFirstAttempt = 100;
     [Min(0)] public int pointsSecondAttempt = 70;
@@ -147,6 +153,7 @@ public class GameManager : MonoBehaviour
         UpdateScoreText();
         LoadQuizData();
         Application.targetFrameRate = 60;
+        EnsureSingleAudioListener(mainSceneCamera != null ? mainSceneCamera.GetComponent<AudioListener>() : null);
     }
 
     void Update()
@@ -524,6 +531,12 @@ public class GameManager : MonoBehaviour
             if (gameScript != null)
             {
                 gameScript.BeginGame(this); // Satu perintah untuk semua jenis game!
+                AudioListener preferredListener = null;
+                if (mainSceneCamera != null && mainSceneCamera.gameObject.activeInHierarchy)
+                {
+                    preferredListener = mainSceneCamera.GetComponent<AudioListener>();
+                }
+                EnsureSingleAudioListener(preferredListener);
             }
             else
             {
@@ -605,6 +618,14 @@ public class GameManager : MonoBehaviour
     {
         StopQuizTimer(resetVisuals: true);
         mainSceneCamera.gameObject.SetActive(true);
+
+        if (activeMiniGameInstance != null)
+        {
+            Destroy(activeMiniGameInstance);
+            activeMiniGameInstance = null;
+        }
+
+        EnsureSingleAudioListener(mainSceneCamera != null ? mainSceneCamera.GetComponent<AudioListener>() : null);
         /*
         float completionTime = Time.time - minigameStartTime;
         Step currentStep = quizData.steps[currentStepIndex];
@@ -649,6 +670,16 @@ public class GameManager : MonoBehaviour
         hasCall112Recap = true;
         call112CorrectCards = Mathf.Max(0, correctCards);
         call112TotalSelections = Mathf.Max(1, totalSelections);
+    }
+
+    public void RegisterMinigameCPRResult(int perfectCount, int shallowCount, int tooLongCount, int missCount, int lateCount)
+    {
+        hasCPRRecap = true;
+        cprPerfectCount = Mathf.Max(0, perfectCount);
+        cprShallowCount = Mathf.Max(0, shallowCount);
+        cprTooLongCount = Mathf.Max(0, tooLongCount);
+        cprMissCount = Mathf.Max(0, missCount);
+        cprLateCount = Mathf.Max(0, lateCount);
     }
 
     private void ShowCutscene(Step cutsceneStep)
@@ -716,6 +747,7 @@ public class GameManager : MonoBehaviour
     {
         // Kembalikan main camera (kalau tadi dimatikan)
         mainSceneCamera.gameObject.SetActive(true);
+        EnsureSingleAudioListener(mainSceneCamera != null ? mainSceneCamera.GetComponent<AudioListener>() : null);
 
         // (opsional) tampilkan feedback singkat
         if (!string.IsNullOrEmpty(optionalFeedback))
@@ -737,6 +769,13 @@ public class GameManager : MonoBehaviour
         StopQuizTimer(resetVisuals: true);
         isWaitingForAdvance = true;
         SetOptionButtonsInteractable(false);
+
+        // Pastikan panel click/overlay aktif agar tombol advance bisa benar-benar diklik.
+        if (clickAdvancePanel != null)
+        {
+            clickAdvancePanel.SetActive(true);
+        }
+
         clickAdvanceButton.gameObject.SetActive(true);
         Debug.Log("PrepareToAdvance dipanggil - tombol advance aktif, menunggu klik pemain");
     }
@@ -1230,6 +1269,19 @@ public class GameManager : MonoBehaviour
         {
             builder.AppendLine($"Minigame Call 112: {call112CorrectCards}/{call112TotalSelections} kartu benar yang dipilih");
         }
+        if (hasCPRRecap)
+        {
+            int totalCompressionAttempts = cprPerfectCount + cprShallowCount + cprTooLongCount;
+            int totalErrorEvents = cprMissCount + cprLateCount;
+            builder.AppendLine("Minigame CPR:");
+            builder.AppendLine($"- Perfect: {cprPerfectCount}");
+            builder.AppendLine($"- Shallow: {cprShallowCount}");
+            builder.AppendLine($"- Too Long: {cprTooLongCount}");
+            builder.AppendLine($"- Miss Input: {cprMissCount}");
+            builder.AppendLine($"- Late: {cprLateCount}");
+            builder.AppendLine($"- Total Kompresi Tercatat: {totalCompressionAttempts}");
+            builder.AppendLine($"- Total Error Event: {totalErrorEvents}");
+        }
         builder.AppendLine();
 
         if (episodeRecaps.Count == 0)
@@ -1323,6 +1375,12 @@ public class GameManager : MonoBehaviour
         hasCall112Recap = false;
         call112CorrectCards = 0;
         call112TotalSelections = 0;
+        hasCPRRecap = false;
+        cprPerfectCount = 0;
+        cprShallowCount = 0;
+        cprTooLongCount = 0;
+        cprMissCount = 0;
+        cprLateCount = 0;
 
         if (recapKeyPointsText != null)
         {
@@ -1386,5 +1444,42 @@ public class GameManager : MonoBehaviour
         }
 
         return count;
+    }
+
+    private void EnsureSingleAudioListener(AudioListener preferred)
+    {
+        AudioListener[] listeners = FindObjectsOfType<AudioListener>(true);
+        if (listeners == null || listeners.Length == 0)
+        {
+            return;
+        }
+
+        AudioListener keeper = preferred;
+        if (keeper == null || !keeper.gameObject.activeInHierarchy)
+        {
+            for (int i = 0; i < listeners.Length; i++)
+            {
+                if (listeners[i] != null && listeners[i].gameObject.activeInHierarchy)
+                {
+                    keeper = listeners[i];
+                    break;
+                }
+            }
+        }
+
+        if (keeper == null)
+        {
+            keeper = listeners[0];
+        }
+
+        for (int i = 0; i < listeners.Length; i++)
+        {
+            if (listeners[i] == null)
+            {
+                continue;
+            }
+
+            listeners[i].enabled = listeners[i] == keeper;
+        }
     }
 }

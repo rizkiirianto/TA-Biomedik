@@ -89,13 +89,6 @@
       "options": []
     },
     {
-      "stepType": "dialog",
-      "speakerName": "Jiro",
-      "instruction": "Tidak boleh ada waktu yang terbuang....",
-      "narrativeImage": "Korban Terbaring",
-      "options": []
-    },
-    {
       "stepType": "quiz",
       "instruction": "Korban tidak bernapas dan tidak sadar. Apa tindakanmu?",
       "quizTimeSeconds": 8,
@@ -113,7 +106,8 @@
         {
           "text": "Segera mulai CPR",
           "isCorrect": true,
-          "feedback": "Tepat! CPR harus segera dilakukan."
+          "feedback": "Tepat! CPR harus segera dilakukan.",
+          "narrativeImage": "Korban Terbaring"
         },
         {
           "text": "Memindahkan korban ke sofa",
@@ -124,18 +118,11 @@
     },
     {
       "stepType": "minigame",
-      "instruction": "Lakukan CPR dengan ritme yang benar!",
+      "instruction": "Jiro terus melakukan CPR dengan ritme dan kedalaman yang konsisten",
       "minigameID": "CPRCoreGameplay",
-      "narrativeImage": "CPR Scene",
+      "narrativeImage": "Korban Terbaring",
       "goldTime": 30,
       "silverTime": 45,
-      "options": []
-    },
-    {
-      "stepType": "dialog",
-      "speakerName": "Narator",
-      "instruction": "Kamu terus melakukan CPR sampai bantuan medis tiba.",
-      "narrativeImage": "Ambulans Datang Malam",
       "options": []
     },
     {

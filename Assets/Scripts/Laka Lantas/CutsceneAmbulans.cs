@@ -1,11 +1,13 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CutsceneAmbulans : MonoBehaviour, ICutscene
 {
     [Header("UI References")]
     [SerializeField] private TextMeshProUGUI narrationText;
+    [SerializeField] private Button nextButton;
 
     [Header("Audio")]
     [SerializeField] private AudioSource audioSource;
@@ -13,8 +15,6 @@ public class CutsceneAmbulans : MonoBehaviour, ICutscene
 
     [Header("Settings")]
     [SerializeField] private float typingSpeed = 0.035f;
-    [SerializeField] private float delayBetweenLines = 1.25f;
-    [SerializeField] private float autoCompleteDelay = 2.5f;
     [SerializeField] private bool destroyOnFinish = true;
 
     [TextArea(3, 8)]
@@ -26,10 +26,30 @@ public class CutsceneAmbulans : MonoBehaviour, ICutscene
     private GameManager gameManager;
     private Coroutine routine;
     private bool finished;
+    private bool isTyping;
+    private bool skipTypingRequested;
+    private bool waitingForNextClick;
+    private bool nextClicked;
 
     public void BeginCutscene(GameManager gm)
     {
         gameManager = gm;
+        finished = false;
+        isTyping = false;
+        skipTypingRequested = false;
+        waitingForNextClick = false;
+        nextClicked = false;
+
+        if (nextButton != null)
+        {
+            nextButton.onClick.RemoveListener(OnNextButtonClicked);
+            nextButton.onClick.AddListener(OnNextButtonClicked);
+            nextButton.gameObject.SetActive(true);
+        }
+        else
+        {
+            Debug.LogWarning("CutsceneAmbulans: nextButton belum di-assign.");
+        }
 
         if (narrationText != null)
         {
@@ -45,23 +65,26 @@ public class CutsceneAmbulans : MonoBehaviour, ICutscene
 
     private IEnumerator PlaySequence()
     {
+        string[] lines = GetNarrationLines();
+
         if (narrationText != null)
         {
-            string[] lines = GetNarrationLines();
-
             for (int i = 0; i < lines.Length; i++)
             {
                 yield return StartCoroutine(TypeText(lines[i]));
 
-                if (i < lines.Length - 1)
+                waitingForNextClick = true;
+                nextClicked = false;
+
+                while (!nextClicked)
                 {
-                    yield return new WaitForSeconds(delayBetweenLines);
-                    narrationText.text = string.Empty;
+                    yield return null;
                 }
+
+                waitingForNextClick = false;
             }
         }
 
-        yield return new WaitForSeconds(autoCompleteDelay);
         Complete();
     }
 
@@ -95,9 +118,17 @@ public class CutsceneAmbulans : MonoBehaviour, ICutscene
     private IEnumerator TypeText(string line)
     {
         narrationText.text = string.Empty;
+        isTyping = true;
+        skipTypingRequested = false;
 
         foreach (char letter in line)
         {
+            if (skipTypingRequested)
+            {
+                narrationText.text = line;
+                break;
+            }
+
             narrationText.text += letter;
 
             if (typewriterSound != null && audioSource != null && char.IsLetterOrDigit(letter))
@@ -107,6 +138,28 @@ public class CutsceneAmbulans : MonoBehaviour, ICutscene
 
             yield return new WaitForSeconds(typingSpeed);
         }
+
+        isTyping = false;
+        skipTypingRequested = false;
+    }
+
+    private void OnNextButtonClicked()
+    {
+        if (finished)
+        {
+            return;
+        }
+
+        if (isTyping)
+        {
+            skipTypingRequested = true;
+            return;
+        }
+
+        if (waitingForNextClick)
+        {
+            nextClicked = true;
+        }
     }
 
     private void OnDisable()
@@ -115,6 +168,11 @@ public class CutsceneAmbulans : MonoBehaviour, ICutscene
         {
             StopCoroutine(routine);
             routine = null;
+        }
+
+        if (nextButton != null)
+        {
+            nextButton.onClick.RemoveListener(OnNextButtonClicked);
         }
     }
 

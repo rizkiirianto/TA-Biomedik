@@ -475,6 +475,29 @@ public class MinigameCall112 : MonoBehaviour, IMiniGame
             textDialog.text = WrongNumberText;
         }
 
+        // Tampilkan pesan salah sebentar, lalu kembalikan ke mode input nomor.
+        yield return new WaitForSeconds(dialogDuration);
+
+        dialedNumber = string.Empty;
+
+        if (textLayarHP != null)
+        {
+            textLayarHP.text = dialedNumber;
+        }
+
+        if (panelDialog != null)
+        {
+            panelDialog.SetActive(false);
+        }
+
+        if (panelCall112 != null)
+        {
+            panelCall112.SetActive(true);
+        }
+
+        SetOnlyHandActive(IdleHandIndex);
+        isCalling = false;
+
         callFlowRoutine = null;
     }
 
