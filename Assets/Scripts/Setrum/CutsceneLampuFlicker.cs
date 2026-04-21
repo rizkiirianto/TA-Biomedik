@@ -32,6 +32,11 @@ public class CutsceneLampuFlicker : MonoBehaviour, ICutscene
     [SerializeField] private float flickerMaxInterval = 0.18f;
     [SerializeField] private bool hideDialogAfterFinish = true;
     [SerializeField] private bool destroyOnFinish = true;
+    [Header("Audio")]
+    [SerializeField] private AudioSource audioSourceTypewriter;
+    [SerializeField] private AudioClip typewriterSound;
+    [SerializeField] private AudioSource audioSourceFlicker;
+    [SerializeField] private AudioClip lampFlickerSound;
 
     private GameManager gameManager;
     private Coroutine sequenceRoutine;
@@ -96,6 +101,7 @@ public class CutsceneLampuFlicker : MonoBehaviour, ICutscene
                 StartFlickerEffect();
                 gambarJiroBiasa.SetActive(false);
                 gambarJiroNesu.SetActive(true);
+                audioSourceFlicker.PlayOneShot(lampFlickerSound);
             }
 
             yield return StartCoroutine(TypeLine(dialogueLines[i]));
@@ -112,7 +118,9 @@ public class CutsceneLampuFlicker : MonoBehaviour, ICutscene
         skipTypingRequested = false;
         dialogText.text = string.Empty;
 
-        for (int i = 0; i < line.Length; i++)
+        
+
+        foreach (char letter in line)
         {
             if (skipTypingRequested)
             {
@@ -120,7 +128,13 @@ public class CutsceneLampuFlicker : MonoBehaviour, ICutscene
                 break;
             }
 
-            dialogText.text += line[i];
+            dialogText.text += letter;
+
+            if (typewriterSound != null && audioSourceTypewriter != null && char.IsLetterOrDigit(letter))
+            {
+                audioSourceTypewriter.PlayOneShot(typewriterSound);
+            }
+
             yield return new WaitForSeconds(typingSpeed);
         }
 

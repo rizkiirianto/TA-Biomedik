@@ -25,6 +25,13 @@ public class MinigameCall112 : MonoBehaviour, IMiniGame
     [SerializeField] private UnityEvent onMinigameFinished;
     [SerializeField] private string minigameSuccessFeedback = "Panggilan 112 selesai.";
     [SerializeField] private List<string> correctCardIds = new List<string> { "Lokasi", "Lingkungan", "Vital" };
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip tombolHPSound;
+    [SerializeField] private AudioClip dialSound;
+    [SerializeField] private AudioClip shuffleCardSound;
+    [SerializeField] private AudioClip typewriterSound;
+    [SerializeField] private AudioClip mainkanKartuSound;
+    [SerializeField] private AudioClip hangupSound;
 
     private const string StartDialogText = "Aku harus memanggil bantuan";
     private const string EmergencyNumber112 = "112";
@@ -40,6 +47,12 @@ public class MinigameCall112 : MonoBehaviour, IMiniGame
     private const int MaxDialDigits = 12;
     private const float LayarXWhenCenter = 0f;
     private const float LayarXWhenShifted = 0f;
+    private const float DeckEnterStartX = 2000f;
+    private const float DeckEnterOvershootX = -100f;
+    private const float DeckEnterFinalX = 0f;
+    private const float DeckEnterFirstDuration = 0.5f;
+    private const float DeckEnterSecondDuration = 0.28f;
+    private const float RepeatedSfxGap = 0.5f;
 
     private Coroutine handFeedbackRoutine;
     private Coroutine callFlowRoutine;
@@ -57,6 +70,48 @@ public class MinigameCall112 : MonoBehaviour, IMiniGame
     private bool isMinigameFinished;
     private bool minigameInitialized;
     private GameManager gameManager;
+
+    private bool IsCallingTextActive()
+    {
+        return textLayarHP != null && string.Equals(textLayarHP.text, "Calling", System.StringComparison.Ordinal);
+    }
+
+    private void StartDialLoopIfCallingText()
+    {
+        if (audioSource == null || dialSound == null)
+        {
+            return;
+        }
+
+        if (!IsCallingTextActive())
+        {
+            return;
+        }
+
+        if (audioSource.isPlaying && audioSource.clip == dialSound && audioSource.loop)
+        {
+            return;
+        }
+
+        audioSource.clip = dialSound;
+        audioSource.loop = true;
+        audioSource.Play();
+    }
+
+    private void StopDialLoop()
+    {
+        if (audioSource == null)
+        {
+            return;
+        }
+
+        if (audioSource.clip == dialSound)
+        {
+            audioSource.Stop();
+            audioSource.loop = false;
+            audioSource.clip = null;
+        }
+    }
 
     void Start()
     {
@@ -189,6 +244,7 @@ public class MinigameCall112 : MonoBehaviour, IMiniGame
         }
 
         int handIndex = NumberHandStartIndex + number;
+        audioSource.PlayOneShot(tombolHPSound);
         PlayHandPressFeedback(handIndex);
     }
 
@@ -202,6 +258,7 @@ public class MinigameCall112 : MonoBehaviour, IMiniGame
         if (textLayarHP != null)
         {
             textLayarHP.text = "Calling";
+            StartDialLoopIfCallingText();
         }
 
         PlayHandPressFeedback(CallHandIndex);
@@ -229,6 +286,7 @@ public class MinigameCall112 : MonoBehaviour, IMiniGame
     {
         isCalling = true;
         yield return new WaitForSeconds(dialogDuration);
+        StopDialLoop();
 
         if (panelCall112 != null)
         {
@@ -275,10 +333,64 @@ public class MinigameCall112 : MonoBehaviour, IMiniGame
         if (panelDeckKartu != null)
         {
             panelDeckKartu.SetActive(true);
+
+            if (audioSource != null && shuffleCardSound != null)
+            {
+                audioSource.PlayOneShot(shuffleCardSound);
+            }
+
+            yield return StartCoroutine(PlayDeckEntranceAnimation());
         }
 
         isCardPhaseActive = true;
         SetupCardListeners();
+    }
+
+    private IEnumerator PlayDeckEntranceAnimation()
+    {
+        if (panelDeckKartu == null)
+        {
+            yield break;
+        }
+
+        RectTransform deckRect = panelDeckKartu.GetComponent<RectTransform>();
+        if (deckRect == null)
+        {
+            yield break;
+        }
+
+        Vector2 anchoredPos = deckRect.anchoredPosition;
+        deckRect.anchoredPosition = new Vector2(DeckEnterStartX, anchoredPos.y);
+
+        yield return StartCoroutine(AnimateRectTransformX(deckRect, DeckEnterOvershootX, DeckEnterFirstDuration));
+        yield return StartCoroutine(AnimateRectTransformX(deckRect, DeckEnterFinalX, DeckEnterSecondDuration));
+    }
+
+    private IEnumerator AnimateRectTransformX(RectTransform targetRect, float targetX, float duration)
+    {
+        if (targetRect == null)
+        {
+            yield break;
+        }
+
+        float safeDuration = Mathf.Max(0.01f, duration);
+        float elapsed = 0f;
+        float startX = targetRect.anchoredPosition.x;
+
+        while (elapsed < safeDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / safeDuration);
+            float easedT = Mathf.SmoothStep(0f, 1f, t);
+            Vector2 pos = targetRect.anchoredPosition;
+            pos.x = Mathf.Lerp(startX, targetX, easedT);
+            targetRect.anchoredPosition = pos;
+            yield return null;
+        }
+
+        Vector2 finalPos = targetRect.anchoredPosition;
+        finalPos.x = targetX;
+        targetRect.anchoredPosition = finalPos;
     }
 
     private void SetupCardListeners()
@@ -298,6 +410,12 @@ public class MinigameCall112 : MonoBehaviour, IMiniGame
         }
 
         isCardPhaseActive = false;
+
+        if (audioSource != null && mainkanKartuSound != null)
+        {
+            audioSource.PlayOneShot(mainkanKartuSound);
+        }
+
         selectedCard.RemoveCard();
         selectedCardCount++;
 
@@ -332,6 +450,7 @@ public class MinigameCall112 : MonoBehaviour, IMiniGame
             panelDeckKartu.SetActive(false);
             gambarJiro.SetActive(false);
             yield return StartCoroutine(TypeDialogText(CallDisconnectedText));
+            yield return StartCoroutine(PlayOneShotRepeated(hangupSound, 3));
             yield return StartCoroutine(WaitForDialogContinue());
             yield return StartCoroutine(TypeDialogText(BatteryOutText));
             yield return StartCoroutine(WaitForDialogContinue());
@@ -344,6 +463,25 @@ public class MinigameCall112 : MonoBehaviour, IMiniGame
 
         isCardPhaseActive = true;
         typingRoutine = null;
+    }
+
+    private IEnumerator PlayOneShotRepeated(AudioClip clip, int repeatCount)
+    {
+        if (audioSource == null || clip == null || repeatCount <= 0)
+        {
+            yield break;
+        }
+
+        for (int i = 0; i < repeatCount; i++)
+        {
+            audioSource.PlayOneShot(clip);
+            yield return new WaitForSeconds(clip.length);
+
+            if (i < repeatCount - 1)
+            {
+                yield return new WaitForSeconds(RepeatedSfxGap);
+            }
+        }
     }
 
     private IEnumerator TypeDialogText(string fullText)
@@ -367,6 +505,12 @@ public class MinigameCall112 : MonoBehaviour, IMiniGame
             }
 
             textDialog.text += fullText[i];
+
+            if (audioSource != null && typewriterSound != null && !char.IsWhiteSpace(fullText[i]))
+            {
+                audioSource.PlayOneShot(typewriterSound);
+            }
+
             yield return new WaitForSeconds(safeTypingSpeed);
         }
 
@@ -398,6 +542,7 @@ public class MinigameCall112 : MonoBehaviour, IMiniGame
         isMinigameFinished = true;
         isCardPhaseActive = false;
         isCalling = false;
+        StopDialLoop();
 
         if (panelCall112 != null)
         {
@@ -459,6 +604,7 @@ public class MinigameCall112 : MonoBehaviour, IMiniGame
     {
         isCalling = true;
         yield return new WaitForSeconds(dialogDuration);
+        StopDialLoop();
 
         if (panelCall112 != null)
         {
@@ -543,6 +689,8 @@ public class MinigameCall112 : MonoBehaviour, IMiniGame
 
     private void OnDestroy()
     {
+        StopDialLoop();
+
         if (callFlowRoutine != null)
         {
             StopCoroutine(callFlowRoutine);

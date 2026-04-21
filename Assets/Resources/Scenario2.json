@@ -29,18 +29,11 @@
     },
     {
       "stepType": "minigame",
-      "instruction": "Apa yang harus kamu lakukan sekarang?",
+      "instruction": "Listrik berhasil dimatikan. Sekarang aman untuk mendekati korban",
       "minigameID": "HazardRecognitionElectric",
       "narrativeImage": "LampuMatiTotaldanKorban",
       "goldTime": 3,
       "silverTime": 5,
-      "options": []
-    },
-    {
-      "stepType": "dialog",
-      "speakerName": "Narator",
-      "instruction": "Listrik berhasil dimatikan. Sekarang aman untuk mendekati korban.",
-      "narrativeImage": "LampuMatiTotaldanKorban",
       "options": []
     },
     {
@@ -81,7 +74,7 @@
     },
     {
       "stepType": "minigame",
-      "instruction": "Segera hubungi bantuan darurat!",
+      "instruction": "Tidak ada waktu lagi, aku sudah coba berikan info yang terbaik",
       "minigameID": "Call112Sequence",
       "narrativeImage": "Korban Terbaring",
       "goldTime": 10,
@@ -106,7 +99,7 @@
         {
           "text": "Segera mulai CPR",
           "isCorrect": true,
-          "feedback": "Tepat! CPR harus segera dilakukan.",
+          "narrative": "Tepat! CPR harus segera dilakukan.",
           "narrativeImage": "Korban Terbaring"
         },
         {
@@ -115,6 +108,38 @@
           "feedback": "Tidak perlu. Fokus pada CPR."
         }
       ]
+    },
+    {
+      "stepType": "dialog",
+      "speakerName": "Jiro",
+      "instruction": "Aku ingat pernah menonton panduan untuk mengikuti beat dari lagu Stayin Alive dari Bee Gees",
+      "narrativeImage": "Korban Terbaring",
+      "gambarPortrait": 0,
+      "options": []
+    },
+    {
+      "stepType": "dialog",
+      "speakerName": "Jiro",
+      "instruction": "Beatnya sekitar 100 BPM jadi aku harus melakukan 2 CPR per detik",
+      "narrativeImage": "Korban Terbaring",
+      "gambarPortrait": 0,
+      "options": []
+    },
+    {
+      "stepType": "dialog",
+      "speakerName": "Jiro",
+      "instruction": "Tekan sedalam 5-6cm, sekali menekan sekitar 0.25 detik dan lepas selama 0.25 detik",
+      "narrativeImage": "Korban Terbaring",
+      "gambarPortrait": 0,
+      "options": []
+    },
+    {
+      "stepType": "dialog",
+      "speakerName": "Jiro",
+      "instruction": "Ayo Jiro, kamu harus BISA!!!",
+      "narrativeImage": "Korban Terbaring",
+      "gambarPortrait": 0,
+      "options": []
     },
     {
       "stepType": "minigame",

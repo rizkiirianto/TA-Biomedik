@@ -50,9 +50,16 @@ public class MinigameCPR : MonoBehaviour, IMiniGame
 
     [Header("Audio")]
     [SerializeField] private AudioSource backingTrackSource;
+    [SerializeField] private AudioSource sfxSource;
     [SerializeField] private AudioClip backingTrackClip;
+    [SerializeField, Range(0f, 1f)] private float backingTrackVolume = 0.35f;
     [SerializeField] private bool playTrackOnStart = true;
     [SerializeField] private bool completeWhenTrackEnds = true;
+    [SerializeField] private AudioClip rusukPatahSound;
+    [SerializeField] private AudioClip soundAmbulance;
+    [SerializeField, Range(0f, 1f)] private float rusukPatahPerfectChance = 0.05f;
+    [SerializeField, Range(0f, 1f)] private float rusukPatahTooLongChance = 0.5f;
+    [SerializeField, Min(1)] private int maxRusukPatahPlayCount = 6;
 
     [Header("Completion")]
     [SerializeField] private bool autoCompleteByPerfectCount = false;
@@ -102,6 +109,51 @@ public class MinigameCPR : MonoBehaviour, IMiniGame
     private int tooLongCompressionCount;
     private int missInputCount;
     private int lateCount;
+    private int rusukPatahPlayedCount;
+
+    private void PlayAmbulanceLoopOnDetachedSource()
+    {
+        if (soundAmbulance == null)
+        {
+            return;
+        }
+
+        GameObject audioHost = new GameObject("CPR_AmbulanceLoopAudio");
+        AudioSource loopSource = audioHost.AddComponent<AudioSource>();
+        loopSource.playOnAwake = false;
+        loopSource.loop = true;
+        loopSource.spatialBlend = 0f;
+        loopSource.clip = soundAmbulance;
+        loopSource.Play();
+    }
+
+    private void TryPlayRusukPatahSound(float playChance)
+    {
+        if (rusukPatahSound == null)
+        {
+            return;
+        }
+
+        if (rusukPatahPlayedCount >= Mathf.Max(1, maxRusukPatahPlayCount))
+        {
+            return;
+        }
+
+        float clampedChance = Mathf.Clamp01(playChance);
+        if (clampedChance <= 0f || Random.value > clampedChance)
+        {
+            return;
+        }
+
+        AudioSource source = sfxSource != null ? sfxSource : backingTrackSource;
+        if (source == null)
+        {
+            return;
+        }
+
+        source.PlayOneShot(rusukPatahSound);
+        rusukPatahPlayedCount++;
+    }
 
     private void Start()
     {
@@ -128,8 +180,10 @@ public class MinigameCPR : MonoBehaviour, IMiniGame
         tooLongCompressionCount = 0;
         missInputCount = 0;
         lateCount = 0;
+        rusukPatahPlayedCount = 0;
         RecalculateRhythmFromBpm(true);
         uiCamera = ResolveUICamera();
+        EnsureAudioSources();
 
         if (laneRoot != null)
         {
@@ -388,6 +442,7 @@ public class MinigameCPR : MonoBehaviour, IMiniGame
             resultText = "Perfect Compression!";
             resultColor = new Color(0.45f, 1f, 0.55f);
             perfectCompressionCount++;
+            TryPlayRusukPatahSound(rusukPatahPerfectChance);
             TryFinishMinigame();
         }
         else if (holdTimer < shallowThresholdSeconds)
@@ -401,6 +456,7 @@ public class MinigameCPR : MonoBehaviour, IMiniGame
             resultText = "Too Long!";
             resultColor = new Color(1f, 0.55f, 0.2f);
             tooLongCompressionCount++;
+            TryPlayRusukPatahSound(rusukPatahTooLongChance);
         }
 
         SetFeedback(resultText, resultColor);
@@ -709,19 +765,32 @@ public class MinigameCPR : MonoBehaviour, IMiniGame
     {
         hasTrackStarted = false;
 
-        if (backingTrackSource == null)
-        {
-            backingTrackSource = GetComponent<AudioSource>();
-        }
-
         if (backingTrackSource == null || backingTrackClip == null || !playTrackOnStart)
         {
             return;
         }
 
+        backingTrackSource.volume = Mathf.Clamp01(backingTrackVolume);
         backingTrackSource.clip = backingTrackClip;
         backingTrackSource.Play();
         hasTrackStarted = true;
+    }
+
+    private void EnsureAudioSources()
+    {
+        if (backingTrackSource == null)
+        {
+            backingTrackSource = GetComponent<AudioSource>();
+        }
+
+        if (sfxSource == null || sfxSource == backingTrackSource)
+        {
+            sfxSource = gameObject.AddComponent<AudioSource>();
+            sfxSource.playOnAwake = false;
+            sfxSource.loop = false;
+            sfxSource.spatialBlend = 0f;
+            sfxSource.volume = 1f;
+        }
     }
 
     private void CheckTrackCompletion()
@@ -770,6 +839,8 @@ public class MinigameCPR : MonoBehaviour, IMiniGame
         {
             backingTrackSource.Stop();
         }
+
+        PlayAmbulanceLoopOnDetachedSource();
 
         if (gameManager != null)
         {

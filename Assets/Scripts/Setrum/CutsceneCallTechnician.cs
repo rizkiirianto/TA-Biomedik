@@ -20,6 +20,13 @@ public class CutsceneCallTechnician : MonoBehaviour, ICutscene
     [SerializeField] private GameObject gambarPerbaikiLampu;
     [SerializeField] private GameObject gambarTersetrum;
     [SerializeField] private GameObject gambarLampuKonslet;
+    [Header("Audio")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip typewriterSound;
+    [SerializeField] private AudioClip dialSound;
+    [SerializeField] private AudioClip pintuTerbukaSound;
+    [SerializeField] private AudioClip electricDischargeSound;
+    [SerializeField] private AudioClip jiroScreamSound;
 
     [Header("Dialogue")]
     [TextArea(2, 4)]
@@ -160,7 +167,7 @@ public class CutsceneCallTechnician : MonoBehaviour, ICutscene
         skipTypingRequested = false;
         dialogText.text = string.Empty;
 
-        for (int i = 0; i < line.Length; i++)
+        foreach (char letter in line)
         {
             if (skipTypingRequested)
             {
@@ -168,7 +175,13 @@ public class CutsceneCallTechnician : MonoBehaviour, ICutscene
                 break;
             }
 
-            dialogText.text += line[i];
+            dialogText.text += letter;
+
+            if (typewriterSound != null && audioSource != null && char.IsLetterOrDigit(letter))
+            {
+                audioSource.PlayOneShot(typewriterSound);
+            }
+
             yield return new WaitForSeconds(typingSpeed);
         }
 
@@ -284,6 +297,7 @@ public class CutsceneCallTechnician : MonoBehaviour, ICutscene
                 SetVisible(gambarJiroBiasa, false);
                 SetVisible(gambarJiroNelpon, true);
                 SetVisible(gambarJiroKaget, false);
+                audioSource.PlayOneShot(dialSound);
                 break;
             case 2:
             case 4:
@@ -308,6 +322,7 @@ public class CutsceneCallTechnician : MonoBehaviour, ICutscene
                 SetVisible(gambarJiroNelpon, false);
                 SetVisible(gambarPakRaka, false);
                 SetVisible(gambarTetanggaDatang, true);
+                audioSource.PlayOneShot(pintuTerbukaSound);
                 break;
             case 9:
                 SetVisible(gambarTetanggaDatang, true);
@@ -346,12 +361,14 @@ public class CutsceneCallTechnician : MonoBehaviour, ICutscene
                 SetVisible(gambarLampuKonslet, true);
                 SetVisible(gambarTersetrum, false);
                 SetVisible(gambarRuangTamuMatiTengah, false);
+                audioSource.PlayOneShot(electricDischargeSound);
                 break;
             case 16:
                 SetVisible(gambarJiroKaget, true);
                 SetVisible(gambarLampuKonslet, false);
                 SetVisible(gambarTersetrum, true);
                 SetVisible(gambarRuangTamuMatiTengah, true);
+                audioSource.PlayOneShot(jiroScreamSound);
                 break;
         }
     }

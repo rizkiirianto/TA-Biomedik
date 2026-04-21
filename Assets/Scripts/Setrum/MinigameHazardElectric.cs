@@ -8,6 +8,9 @@ using System.Collections.Generic;
 public class MinigameHazardElectric : MonoBehaviour, IMiniGame
 {
     [SerializeField] private TextMeshProUGUI dialogText;
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip typewriterSound;
+    [SerializeField] private AudioClip matikanSekringSound;
     [SerializeField] private Button advanceButton;
     [SerializeField] private GameObject dialogPanel;
     [SerializeField] private float typingSpeed = 0.035f;
@@ -52,6 +55,7 @@ public class MinigameHazardElectric : MonoBehaviour, IMiniGame
     private Coroutine wrongAnswerCoroutine;
     private bool minigameStarted = false;
     private bool minigameCompleted = false;
+    private bool interactionPhaseActive = false;
     private GameManager gameManager;
     
     // Breaker panel drag state
@@ -91,6 +95,8 @@ public class MinigameHazardElectric : MonoBehaviour, IMiniGame
         }
 
         SetupHitboxButtons();
+        EnableHitboxButtons(false);
+        interactionPhaseActive = false;
 
         // Mulai dialog pertama
         DisplayDialog(0);
@@ -126,6 +132,9 @@ public class MinigameHazardElectric : MonoBehaviour, IMiniGame
             return;
         }
 
+        interactionPhaseActive = false;
+        EnableHitboxButtons(false);
+
         currentDialogIndex = index;
 
         // Stop typing coroutine sebelumnya jika ada
@@ -148,6 +157,7 @@ public class MinigameHazardElectric : MonoBehaviour, IMiniGame
     private void EnterInteractionPhase()
     {
         HideDialogPanel();
+        interactionPhaseActive = true;
         EnableHitboxButtons(true);
 
         if (advanceButton != null)
@@ -165,6 +175,10 @@ public class MinigameHazardElectric : MonoBehaviour, IMiniGame
         {
             dialogText.text += character;
             yield return new WaitForSeconds(typingSpeed);
+            if (typewriterSound != null && audioSource != null && char.IsLetterOrDigit(character))
+            {
+                audioSource.PlayOneShot(typewriterSound);
+            }
         }
 
         isTyping = false;
@@ -259,7 +273,7 @@ public class MinigameHazardElectric : MonoBehaviour, IMiniGame
 
     private void HandleWrongChoice(string message)
     {
-        if (minigameCompleted)
+        if (minigameCompleted || isTyping || !interactionPhaseActive)
         {
             return;
         }
@@ -297,7 +311,7 @@ public class MinigameHazardElectric : MonoBehaviour, IMiniGame
 
     private void OnHitboxBreakerClicked()
     {
-        if (minigameCompleted)
+        if (minigameCompleted || isTyping || !interactionPhaseActive)
         {
             return;
         }
@@ -501,6 +515,7 @@ public class MinigameHazardElectric : MonoBehaviour, IMiniGame
             // Check apakah dilepas di zona bawah
             if (currentBreakerZone == BreakerZone.Bawah)
             {
+                audioSource.PlayOneShot(matikanSekringSound);
                 CompleteBreakerPanel();
             }
         }
