@@ -875,7 +875,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -251.46014, y: 0}
+  m_AnchoredPosition: {x: -251.4599, y: 0}
   m_SizeDelta: {x: -602.92004, y: -100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &254894989
@@ -4968,7 +4968,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.00024414062, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0.00032043457, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1635994295
@@ -5621,10 +5621,6 @@ MonoBehaviour:
   - scenarioId: 
     ambanceClip: {fileID: 0}
   dialogSfxAudioSource: {fileID: 83180211}
-  dialogTypewriterAudioSource: {fileID: 1968851129}
-  dialogTypewriterSfx: {fileID: 8300000, guid: 88b36b5273eb88e45b5452fc1d8d51e2, type: 3}
-  dialogTypewriterCharInterval: 0.03
-  playTypewriterForWhitespace: 0
   pointsFirstAttempt: 100
   pointsSecondAttempt: 70
   pointsThirdOrMoreAttempt: 40

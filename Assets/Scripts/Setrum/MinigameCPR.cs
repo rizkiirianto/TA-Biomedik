@@ -17,6 +17,7 @@ public class MinigameCPR : MonoBehaviour, IMiniGame
     [SerializeField] private Canvas rootCanvas;
     [SerializeField] private Image depthBarFill;
     [SerializeField] private TextMeshProUGUI feedbackText;
+    [SerializeField] private GameObject tebaringCompressed;
 
     [Header("Sprites")]
     [SerializeField] private Sprite incomingSprite;
@@ -196,6 +197,8 @@ public class MinigameCPR : MonoBehaviour, IMiniGame
             depthBarFill.gameObject.SetActive(true);
         }
 
+        SetCompressedVisual(false);
+
         PrepareAndPlayTrack();
 
         SetFeedback(string.Empty, Color.white);
@@ -368,6 +371,7 @@ public class MinigameCPR : MonoBehaviour, IMiniGame
 
         holdTimer = 0f;
         isHolding = true;
+        SetCompressedVisual(true);
         SetFeedback("Hold...", Color.white);
 
         StartCoroutine(PopScaleRoutine(heldNote));
@@ -424,10 +428,12 @@ public class MinigameCPR : MonoBehaviour, IMiniGame
     {
         if (!isHolding)
         {
+            SetCompressedVisual(false);
             return;
         }
 
         isHolding = false;
+        SetCompressedVisual(false);
 
         if (heldNote == null)
         {
@@ -573,6 +579,7 @@ public class MinigameCPR : MonoBehaviour, IMiniGame
             heldNote = null;
             isHolding = false;
             holdTimer = 0f;
+            SetCompressedVisual(false);
         }
 
         activeNotes.RemoveAt(index);
@@ -829,6 +836,7 @@ public class MinigameCPR : MonoBehaviour, IMiniGame
         }
 
         minigameFinished = true;
+        SetCompressedVisual(false);
 
         if (laneRoot != null)
         {
@@ -871,5 +879,13 @@ public class MinigameCPR : MonoBehaviour, IMiniGame
         }
 
         activeNotes.Clear();
+    }
+
+    private void SetCompressedVisual(bool isActive)
+    {
+        if (tebaringCompressed != null)
+        {
+            tebaringCompressed.SetActive(isActive);
+        }
     }
 }
