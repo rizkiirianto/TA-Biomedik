@@ -296,11 +296,23 @@ public class MinigameHazardElectric : MonoBehaviour, IMiniGame
 
     private void OnHitboxTanggaClicked()
     {
+        if (gameManager != null)
+        {
+            gameManager.PlayTemporaryCutsceneFromMinigame("JiroKesetrum");
+            return;
+        }
+
         HandleWrongChoice(wrongTanggaMessage);
     }
 
     private void OnHitboxTetanggaClicked()
     {
+        if (gameManager != null)
+        {
+            gameManager.PlayTemporaryCutsceneFromMinigame("JiroKesetrum");
+            return;
+        }
+
         HandleWrongChoice(wrongTetanggaMessage);
     }
 

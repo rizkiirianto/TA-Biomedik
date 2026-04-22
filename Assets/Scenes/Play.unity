@@ -2984,7 +2984,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 40
+  m_fontSize: 65
   m_fontSizeBase: 40
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -3405,7 +3405,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -50, y: 573}
+  m_AnchoredPosition: {x: -150, y: 0}
   m_SizeDelta: {x: 0, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &954105044
@@ -3532,7 +3532,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 40
+  m_fontSize: 72
   m_fontSizeBase: 40
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -5612,6 +5612,12 @@ MonoBehaviour:
     prefab: {fileID: 2022727342517948407, guid: ebc9694f7b8640349b6995cba5ccfd51, type: 3}
   - id: AmbulanceArrivalNight
     prefab: {fileID: 9000922053294694422, guid: 8e414745a8328784bba5de97197bcd8d, type: 3}
+  - id: JiroTertabrak
+    prefab: {fileID: 4262491630687424173, guid: 963339fae8bad3649b1f9f5323e079aa, type: 3}
+  - id: KainDilepas
+    prefab: {fileID: 4661209775782628082, guid: 0b546449b8569d243bd39a87b3cbe82b, type: 3}
+  - id: JiroKesetrum
+    prefab: {fileID: 4074745428878778627, guid: a707043cea59fac42b4491f834b07144, type: 3}
   ambianceAudioSource: {fileID: 1236919084}
   ambianceAudioRegistry:
   - scenarioId: Scenario1
@@ -6322,7 +6328,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 40
+  m_fontSize: 72
   m_fontSizeBase: 40
   m_fontWeight: 400
   m_enableAutoSizing: 1

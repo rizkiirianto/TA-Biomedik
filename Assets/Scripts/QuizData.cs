@@ -6,6 +6,8 @@ public class Option
 {
     public string text;
     public bool isCorrect;
+    public bool isFatal;
+    public string fatalCutsceneID;
     public string feedback;
     public string narrative;
     public string narrativeImage;

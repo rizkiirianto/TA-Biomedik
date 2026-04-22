@@ -107,6 +107,9 @@ public class GameManager : MonoBehaviour
     private Coroutine revealOptionsCoroutine;
     private GameObject activeOptionParent;
     private Button[] activeOptionButtons = Array.Empty<Button>();
+    private bool shouldRetryCurrentQuizAfterCutscene;
+    private bool shouldReturnToMinigameAfterCutscene;
+    private GameObject minigameInstanceBeforeTemporaryCutscene;
     private Coroutine quizTimerCoroutine;
     private float currentQuizTimeRemaining;
     private float currentQuizTimeLimit;
@@ -602,6 +605,22 @@ public class GameManager : MonoBehaviour
         }
         else
         {
+            if (selectedOption.isFatal && !string.IsNullOrWhiteSpace(selectedOption.fatalCutsceneID))
+            {
+                StopQuizTimer(resetVisuals: true);
+                SetOptionButtonsInteractable(false);
+
+                if (activeOptionParent != null)
+                {
+                    activeOptionParent.SetActive(false);
+                }
+
+                feedbackPanel.SetActive(false);
+                shouldRetryCurrentQuizAfterCutscene = true;
+                ShowCutsceneById(selectedOption.fatalCutsceneID);
+                return;
+            }
+
             // Tampilkan feedback panel hanya untuk jawaban salah
             feedbackPanel.SetActive(true);
             if (activeOptionParent != null)
@@ -662,7 +681,7 @@ public class GameManager : MonoBehaviour
         feedbackPanel.SetActive(true);
         
         Debug.Log("Memanggil PrepareToAdvance untuk lanjut ke step berikutnya");
-        PrepareToAdvance();
+        PrepareToAdvance(showOverlayPanel: false);
     }
 
     public void RegisterMinigameCall112Result(int correctCards, int totalSelections)
@@ -683,6 +702,31 @@ public class GameManager : MonoBehaviour
     }
 
     private void ShowCutscene(Step cutsceneStep)
+    {
+        ShowCutsceneById(cutsceneStep.cutsceneID);
+    }
+
+    public void PlayTemporaryCutsceneFromMinigame(string cutsceneId)
+    {
+        if (string.IsNullOrWhiteSpace(cutsceneId))
+        {
+            Debug.LogWarning("PlayTemporaryCutsceneFromMinigame dipanggil dengan cutsceneId kosong.");
+            return;
+        }
+
+        if (activeMiniGameInstance == null)
+        {
+            Debug.LogWarning($"Tidak ada minigame aktif saat mencoba memainkan cutscene sementara '{cutsceneId}'.");
+            return;
+        }
+
+        minigameInstanceBeforeTemporaryCutscene = activeMiniGameInstance;
+        activeMiniGameInstance.SetActive(false);
+        shouldReturnToMinigameAfterCutscene = true;
+        ShowCutsceneById(cutsceneId);
+    }
+
+    private void ShowCutsceneById(string cutsceneId)
     {   
         StopQuizTimer(resetVisuals: true);
         quizUIParent.SetActive(false);
@@ -693,21 +737,56 @@ public class GameManager : MonoBehaviour
         LoadPortraitImage(-1); // Sembunyikan portrait di cutscene
         LoadPortraitDialogue(-1);
 
+        if (string.IsNullOrWhiteSpace(cutsceneId))
+        {
+            Debug.LogError("Cutscene ID kosong, tidak bisa menjalankan cutscene.");
+            if (shouldReturnToMinigameAfterCutscene)
+            {
+                shouldReturnToMinigameAfterCutscene = false;
+                ReturnToMinigameAfterTemporaryCutscene();
+                return;
+            }
+            if (shouldRetryCurrentQuizAfterCutscene)
+            {
+                shouldRetryCurrentQuizAfterCutscene = false;
+                RestartCurrentQuizAfterFatalCutscene();
+            }
+            else
+            {
+                PrepareToAdvance();
+            }
+            return;
+        }
+
         // Cari prefab cutscene berdasarkan ID
         CutsceneRegistry cutsceneToStart = cutsceneRegistry
-            .FirstOrDefault(cs => cs.id == cutsceneStep.cutsceneID);
+            .FirstOrDefault(cs => cs.id == cutsceneId);
 
         if (cutsceneToStart == null || cutsceneToStart.prefab == null)
         {
-            Debug.LogError($"Prefab cutscene ID '{cutsceneStep.cutsceneID}' tidak ditemukan di Cutscene Registry!");
-            PrepareToAdvance();
+            Debug.LogError($"Prefab cutscene ID '{cutsceneId}' tidak ditemukan di Cutscene Registry!");
+            if (shouldReturnToMinigameAfterCutscene)
+            {
+                shouldReturnToMinigameAfterCutscene = false;
+                ReturnToMinigameAfterTemporaryCutscene();
+                return;
+            }
+            if (shouldRetryCurrentQuizAfterCutscene)
+            {
+                shouldRetryCurrentQuizAfterCutscene = false;
+                RestartCurrentQuizAfterFatalCutscene();
+            }
+            else
+            {
+                PrepareToAdvance();
+            }
             return;
         }
 
         // Spawn: logika sama seperti minigame (UI vs world)
         if (cutsceneToStart.prefab.GetComponent<RectTransform>() != null)
         {
-            Debug.Log($"Spawning UI Cutscene: {cutsceneStep.cutsceneID}");
+            Debug.Log($"Spawning UI Cutscene: {cutsceneId}");
 
             // Pastikan camera ON untuk render Canvas
             mainSceneCamera.gameObject.SetActive(true);
@@ -720,7 +799,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            Debug.Log($"Spawning World Cutscene: {cutsceneStep.cutsceneID}");
+            Debug.Log($"Spawning World Cutscene: {cutsceneId}");
 
             // Kalau cutscene world bawa kamera sendiri, matikan main camera (opsional).
             // Kalau cutscene world TIDAK bawa kamera sendiri, biarkan main camera tetap aktif.
@@ -738,8 +817,22 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError($"Prefab Cutscene {cutsceneStep.cutsceneID} tidak punya script yang implement ICutscene!");
-            PrepareToAdvance();
+            Debug.LogError($"Prefab Cutscene {cutsceneId} tidak punya script yang implement ICutscene!");
+            if (shouldReturnToMinigameAfterCutscene)
+            {
+                shouldReturnToMinigameAfterCutscene = false;
+                ReturnToMinigameAfterTemporaryCutscene();
+                return;
+            }
+            if (shouldRetryCurrentQuizAfterCutscene)
+            {
+                shouldRetryCurrentQuizAfterCutscene = false;
+                RestartCurrentQuizAfterFatalCutscene();
+            }
+            else
+            {
+                PrepareToAdvance();
+            }
         }
     }
 
@@ -761,10 +854,70 @@ public class GameManager : MonoBehaviour
             feedbackPanel.SetActive(false);
         }
 
+        if (shouldReturnToMinigameAfterCutscene)
+        {
+            shouldReturnToMinigameAfterCutscene = false;
+            ReturnToMinigameAfterTemporaryCutscene();
+            return;
+        }
+
+        if (shouldRetryCurrentQuizAfterCutscene)
+        {
+            shouldRetryCurrentQuizAfterCutscene = false;
+            RestartCurrentQuizAfterFatalCutscene();
+            return;
+        }
+
         GoToNextStep();
     }
 
-    private void PrepareToAdvance()
+    private void ReturnToMinigameAfterTemporaryCutscene()
+    {
+        if (minigameInstanceBeforeTemporaryCutscene == null)
+        {
+            return;
+        }
+
+        activeMiniGameInstance = minigameInstanceBeforeTemporaryCutscene;
+        minigameInstanceBeforeTemporaryCutscene = null;
+
+        if (activeCutsceneInstance != null)
+        {
+            Destroy(activeCutsceneInstance);
+            activeCutsceneInstance = null;
+        }
+
+        if (activeMiniGameInstance != null)
+        {
+            activeMiniGameInstance.SetActive(true);
+        }
+
+        quizUIParent.SetActive(false);
+        clickAdvancePanel.SetActive(false);
+        clickAdvanceButton.gameObject.SetActive(false);
+        feedbackPanel.SetActive(false);
+    }
+
+    private void RestartCurrentQuizAfterFatalCutscene()
+    {
+        if (quizData == null || currentStepIndex < 0 || currentStepIndex >= quizData.steps.Count)
+        {
+            return;
+        }
+
+        Step currentStep = quizData.steps[currentStepIndex];
+        if (currentStep.stepType != "quiz")
+        {
+            ShowStep(currentStepIndex);
+            return;
+        }
+
+        int previousAttempts = currentQuestionAttempts;
+        ShowQuiz(currentStep);
+        currentQuestionAttempts = previousAttempts;
+    }
+
+    private void PrepareToAdvance(bool showOverlayPanel = true)
     {
         StopQuizTimer(resetVisuals: true);
         isWaitingForAdvance = true;
@@ -773,7 +926,7 @@ public class GameManager : MonoBehaviour
         // Pastikan panel click/overlay aktif agar tombol advance bisa benar-benar diklik.
         if (clickAdvancePanel != null)
         {
-            clickAdvancePanel.SetActive(true);
+            clickAdvancePanel.SetActive(showOverlayPanel);
         }
 
         clickAdvanceButton.gameObject.SetActive(true);
