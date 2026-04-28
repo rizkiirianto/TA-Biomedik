@@ -1,359 +1,342 @@
 {
-	"steps": [
-		{
-			"stepType": "dialog",
-			"speakerName": "Narator",
-			"instruction": "Sore hari di Gedung Satria Mall. Jiro sedang membeli minum ketika alarm kebakaran mendadak berbunyi.",
-			"narrativeImage": "bg hitam",
-			"options": []
-		},
-		{
-			"stepType": "dialog",
-			"speakerName": "Jiro",
-			"instruction": "Semua tetap tenang! Ikuti jalur evakuasi! Saya cek korban di lantai dasar.",
-			"options": []
-		},
-		{
-			"stepType": "quiz",
-			"instruction": "Saat tiba di area kebakaran dengan banyak korban, tindakan pertama Jiro adalah...",
-			"quizTimeSeconds": 12,
-			"lowTimeCueSeconds": 4,
-			"backgroundImage": "bg hitam",
-			"options": [
-				{
-					"text": "Langsung mengangkat korban terdekat",
-					"isCorrect": false,
-					"feedback": "Jangan terburu-buru. Penolong harus memastikan area aman dulu agar tidak jadi korban berikutnya."
-				},
-				{
-					"text": "Pastikan keamanan lokasi, identifikasi bahaya api/asap, lalu aktifkan bantuan",
-					"isCorrect": true,
-					"feedback": "Benar! Prinsip pertama: scene safety. Setelah itu baru triase dan pertolongan.",
-					"narrative": "Jiro menilai jalur aman, menjauh dari sumber api, lalu mengarahkan orang sekitar untuk membantu evakuasi.",
-					"narrativeImage": "bg hitam"
-				},
-				{
-					"text": "Memberi minum semua korban agar tidak panik",
-					"isCorrect": false,
-					"feedback": "Tidak tepat. Prioritas awal pada keselamatan, triase, dan aktivasi bantuan darurat."
-				}
-			]
-		},
-		{
-			"stepType": "dialog",
-			"speakerName": "Jiro",
-			"instruction": "Kamu, tolong hubungi 119 untuk ambulans medis dan 112 untuk pemadam kebakaran sekarang. Sampaikan ini kebakaran gedung dengan banyak korban.",
-			"options": []
-		},
-		{
-			"stepType": "quiz",
-			"instruction": "Untuk insiden multiple victim, informasi paling penting saat melapor ke layanan darurat adalah...",
-			"quizTimeSeconds": 12,
-			"lowTimeCueSeconds": 4,
-			"backgroundImage": "bg hitam",
-			"options": [
-				{
-					"text": "Nama semua korban satu per satu",
-					"isCorrect": false,
-					"feedback": "Tidak perlu di awal. Operator perlu data situasi untuk mobilisasi sumber daya."
-				},
-				{
-					"text": "Lokasi spesifik, jenis kejadian, perkiraan jumlah korban, dan potensi bahaya",
-					"isCorrect": true,
-					"feedback": "Tepat! Data ini paling membantu pengiriman bantuan yang sesuai."
-				},
-				{
-					"text": "Kronologi lengkap dari awal kejadian",
-					"isCorrect": false,
-					"feedback": "Terlalu panjang untuk fase awal. Fokus pada data inti yang bisa segera ditindak."
-				}
-			]
-		},
-		{
-			"stepType": "dialog",
-			"speakerName": "Narator",
-			"instruction": "Asap mulai menebal. Jiro melakukan triase cepat metode START pada tiga korban utama.",
-			"options": []
-		},
-		{
-			"stepType": "quiz",
-			"instruction": "Korban 1 dapat berjalan sendiri sambil batuk ringan. Kategori triase paling tepat adalah...",
-			"quizTimeSeconds": 10,
-			"lowTimeCueSeconds": 3,
-			"backgroundImage": "bg hitam",
-			"options": [
-				{
-					"text": "Merah (Immediate)",
-					"isCorrect": false,
-					"feedback": "Belum tentu. Jika bisa berjalan, biasanya masuk prioritas rendah lebih dulu."
-				},
-				{
-					"text": "Hijau (Minor)",
-					"isCorrect": true,
-					"feedback": "Benar. Korban yang masih bisa berjalan diarahkan ke zona aman sebagai kategori hijau."
-				},
-				{
-					"text": "Hitam (Expectant)",
-					"isCorrect": false,
-					"feedback": "Tidak tepat. Korban masih sadar dan mobil.",
-					"narrativeImage": "bg hitam"
-				}
-			]
-		},
-		{
-			"stepType": "quiz",
-			"instruction": "Korban 2 terbaring, tidak bernapas. Setelah reposisi jalan napas tetap tidak bernapas. Kategori triase adalah...",
-			"quizTimeSeconds": 12,
-			"lowTimeCueSeconds": 4,
-			"backgroundImage": "bg hitam",
-			"options": [
-				{
-					"text": "Kuning (Delayed)",
-					"isCorrect": false,
-					"feedback": "Dalam START, korban tanpa napas setelah reposisi jalan napas dikategorikan expectant/deceased."
-				},
-				{
-					"text": "Merah (Immediate)",
-					"isCorrect": false,
-					"feedback": "Kategori merah untuk korban yang masih punya tanda hidup namun butuh tindakan segera."
-				},
-				{
-					"text": "Hitam (Expectant/Deceased)",
-					"isCorrect": true,
-					"feedback": "Benar. Pada kejadian korban massal, sumber daya difokuskan ke korban yang masih dapat diselamatkan cepat."
-				}
-			]
-		},
-		{
-			"stepType": "quiz",
-			"instruction": "Korban 3 bernapas 36 kali/menit, luka bakar pada wajah dan dada, tampak bingung. Kategori triase paling tepat...",
-			"quizTimeSeconds": 10,
-			"lowTimeCueSeconds": 3,
-			"backgroundImage": "bg hitam",
-			"options": [
-				{
-					"text": "Hijau (Minor)",
-					"isCorrect": false,
-					"feedback": "Tidak tepat. Ada tanda kegawatan pernapasan dan mental status menurun."
-				},
-				{
-					"text": "Kuning (Delayed)",
-					"isCorrect": false,
-					"feedback": "Belum tepat. RR > 30/menit dan kondisi mental terganggu masuk prioritas immediate."
-				},
-				{
-					"text": "Merah (Immediate)",
-					"isCorrect": true,
-					"feedback": "Tepat. Ini korban prioritas tinggi yang harus ditangani segera.",
-					"narrative": "Jiro menandai korban 3 sebagai merah dan segera fokus pada penanganan luka bakar serta jalan napas.",
-					"narrativeImage": "bg hitam"
-				}
-			]
-		},
-		{
-			"stepType": "dialog",
-			"speakerName": "Jiro",
-			"instruction": "Saya fokus ke korban merah dulu. Kalian arahkan korban hijau ke titik kumpul dan jaga jalur ambulans tetap kosong!",
-			"options": []
-		},
-		{
-			"stepType": "quiz",
-			"instruction": "Pada korban luka bakar dengan pakaian masih panas, langkah awal paling tepat adalah...",
-			"quizTimeSeconds": 12,
-			"lowTimeCueSeconds": 4,
-			"backgroundImage": "bg hitam",
-			"options": [
-				{
-					"text": "Oleskan pasta gigi agar terasa dingin",
-					"isCorrect": false,
-					"feedback": "Salah. Pasta gigi tidak steril dan dapat memperparah cedera jaringan."
-				},
-				{
-					"text": "Hentikan proses terbakar, jauhkan dari sumber panas, lalu dinginkan dengan air mengalir",
-					"isCorrect": true,
-					"feedback": "Benar. Stop the burning process, jauhkan sumber panas, dan lakukan cooling secara tepat sesuai luas luka."
-				},
-				{
-					"text": "Pecahkan lepuh agar cepat kering",
-					"isCorrect": false,
-					"feedback": "Jangan memecahkan lepuh karena meningkatkan risiko infeksi."
-				}
-			]
-		},
-		{
-			"stepType": "quiz",
-			"instruction": "Saat melepas pakaian terbakar pada korban, prinsip yang benar adalah...",
-			"quizTimeSeconds": 12,
-			"lowTimeCueSeconds": 4,
-			"backgroundImage": "bg hitam",
-			"options": [
-				{
-					"text": "Semua kain ditarik lepas termasuk yang menempel di kulit",
-					"isCorrect": false,
-					"feedback": "Salah. Kain yang sudah menempel kuat tidak boleh dipaksa dilepas karena dapat merobek jaringan kulit."
-				},
-				{
-					"text": "Lepas pakaian yang longgar/terbakar, tetapi biarkan kain yang sudah menempel erat pada kulit",
-					"isCorrect": true,
-					"feedback": "Tepat. Jangan mengelupas kain yang melekat pada luka bakar; cukup potong bagian yang longgar di sekitarnya."
-				},
-				{
-					"text": "Tutup dengan salep dulu baru pakaian dilepas",
-					"isCorrect": false,
-					"feedback": "Tidak tepat. Prioritaskan penghentian proses terbakar dan penanganan jaringan dengan aman."
-				}
-			]
-		},
-		{
-			"stepType": "quiz",
-			"instruction": "Untuk luka bakar luas pada korban merah (misalnya wajah dan dada), pendinginan yang paling aman adalah...",
-			"quizTimeSeconds": 12,
-			"lowTimeCueSeconds": 4,
-			"backgroundImage": "bg hitam",
-			"options": [
-				{
-					"text": "Kompres es langsung di area luka agar cepat dingin",
-					"isCorrect": false,
-					"feedback": "Es langsung dapat memperburuk kerusakan jaringan."
-				},
-				{
-					"text": "Cooling seperlunya untuk menghentikan panas, hindari penyiraman lama pada area luas, lalu cegah hipotermia",
-					"isCorrect": true,
-					"feedback": "Benar. Pada luka bakar luas, pendinginan berkepanjangan berisiko hipotermia; segera lanjutkan proteksi suhu tubuh."
-				},
-				{
-					"text": "Taburi bedak agar luka kering",
-					"isCorrect": false,
-					"feedback": "Tidak dianjurkan. Hindari bahan yang mengkontaminasi luka."
-				}
-			]
-		},
-		{
-			"stepType": "dialog",
-			"speakerName": "Narator",
-			"instruction": "Jiro menghentikan proses pembakaran, melakukan pendinginan singkat pada area luka, lalu segera menutup korban dengan kain bersih kering untuk mencegah hipotermia.",
-			"narrativeImage": "KorbanSelimut",
-			"options": []
-		},
-		{
-			"stepType": "dialog",
-			"speakerName": "Jiro",
-			"instruction": "Bagian baju yang longgar kita potong, tapi kain yang sudah meleleh dan menempel di kulit jangan ditarik supaya jaringan tidak ikut terkelupas.",
-			"options": []
-		},
-		{
-			"stepType": "quiz",
-			"instruction": "Saat menangani luka bakar di lengan, apa yang harus dilakukan terhadap jam tangan/cincin korban?",
-			"quizTimeSeconds": 10,
-			"lowTimeCueSeconds": 3,
-			"backgroundImage": "bg hitam",
-			"options": [
-				{
-					"text": "Dibiarkan saja sampai rumah sakit",
-					"isCorrect": false,
-					"feedback": "Salah. Pembengkakan cepat dapat membuat aksesori menjepit jaringan."
-				},
-				{
-					"text": "Lepas segera jika memungkinkan, sebelum bengkak bertambah",
-					"isCorrect": true,
-					"feedback": "Benar. Lepas benda ketat sedini mungkin jika aman dilakukan."
-				},
-				{
-					"text": "Potong kulit sekitar aksesori",
-					"isCorrect": false,
-					"feedback": "Berbahaya dan tidak boleh dilakukan oleh penolong awam."
-				}
-			]
-		},
-		{
-			"stepType": "quiz",
-			"instruction": "Setelah pendinginan awal, penutup luka bakar yang paling tepat adalah...",
-			"quizTimeSeconds": 10,
-			"lowTimeCueSeconds": 3,
-			"backgroundImage": "bg hitam",
-			"options": [
-				{
-					"text": "Kain bersih non-lengket atau kasa steril longgar",
-					"isCorrect": true,
-					"feedback": "Benar. Penutupan longgar menjaga luka tetap bersih dan mengurangi nyeri."
-				},
-				{
-					"text": "Kapas langsung menempel di luka",
-					"isCorrect": false,
-					"feedback": "Kapas mudah menempel dan sulit dibersihkan dari luka."
-				},
-				{
-					"text": "Salep tebal beraroma",
-					"isCorrect": false,
-					"feedback": "Hindari bahan tambahan non-medis pada pertolongan awal."
-				}
-			]
-		},
-		{
-			"stepType": "quiz",
-			"instruction": "Korban merah mengalami luka bakar wajah, suara serak, dan batuk jelaga. Prioritas utama berikutnya adalah...",
-			"quizTimeSeconds": 12,
-			"lowTimeCueSeconds": 4,
-			"backgroundImage": "bg hitam",
-			"options": [
-				{
-					"text": "Menyuruh korban berlari ke luar agar cepat",
-					"isCorrect": false,
-					"feedback": "Dapat memperparah sesak dan kelelahan."
-				},
-				{
-					"text": "Pantau ketat jalan napas dan siapkan evakuasi segera ke fasilitas lanjut",
-					"isCorrect": true,
-					"feedback": "Tepat. Tanda inhalation injury adalah red flag kegawatan jalan napas."
-				},
-				{
-					"text": "Berikan makanan manis agar tenaga kembali",
-					"isCorrect": false,
-					"feedback": "Tidak prioritas dan berisiko pada korban dengan potensi gangguan napas."
-				}
-			]
-		},
-		{
-			"stepType": "dialog",
-			"speakerName": "Narator",
-			"instruction": "Sirene terdengar mendekat. Tim damkar dan ambulans tiba, sementara Jiro menyiapkan serah-terima kondisi korban.",
-			"options": []
-		},
-		{
-			"stepType": "quiz",
-			"instruction": "Saat handover ke tim medis, laporan paling efektif adalah...",
-			"quizTimeSeconds": 12,
-			"lowTimeCueSeconds": 4,
-			"backgroundImage": "bg hitam",
-			"options": [
-				{
-					"text": "Cerita detail panjang tanpa urutan",
-					"isCorrect": false,
-					"feedback": "Kurang efektif untuk situasi gawat darurat."
-				},
-				{
-					"text": "Ringkas dan terstruktur: kategori triase, temuan utama, tindakan yang sudah dilakukan",
-					"isCorrect": true,
-					"feedback": "Benar. Informasi terstruktur mempercepat keputusan tim lanjutan."
-				},
-				{
-					"text": "Serahkan tanpa penjelasan karena tim medis pasti paham",
-					"isCorrect": false,
-					"feedback": "Tidak tepat. Handover yang baik sangat menentukan kontinuitas penanganan."
-				}
-			]
-		},
-		{
-			"stepType": "dialog",
-			"speakerName": "Jiro",
-			"instruction": "Korban merah: napas cepat, luka bakar wajah-dada, cooling awal seperlunya sudah dilakukan tanpa penyiraman lama karena area luas, aksesori dilepas, luka ditutup kasa longgar dan tubuh dijaga tetap hangat. Korban hijau sudah di titik aman. Satu korban hitam setelah reposisi airway tetap apnea.",
-			"options": []
-		},
-		{
-			"stepType": "dialog",
-			"speakerName": "Narator",
-			"instruction": "Malam itu, Jiro belajar bahwa di tengah kekacauan, triase yang tepat dan pertolongan luka bakar yang benar bisa menyelamatkan lebih banyak nyawa.",
-			"options": []
-		}
-	]
+  "steps": [
+    {
+      "stepType": "cutscene",
+      "cutsceneID": "Intro_Episode3",
+      "instruction": "",
+      "options": []
+    },
+    {
+      "stepType": "dialog",
+      "speakerName": "Narator",
+      "instruction": "Pintu darurat tertutup puing dan api. Namun kemudian Jiro mendengar ada suara orang berteriak, dan merintih dari arah belakangnya.",
+      "narrativeImage": "TanggaDarurat_Tertutup",
+      "dialogSfx": "Dialog/FireAlarm_Muffled",
+      "options": []
+    },
+    {
+      "stepType": "dialog",
+      "speakerName": "Narator",
+      "instruction": "Jiro menoleh ke arah lorong di belakangnya dan menemukan ada 2 orang lain di situ.",
+      "narrativeImage": "Dua_Korban",
+      "dialogSfx": "Dialog/FireAlarm_Muffled",
+      "options": []
+    },
+    {
+      "stepType": "dialog",
+      "speakerName": "Narator",
+      "instruction": "Di tengah kepanikan, Jiro juga mendengar suara batuk yang teredam asap dari arah ujung lorong yang gelap.",
+      "narrativeImage": "Dua_Korban",
+      "dialogSfx": "Dialog/Coughing_Far",
+      "options": []
+    },
+    {
+      "stepType": "quiz",
+      "instruction": "Kamu melihat 2 korban tergeletak dan mendengar 1 orang tak terlihat di ujung lorong. Apa langkah triase PERTAMA yang paling cepat untuk memilah mereka?",
+      "minigameID": "",
+      "quizTimeSeconds": 12,
+      "lowTimeCueSeconds": 4,
+      "backgroundImage": "Dua_Korban",
+      "optionParentTarget": "optionParents",
+      "optionParentPosX": -150.0,
+      "optionParentPosY": 300.0,
+      "options": [
+        {
+          "text": "Mengecek denyut nadi mereka satu per satu",
+          "isCorrect": false,
+          "feedback": "Terlalu lama! Gunakan perintah suara untuk merespons orang di ujung lorong dan memilah korban di dekatmu."
+        },
+        {
+          "text": "Memeriksa luka yang paling berdarah dulu sebelum memanggil siapa pun",
+          "isCorrect": false,
+          "feedback": "Terlihat logis, tetapi pada triase awal insiden massal kamu harus memilah semua korban (termasuk yang tidak terlihat) dengan cepat."
+        },
+        {
+          "text": "Berteriak memanggil siapa saja yang masih bisa berjalan",
+          "isCorrect": true,
+          "narrative": "Tepat! (Triase Hijau). Panggil mereka untuk memastikan siapa yang kondisinya ringan dan bisa berjalan sendiri menembus asap.",
+          "narrativeImage": "Dua_Korban"
+        }
+      ]
+    },
+    {
+      "stepType": "minigame",
+      "instruction": "Teriak sekeras mungkin saat suara alarm sedikit mereda agar orang di ujung lorong mendengarmu!",
+      "minigameID": "TriageShout",
+      "narrativeImage": "Minigame_Shout_UI",
+      "goldTime": 8,
+      "silverTime": 12,
+      "options": []
+    },
+    {
+      "stepType": "dialog",
+      "speakerName": "Narator",
+      "instruction": "Mendengar teriakan Jiro, seorang pria (Budi) muncul dari ruangan di ujung lorong sambil terbatuk-batuk keras.",
+      "narrativeImage": "Budi_Jalan_Batuk",
+      "options": []
+    },
+    {
+      "stepType": "quiz",
+      "instruction": "Budi datang terbatuk-batuk (Kategori Hijau) akibat menghirup asap. Apa instruksimu untuknya?",
+      "minigameID": "",
+      "quizTimeSeconds": 12,
+      "lowTimeCueSeconds": 4,
+      "backgroundImage": "Budi_Jalan_Batuk",
+      "optionParentTarget": "optionParents2",
+      "options": [
+        {
+          "text": "Suruh Budi merunduk sejajar lantai dan tutup mulut",
+          "isCorrect": true,
+          "narrative": "Benar. Udara beracun dan panas bergerak ke atas. Udara paling bersih ada di dekat lantai.",
+          "narrativeImage": "Budi_Merunduk"
+        },
+        {
+          "text": "Suruh Budi berdiri dekat jendela sambil bernapas cepat agar paru-paru 'bersih'",
+          "isCorrect": false,
+          "feedback": "Bernapas cepat justru bisa memperparah iritasi saluran napas. Prioritaskan posisi rendah dan napas terkontrol."
+        },
+        {
+          "text": "Suruh Budi membantu mengangkat puing",
+          "isCorrect": false,
+          "feedback": "Budi mengalami trauma pernapasan ringan (inhalasi). Beban fisik akan memperburuk kondisinya."
+        }
+      ]
+    },
+    {
+      "stepType": "quiz",
+      "instruction": "Tersisa 2 korban. Tono tertimpa puing plafon di kepala (diam). Siti menjerit karena lengan terbakar dan kaki robek. Siapa yang dihampiri lebih dulu?",
+      "minigameID": "",
+      "quizTimeSeconds": 10,
+      "lowTimeCueSeconds": 3,
+      "backgroundImage": "Tono_Siti_Tergeletak",
+      "optionParentTarget": "optionParents",
+      "options": [
+        {
+          "text": "Tono (Diam tak sadarkan diri)",
+          "isCorrect": true,
+          "narrative": "Benar. Korban yang diam adalah prioritas utama (Merah) karena ada kemungkinan jalan napas tersumbat.",
+          "narrativeImage": "Tono_Pingsan"
+        },
+        {
+          "text": "Datangi Siti dulu karena luka terlihat paling parah dan banyak keluhan",
+          "isCorrect": false,
+          "feedback": "Luka yang tampak dramatis belum tentu paling mengancam nyawa saat ini. Korban tidak responsif harus dicek dulu jalan napasnya."
+        },
+        {
+          "text": "Siti (Menjerit kesakitan)",
+          "isCorrect": false,
+          "feedback": "Siti menjerit, artinya jalan napas (Airway) masih aman. Tono lebih terancam nyawanya."
+        }
+      ]
+    },
+    {
+      "stepType": "quiz",
+      "instruction": "Tono TIDAK BERNAPAS. Dia tertimpa puing di area kepala dan berisiko patah tulang leher. Bagaimana cara membuka jalan napasnya?",
+      "minigameID": "",
+      "quizTimeSeconds": 15,
+      "lowTimeCueSeconds": 5,
+      "backgroundImage": "Tono_Pingsan",
+      "optionParentTarget": "optionParents2",
+      "options": [
+        {
+          "text": "Dongakkan kepala dan angkat dagunya (Head-Tilt)",
+          "isCorrect": false,
+          "isFatal": true,
+          "fatalCutsceneID": "Spinal_Cord_Damage",
+          "feedback": "FATAL! Memutar/mendongakkan leher korban trauma kepala berisiko memutus saraf tulang belakang."
+        },
+        {
+          "text": "Tarik bahu korban agar posisi leher lebih lurus lalu cek napas",
+          "isCorrect": false,
+          "feedback": "Gerakan pada bahu dan leher tetap berisiko memperparah cedera tulang belakang pada trauma kepala/leher."
+        },
+        {
+          "text": "Dorong rahang bawah ke depan tanpa memutar leher (Jaw-Thrust)",
+          "isCorrect": true,
+          "narrative": "Sangat Tepat! Teknik Jaw-Thrust digunakan HANYA jika dicurigai ada trauma pada leher.",
+          "narrativeImage": "Tono_JawThrust_Prep"
+        }
+      ]
+    },
+    {
+      "stepType": "minigame",
+      "instruction": "Geser rahang bawah Tono ke atas perlahan tanpa menyentuh leher atau dahinya!",
+      "minigameID": "JawThrust",
+      "narrativeImage": "Minigame_JawThrust_UI",
+      "goldTime": 5,
+      "silverTime": 10,
+      "options": []
+    },
+    {
+      "stepType": "quiz",
+      "instruction": "Walau jalan napas sudah dibuka, Tono TETAP TIDAK BERNAPAS. Dalam situasi triase banyak korban yang kritis, apa keputusanmu?",
+      "minigameID": "",
+      "quizTimeSeconds": 12,
+      "lowTimeCueSeconds": 4,
+      "backgroundImage": "Tono_JawThrust_Prep",
+      "optionParentTarget": "optionParents2",
+      "options": [
+        {
+          "text": "Lakukan CPR (Resusitasi Jantung Paru)",
+          "isCorrect": false,
+          "isFatal": true,
+          "fatalCutsceneID": "Siti_Bleed_Out",
+          "feedback": "Saat kamu membuang waktu melakukan CPR, Siti kehabisan darah dan meninggal dunia."
+        },
+        {
+          "text": "Pantau Tono selama 1 menit untuk memastikan tidak ada napas spontan",
+          "isCorrect": false,
+          "feedback": "Dalam triase korban massal, menunggu lama pada satu korban akan mengurangi peluang selamat korban lain yang masih bisa ditolong."
+        },
+        {
+          "text": "Tinggalkan Tono (Kategori Hitam), pindah ke Siti",
+          "isCorrect": true,
+          "feedback": "Keputusan berat namun TEPAT. Korban tanpa napas di insiden massal diberi tag Hitam (Meninggal).",
+          "narrative": "Jiro menahan napas sejenak, menerima kenyataan pahit, lalu segera beralih menyelamatkan Siti.",
+          "narrativeImage": "Jiro_Pindah_Ke_Siti"
+        }
+      ]
+    },
+    {
+      "stepType": "dialog",
+      "speakerName": "Siti",
+      "instruction": "Tolong... lenganku melepuh, dan kakiku robek kena kaca besar!",
+      "gambarPortrait": 6,
+      "narrativeImage": "Siti_Kombinasi_Luka",
+      "dialogSfx": "Dialog/Female_Groan_Pain",
+      "options": []
+    },
+    {
+      "stepType": "quiz",
+      "instruction": "Kaki Siti mengalami PENDARAHAN ARTERI hebat, dan lengannya LUKA BAKAR derajat dua. Mana yang harus dihentikan lebih dulu?",
+      "minigameID": "",
+      "quizTimeSeconds": 10,
+      "lowTimeCueSeconds": 3,
+      "backgroundImage": "Siti_Kombinasi_Luka",
+      "optionParentTarget": "optionParents",
+      "options": [
+        {
+          "text": "Pendarahan Arteri",
+          "isCorrect": true,
+          "narrative": "Tepat! Pendarahan berdenyut bisa membunuh dalam hitungan menit (Syok Hipovolemik). Abaikan luka bakar sementara.",
+          "narrativeImage": "Siti_Kaki_Kaca"
+        },
+        {
+          "text": "Kerjakan keduanya bersamaan agar sama-sama cepat tertangani",
+          "isCorrect": false,
+          "feedback": "Niatnya baik, tetapi tanpa prioritas jelas tindakan jadi tidak efektif. Ancaman paling cepat mematikan adalah perdarahan arteri."
+        },
+        {
+          "text": "Luka Bakar",
+          "isCorrect": false,
+          "feedback": "Luka bakar sangat sakit, tapi Siti akan mati kehabisan darah lebih cepat jika kakinya tidak ditangani."
+        }
+      ]
+    },
+    {
+      "stepType": "quiz",
+      "instruction": "Serpihan kaca besar menancap di kaki Siti. Bagaimana cara menekan lukanya?",
+      "minigameID": "",
+      "quizTimeSeconds": 12,
+      "lowTimeCueSeconds": 4,
+      "backgroundImage": "Siti_Kaki_Kaca",
+      "optionParentTarget": "optionParents2",
+      "options": [
+        {
+          "text": "Cabut kaca secepat mungkin lalu tekan kuat",
+          "isCorrect": false,
+          "isFatal": true,
+          "fatalCutsceneID": "Glass_Pulled_Bleed",
+          "feedback": "FATAL! Mencabut benda menancap akan merobek pembuluh darah dan memperparah pendarahan."
+        },
+        {
+          "text": "Tekan langsung tepat di atas serpihan kaca",
+          "isCorrect": false,
+          "feedback": "Salah. Menekan dari atas akan mendorong kaca masuk lebih dalam dan memotong saraf."
+        },
+        {
+          "text": "Tekan di sekeliling sisi kaca tanpa mencabutnya",
+          "isCorrect": true,
+          "narrative": "Benar! Benda menancap berfungsi sebagai 'penyumbat'. Tekan area sekelilingnya untuk menghentikan darah.",
+          "narrativeImage": "Siti_Kaki_Ditekan"
+        }
+      ]
+    },
+    {
+      "stepType": "minigame",
+      "instruction": "Tahan pendarahan dengan menekan sisi KIRI dan KANAN kaca! JANGAN sentuh kacanya!",
+      "minigameID": "BleedControl_Glass",
+      "narrativeImage": "Minigame_Bleed_Glass_UI",
+      "goldTime": 15,
+      "silverTime": 20,
+      "options": []
+    },
+    {
+      "stepType": "dialog",
+      "speakerName": "Narator",
+      "instruction": "Pendarahan kaki terkendali. Jiro menemukan sisa galon air untuk menangani luka bakar di lengan Siti.",
+      "narrativeImage": "Galon_Air_Sisa",
+      "options": []
+    },
+    {
+      "stepType": "quiz",
+      "instruction": "Bagaimana cara terbaik mendinginkan luka bakar Siti dengan sisa air tersebut?",
+      "minigameID": "",
+      "quizTimeSeconds": 12,
+      "lowTimeCueSeconds": 4,
+      "backgroundImage": "Galon_Air_Sisa",
+      "optionParentTarget": "optionParents",
+      "options": [
+        {
+          "text": "Alirkan air bersuhu ruang secara perlahan dan konsisten",
+          "isCorrect": true,
+          "narrative": "Tepat! Air mengalir perlahan akan mendinginkan jaringan dan menghentikan kerusakan kulit.",
+          "narrativeImage": "Siram_Luka_Bakar_Galon"
+        },
+        {
+          "text": "Kompres dengan kain basah dingin yang diperas berulang",
+          "isCorrect": false,
+          "feedback": "Kompres lembap boleh membantu sementara, tetapi pendinginan terbaik tetap air mengalir stabil agar panas terus terbuang."
+        },
+        {
+          "text": "Oleskan odol dari tas Siti agar cepat dingin",
+          "isCorrect": false,
+          "feedback": "MITOS BERBAHAYA! Odol mengunci panas di dalam kulit dan memicu infeksi berat."
+        }
+      ]
+    },
+    {
+      "stepType": "minigame",
+      "instruction": "Jaga ritme aliran air agar stabil mengenai luka bakar Siti!",
+      "minigameID": "WaterCooling_Gallon",
+      "narrativeImage": "Minigame_WaterFlow_UI",
+      "goldTime": 20,
+      "silverTime": 30,
+      "options": []
+    },
+    {
+      "stepType": "minigame",
+      "instruction": "Bungkus luka bakar dengan plastik wrap sisa pantry. JANGAN terlalu ketat!",
+      "minigameID": "WrapBurnWound_Loose",
+      "narrativeImage": "Minigame_WrapLoose_UI",
+      "goldTime": 10,
+      "silverTime": 15,
+      "options": []
+    },
+    {
+      "stepType": "dialog",
+      "speakerName": "Jiro",
+      "instruction": "Semua bertahan! Aku mendengar suara alat berat dari balik pintu!",
+      "gambarPortrait": 0,
+      "narrativeImage": "Pintu_Didobrak",
+      "dialogSfx": "Dialog/Heavy_Banging_Tools",
+      "options": []
+    },
+    {
+      "stepType": "cutscene",
+      "cutsceneID": "Firefighters_Breach",
+      "instruction": "",
+      "options": []
+    }
+  ]
 }

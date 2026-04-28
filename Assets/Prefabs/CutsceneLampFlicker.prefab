@@ -487,7 +487,7 @@ MonoBehaviour:
   gambarJiroNesu: {fileID: 5792383126456138214}
   dialogueLines:
   - Ahh akhirnya sampai rumah juga, hampir aja terjebak hujan deras ini.
-  - '*lampu ruang tamu flickering'
+  - '*lampu ruang tamu tiba-tiba berkedip '
   - Aduhh kenapa lagi inii....baru juga sampai rumah udah ada masalah lagi
   typingSpeed: 0.035
   flickerMinInterval: 0.04

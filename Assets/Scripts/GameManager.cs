@@ -166,6 +166,12 @@ public class GameManager : MonoBehaviour
         {
             OnSkipButtonClicked();
         }
+
+        // Dev mode: tekan J untuk mundur satu step
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            OnPreviousButtonClicked();
+        }
     }
 
     void UpdateScoreText()
@@ -964,6 +970,25 @@ public class GameManager : MonoBehaviour
         isWaitingForAdvance = false;
         clickAdvanceButton.gameObject.SetActive(false);
         GoToNextStep();
+    }
+
+    private void OnPreviousButtonClicked()
+    {
+        if (currentStepIndex <= 0)
+        {
+            Debug.Log("[DEV MODE] Tidak bisa mundur lagi karena sudah berada di step pertama.");
+            return;
+        }
+
+        Debug.Log($"[DEV MODE] Previous button diklik - kembali dari step {currentStepIndex} ke step {currentStepIndex - 1}");
+
+        // Pastikan mainSceneCamera hidup kembali (untuk cutscene yang meng-disable camera)
+        mainSceneCamera.gameObject.SetActive(true);
+
+        isWaitingForAdvance = false;
+        clickAdvanceButton.gameObject.SetActive(false);
+        currentStepIndex--;
+        ShowStep(currentStepIndex);
     }
 
     private void GoToNextStep()

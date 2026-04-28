@@ -10,6 +10,7 @@ public class MinigameCall112 : MonoBehaviour, IMiniGame
     [SerializeField] private GameObject panelDialog;
     [SerializeField] private TextMeshProUGUI textDialog;
     [SerializeField] private GameObject panelCall112;
+    [SerializeField] private GameObject panelFeedback;
     [SerializeField] private GameObject gambarJiro;
     [SerializeField] private GameObject panelDeckKartu;
     [SerializeField] private TextMeshProUGUI textLayarHP;
@@ -18,6 +19,10 @@ public class MinigameCall112 : MonoBehaviour, IMiniGame
     [SerializeField] private Button callButton;
     [SerializeField] private float dialogDuration = 2f;
     [SerializeField] private float pressFeedbackDuration = 0.18f;
+    [SerializeField] private int feedbackBlinkCount = 3;
+    [SerializeField, Range(0f, 100f)] private float feedbackBlinkAlpha = 50f;
+    [SerializeField] private float feedbackBlinkVisibleDuration = 0.16f;
+    [SerializeField] private float feedbackBlinkHiddenDuration = 0.08f;
     [SerializeField] private float typingSpeed = 0.03f;
     [SerializeField] private GameObject nextStepRoot;
     [SerializeField] private bool hideDialogAtFinish = true;
@@ -57,6 +62,7 @@ public class MinigameCall112 : MonoBehaviour, IMiniGame
     private Coroutine handFeedbackRoutine;
     private Coroutine callFlowRoutine;
     private Coroutine typingRoutine;
+    private Coroutine feedbackRoutine;
     private string dialedNumber = string.Empty;
     private bool isCalling;
     private bool isCardPhaseActive;
@@ -70,6 +76,8 @@ public class MinigameCall112 : MonoBehaviour, IMiniGame
     private bool isMinigameFinished;
     private bool minigameInitialized;
     private GameManager gameManager;
+    private readonly List<Graphic> feedbackGraphics = new List<Graphic>();
+    private readonly List<Color> feedbackDefaultColors = new List<Color>();
 
     private bool IsCallingTextActive()
     {
@@ -133,6 +141,8 @@ public class MinigameCall112 : MonoBehaviour, IMiniGame
 
         minigameInitialized = true;
         SetupButtonListeners();
+        CacheFeedbackPanelGraphics();
+        HideFeedbackPanel();
         StartCoroutine(BeginMinigameFlow());
     }
 
@@ -167,6 +177,7 @@ public class MinigameCall112 : MonoBehaviour, IMiniGame
 
     private IEnumerator BeginMinigameFlow()
     {
+        HideFeedbackPanel();
         SetOnlyHandActive(IdleHandIndex);
         isCalling = false;
         dialedNumber = string.Empty;
@@ -422,6 +433,11 @@ public class MinigameCall112 : MonoBehaviour, IMiniGame
         if (IsCorrectCard(selectedCard.GetCardId()))
         {
             correctSelectedCardCount++;
+            PlayFeedbackPanel(true);
+        }
+        else
+        {
+            PlayFeedbackPanel(false);
         }
 
         blockClickUntilRelease = true;
@@ -543,6 +559,7 @@ public class MinigameCall112 : MonoBehaviour, IMiniGame
         isCardPhaseActive = false;
         isCalling = false;
         StopDialLoop();
+        StopFeedbackPanel();
 
         if (panelCall112 != null)
         {
@@ -690,6 +707,7 @@ public class MinigameCall112 : MonoBehaviour, IMiniGame
     private void OnDestroy()
     {
         StopDialLoop();
+        StopFeedbackPanel();
 
         if (callFlowRoutine != null)
         {
@@ -712,6 +730,136 @@ public class MinigameCall112 : MonoBehaviour, IMiniGame
         if (callButton != null)
         {
             callButton.onClick.RemoveAllListeners();
+        }
+    }
+
+    private void CacheFeedbackPanelGraphics()
+    {
+        feedbackGraphics.Clear();
+        feedbackDefaultColors.Clear();
+
+        if (panelFeedback == null)
+        {
+            return;
+        }
+
+        Graphic[] graphics = panelFeedback.GetComponentsInChildren<Graphic>(true);
+        for (int i = 0; i < graphics.Length; i++)
+        {
+            if (graphics[i] == null)
+            {
+                continue;
+            }
+
+            feedbackGraphics.Add(graphics[i]);
+            feedbackDefaultColors.Add(graphics[i].color);
+        }
+    }
+
+    private void PlayFeedbackPanel(bool isCorrect)
+    {
+        if (panelFeedback == null)
+        {
+            return;
+        }
+
+        if (feedbackRoutine != null)
+        {
+            StopCoroutine(feedbackRoutine);
+        }
+
+        feedbackRoutine = StartCoroutine(FeedbackPanelRoutine(isCorrect));
+    }
+
+    private IEnumerator FeedbackPanelRoutine(bool isCorrect)
+    {
+        if (panelFeedback == null)
+        {
+            yield break;
+        }
+
+        if (feedbackGraphics.Count == 0)
+        {
+            CacheFeedbackPanelGraphics();
+        }
+
+        if (feedbackGraphics.Count == 0)
+        {
+            panelFeedback.SetActive(true);
+            yield return new WaitForSeconds((feedbackBlinkVisibleDuration + feedbackBlinkHiddenDuration) * Mathf.Max(1, feedbackBlinkCount));
+            panelFeedback.SetActive(false);
+            feedbackRoutine = null;
+            yield break;
+        }
+
+        panelFeedback.SetActive(true);
+
+        Color blinkColor = isCorrect ? Color.green : Color.red;
+        int blinkCount = Mathf.Max(1, feedbackBlinkCount);
+        float visibleAlpha = Mathf.Clamp01(feedbackBlinkAlpha / 100f);
+
+        for (int i = 0; i < blinkCount; i++)
+        {
+            SetFeedbackPanelColor(blinkColor, visibleAlpha);
+            yield return new WaitForSeconds(Mathf.Max(0.01f, feedbackBlinkVisibleDuration));
+
+            SetFeedbackPanelColor(blinkColor, 0f);
+            yield return new WaitForSeconds(Mathf.Max(0.01f, feedbackBlinkHiddenDuration));
+        }
+
+        RestoreFeedbackPanelColor();
+        panelFeedback.SetActive(false);
+        feedbackRoutine = null;
+    }
+
+    private void SetFeedbackPanelColor(Color baseColor, float alpha)
+    {
+        Color targetColor = new Color(baseColor.r, baseColor.g, baseColor.b, alpha);
+
+        for (int i = 0; i < feedbackGraphics.Count; i++)
+        {
+            if (feedbackGraphics[i] != null)
+            {
+                feedbackGraphics[i].color = targetColor;
+            }
+        }
+    }
+
+    private void RestoreFeedbackPanelColor()
+    {
+        int limit = Mathf.Min(feedbackGraphics.Count, feedbackDefaultColors.Count);
+        for (int i = 0; i < limit; i++)
+        {
+            if (feedbackGraphics[i] != null)
+            {
+                feedbackGraphics[i].color = feedbackDefaultColors[i];
+            }
+        }
+    }
+
+    private void StopFeedbackPanel()
+    {
+        if (feedbackRoutine != null)
+        {
+            StopCoroutine(feedbackRoutine);
+            feedbackRoutine = null;
+        }
+
+        RestoreFeedbackPanelColor();
+
+        if (panelFeedback != null)
+        {
+            panelFeedback.SetActive(false);
+        }
+    }
+
+    private void HideFeedbackPanel()
+    {
+        RestoreFeedbackPanelColor();
+
+        if (panelFeedback != null)
+        {
+            panelFeedback.SetActive(false);
         }
     }
 }
