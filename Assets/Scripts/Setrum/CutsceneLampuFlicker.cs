@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using UnityEngine.Video;
 
 public class CutsceneLampuFlicker : MonoBehaviour, ICutscene
 {
@@ -10,6 +11,10 @@ public class CutsceneLampuFlicker : MonoBehaviour, ICutscene
     [SerializeField] private TextMeshProUGUI dialogText;
     [SerializeField] private Button advanceButton;
     [SerializeField] private GameObject dialogPanelRoot;
+    [Header("Video")]
+    [SerializeField] private VideoPlayer videoPlayer;
+    [SerializeField] private RawImage videoRawImage;
+    [SerializeField] private bool playVideoAtStart = true;
 
     [Header("Room Flicker Objects")]
     [SerializeField] private GameObject ruangTamuMenyala;
@@ -40,6 +45,7 @@ public class CutsceneLampuFlicker : MonoBehaviour, ICutscene
 
     private GameManager gameManager;
     private Coroutine sequenceRoutine;
+    private Coroutine videoRoutine;
     private Coroutine flickerRoutine;
     private bool finished;
     private bool skipTypingRequested;
@@ -52,9 +58,20 @@ public class CutsceneLampuFlicker : MonoBehaviour, ICutscene
     {
         gameManager = gm;
 
+        // Ensure UI/room are hidden while video plays
         if (dialogPanelRoot != null)
         {
-            dialogPanelRoot.SetActive(true);
+            dialogPanelRoot.SetActive(false);
+        }
+
+        if (ruangTamuMenyala != null)
+        {
+            ruangTamuMenyala.SetActive(false);
+        }
+
+        if (ruangTamuLampuMati != null)
+        {
+            ruangTamuLampuMati.SetActive(false);
         }
 
         if (dialogText != null)
@@ -63,7 +80,34 @@ public class CutsceneLampuFlicker : MonoBehaviour, ICutscene
         }
 
         HookAdvanceButton();
+
+        if (playVideoAtStart && videoPlayer != null)
+        {
+            if (videoRoutine != null) StopCoroutine(videoRoutine);
+            videoRoutine = StartCoroutine(PlayVideoThenStartRoutine());
+        }
+        else
+        {
+            // No video: show dialog UI and lit room immediately
+            if (dialogPanelRoot != null) dialogPanelRoot.SetActive(true);
+            if (ruangTamuMenyala != null) ruangTamuMenyala.SetActive(true);
+            sequenceRoutine = StartCoroutine(PlayDialogueSequence());
+        }
+    }
+
+    private IEnumerator PlayVideoThenStartRoutine()
+    {
+        yield return StartCoroutine(PlayVideoAndWait());
+
+        // After video ends: hide video presentation, show dialog and lit room
+        if (videoRawImage != null) videoRawImage.gameObject.SetActive(false);
+        if (videoPlayer != null && videoPlayer.isPlaying) videoPlayer.Stop();
+
+        if (dialogPanelRoot != null) dialogPanelRoot.SetActive(true);
+        if (ruangTamuMenyala != null) ruangTamuMenyala.SetActive(true);
+
         sequenceRoutine = StartCoroutine(PlayDialogueSequence());
+        videoRoutine = null;
     }
 
     private void HookAdvanceButton()
@@ -197,6 +241,26 @@ public class CutsceneLampuFlicker : MonoBehaviour, ICutscene
             sequenceRoutine = null;
         }
 
+        if (videoRoutine != null)
+        {
+            StopCoroutine(videoRoutine);
+            videoRoutine = null;
+        }
+
+        if (videoPlayer != null)
+        {
+            if (videoPlayer.isPlaying)
+            {
+                videoPlayer.Stop();
+            }
+            videoPlayer.gameObject.SetActive(false);
+        }
+
+        if (videoRawImage != null)
+        {
+            videoRawImage.gameObject.SetActive(false);
+        }
+
         if (advanceButton != null && advanceListener != null)
         {
             advanceButton.onClick.RemoveListener(advanceListener);
@@ -244,6 +308,37 @@ public class CutsceneLampuFlicker : MonoBehaviour, ICutscene
             float waitTime = Random.Range(flickerMinInterval, flickerMaxInterval);
             yield return new WaitForSeconds(waitTime);
         }
+    }
+
+    private IEnumerator PlayVideoAndWait()
+    {
+        if (videoPlayer == null)
+        {
+            yield break;
+        }
+
+        // Activate player and RawImage
+        videoPlayer.gameObject.SetActive(true);
+        if (videoRawImage != null) videoRawImage.gameObject.SetActive(true);
+
+        videoPlayer.Stop();
+        videoPlayer.Play();
+
+        float startTimeout = 1f;
+        while (!videoPlayer.isPlaying && startTimeout > 0f)
+        {
+            startTimeout -= Time.deltaTime;
+            yield return null;
+        }
+
+        while (videoPlayer.isPlaying)
+        {
+            yield return null;
+        }
+
+        videoPlayer.Stop();
+        if (videoPlayer != null) videoPlayer.gameObject.SetActive(false);
+        if (videoRawImage != null) videoRawImage.gameObject.SetActive(false);
     }
 
     private void SetRoomState(bool showLitRoom)

@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Video;
 using TMPro;
 
 public class Cutscene1JiroPulang : MonoBehaviour, ICutscene
@@ -9,6 +10,11 @@ public class Cutscene1JiroPulang : MonoBehaviour, ICutscene
     [SerializeField] private TextMeshProUGUI textNarasi;
     [SerializeField] private GameObject jiroPortraitObj;
     [SerializeField] private Image jiroPortraitImage;
+    [SerializeField] private GameObject jiroPulang;
+    [SerializeField] private GameObject narasiCutscene;
+    [SerializeField] private RawImage videoRawImage;
+    [SerializeField] private VideoPlayer videoPlayer;
+    [SerializeField] private bool playVideoAtStart = true;
 
     [Header("Jiro Expressions")]
     [SerializeField] private Sprite jiroNormal;
@@ -33,6 +39,7 @@ public class Cutscene1JiroPulang : MonoBehaviour, ICutscene
 
     private GameManager gameManager;
     private Coroutine routine;
+    private Coroutine videoRoutine;
     private bool finished;
 
     // --- Variabel untuk fitur Skip ---
@@ -43,10 +50,33 @@ public class Cutscene1JiroPulang : MonoBehaviour, ICutscene
     public void BeginCutscene(GameManager gm)
     {
         this.gameManager = gm;
+        SetCutsceneContentVisible(false);
         jiroPortraitObj.SetActive(false);
         textNarasi.text = "";
         
+        if (playVideoAtStart)
+        {
+            if (videoRoutine != null)
+            {
+                StopCoroutine(videoRoutine);
+            }
+
+            videoRoutine = StartCoroutine(PlayVideoThenStartRoutine());
+        }
+        else
+        {
+            SetCutsceneContentVisible(true);
+            routine = StartCoroutine(PlayCutsceneSequence());
+        }
+    }
+
+    private IEnumerator PlayVideoThenStartRoutine()
+    {
+        yield return StartCoroutine(PlayVideoAndWait());
+        HideVideoPresentation();
+        SetCutsceneContentVisible(true);
         routine = StartCoroutine(PlayCutsceneSequence());
+        videoRoutine = null;
     }
 
     private void Update()
@@ -156,6 +186,99 @@ public class Cutscene1JiroPulang : MonoBehaviour, ICutscene
         {
             StopCoroutine(routine);
             routine = null;
+        }
+
+        if (videoRoutine != null)
+        {
+            StopCoroutine(videoRoutine);
+            videoRoutine = null;
+        }
+
+        if (videoPlayer != null)
+        {
+            if (videoPlayer.isPlaying)
+            {
+                videoPlayer.Stop();
+            }
+            videoPlayer.gameObject.SetActive(false);
+        }
+
+        if (videoRawImage != null)
+        {
+            videoRawImage.gameObject.SetActive(false);
+        }
+    }
+
+    private IEnumerator PlayVideoAndWait()
+    {
+        if (videoPlayer == null)
+        {
+            yield break;
+        }
+
+        // Ensure the GameObject is active so the player can render
+        videoPlayer.gameObject.SetActive(true);
+
+        if (videoRawImage != null)
+        {
+            videoRawImage.gameObject.SetActive(true);
+        }
+
+        // Start playback
+        videoPlayer.Stop();
+        videoPlayer.Play();
+
+        // Wait until the player actually started playing (or reached end)
+        float startTimeout = 1f; // precaution
+        while (!videoPlayer.isPlaying && startTimeout > 0f)
+        {
+            startTimeout -= Time.deltaTime;
+            yield return null;
+        }
+
+        // Wait until finished
+        while (videoPlayer.isPlaying)
+        {
+            yield return null;
+        }
+
+        // Deactivate player after finished
+        videoPlayer.Stop();
+        videoPlayer.gameObject.SetActive(false);
+        if (videoRawImage != null)
+        {
+            videoRawImage.gameObject.SetActive(false);
+        }
+    }
+
+    private void SetCutsceneContentVisible(bool visible)
+    {
+        if (jiroPulang != null)
+        {
+            jiroPulang.SetActive(visible);
+        }
+
+        if (narasiCutscene != null)
+        {
+            narasiCutscene.SetActive(visible);
+        }
+    }
+
+    private void HideVideoPresentation()
+    {
+        if (videoPlayer != null && videoPlayer.isPlaying)
+        {
+            videoPlayer.Stop();
+        }
+
+        if (videoPlayer != null)
+        {
+            videoPlayer.gameObject.SetActive(false);
+        }
+
+        if (videoRawImage != null)
+        {
+            videoRawImage.gameObject.SetActive(false);
         }
     }
 
