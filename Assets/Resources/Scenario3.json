@@ -13,9 +13,9 @@
       "quizTimeSeconds": 12,
       "lowTimeCueSeconds": 4,
       "backgroundImage": "DepanLift",
-      "optionParentTarget": "optionParents",
+      "optionParentTarget": "optionParents2",
       "optionParentPosX": -150.0,
-      "optionParentPosY": 300.0,
+      "optionParentPosY": -225.0,
       "options": [
         {
           "text": "Turun dengan menggunakan Lift",
@@ -39,7 +39,7 @@
       "stepType": "cutscene",
       "cutsceneID": "FoundAltStairs",
       "instruction": "",
-      "narrativeImage": "LobbyGedung",
+      "narrativeImage": "TW_Kobong",
       "options": []
     },
     {

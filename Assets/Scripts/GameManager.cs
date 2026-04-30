@@ -26,6 +26,8 @@ public class AmbanceAudioRegistry
 {
     public string scenarioId;
     public AudioClip ambanceClip;
+    // Optional second ambiance clip to play simultaneously
+    public AudioClip ambanceClip2;
 }
 
 public class GameManager : MonoBehaviour
@@ -89,6 +91,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Ambiance Audio untuk Setiap Episode")]
     public AudioSource ambianceAudioSource;
+    public AudioSource ambianceAudioSource2;
     public List<AmbanceAudioRegistry> ambianceAudioRegistry;
 
     [Header("Dialog SFX")]
@@ -271,6 +274,22 @@ public class GameManager : MonoBehaviour
             ambianceAudioSource.clip = ambianceEntry.ambanceClip;
             ambianceAudioSource.loop = true;
             ambianceAudioSource.Play();
+
+            // second ambiance source (optional)
+            if (ambianceAudioSource2 != null)
+            {
+                if (ambianceEntry.ambanceClip2 != null)
+                {
+                    ambianceAudioSource2.clip = ambianceEntry.ambanceClip2;
+                    ambianceAudioSource2.loop = true;
+                    ambianceAudioSource2.Play();
+                }
+                else
+                {
+                    // stop second source if no clip provided for this scenario
+                    if (ambianceAudioSource2.isPlaying) ambianceAudioSource2.Stop();
+                }
+            }
             Debug.Log($"Memainkan ambiance untuk skenario: {scenarioName}");
         }
         else
@@ -279,6 +298,10 @@ public class GameManager : MonoBehaviour
             if (ambianceAudioSource.isPlaying)
             {
                 ambianceAudioSource.Stop();
+            }
+            if (ambianceAudioSource2 != null && ambianceAudioSource2.isPlaying)
+            {
+                ambianceAudioSource2.Stop();
             }
         }
     }

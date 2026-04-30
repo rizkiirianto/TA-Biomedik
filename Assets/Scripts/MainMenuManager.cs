@@ -37,6 +37,12 @@ public class MainMenuManager : MonoBehaviour
         PlayerPrefs.Save();
         SceneManager.LoadScene("Play");
     }
+    public void Scenario3ButtonClicked()
+    {
+        PlayerPrefs.SetString("SelectedScenario", "Scenario3");
+        PlayerPrefs.Save();
+        SceneManager.LoadScene("Play");
+    }
 
     public void ExitButtonClicked()
     {

@@ -1,45 +1,65 @@
 using System.Collections;
-using System.Diagnostics;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class Cutscene_IntroEps3 : MonoBehaviour, ICutscene
+public class Cutscene_AlternateStairs : MonoBehaviour, ICutscene
 {
-    [Header("Visual")]
-    [SerializeField] private GameObject Gambar1MejaLab;
-    [SerializeField] private GameObject Gambar2DalamLab;
-    [SerializeField] private GameObject Gambar3LuarLab;
+    [Header("Visual - Images")]
+    [SerializeField] private GameObject Gambar4_TanggaTerbakar;
+    [SerializeField] private GameObject Gambar5_BerlariKeSisi;
+    [SerializeField] private GameObject Gambar6_TanggaSatunya;
+    [SerializeField] private GameObject Gambar7_TanggaLanjut1;
+    [SerializeField] private GameObject Gambar8_TanggaLanjut2;
+    [SerializeField] private GameObject Gambar9_TanggaTerakhir;
+    [SerializeField] private GameObject Gambar10_Lobby;
+    [SerializeField] private GameObject Gambar11_Parkiran;
+
+    [Header("UI")]
     [SerializeField] private GameObject panelDialog;
     [SerializeField] private TextMeshProUGUI textDialog;
     [SerializeField] private GameObject jiroBiasa;
     [SerializeField] private GameObject jiroTakut;
     [SerializeField] private GameObject redPanelAlarm;
-    [SerializeField] private float alarmBlinkInterval = 0.25f;
 
     [Header("Audio")]
     [SerializeField] private AudioSource sfxAudioSource;
     [SerializeField] private AudioClip typewriterSound;
     [SerializeField] private AudioSource alarmAudioSource;
     [SerializeField] private AudioClip alarmLoopSound;
-    [SerializeField] private AudioClip explosionSound;
 
     [Header("Control")]
     [SerializeField] private Button nextButton;
     [SerializeField] private bool destroyOnFinish = true;
+    [SerializeField] private float alarmBlinkInterval = 0.25f;
 
-    [SerializeField] private float typingSpeed = 0.035f;
-
-    [Header("Dialog")]
-    [TextArea(2, 5)]
-    [SerializeField] private string[] dialogLines = new string[]
+    [Header("Dialogue")]
+    [TextArea(2,4)]
+    [SerializeField] private string[] dialogueLines = new string[]
     {
-        "Di suatu hari Jiro sedang berada di gedung kampusnya untuk mengerjakan tugasnya.",
-        "Jiro sedang berada di lab jurusannya saat tiba-tiba terdengar suara ledakan dan alarm kebakaran mulai berbunyi.",
-        "Jiro: Hah?! Itu suara ledakan?! Alarm kebakaran juga nyala... aku harus tetap tenang!",
-        "Jiro: Aku harus segera keluar dari sini!"
+        // Gambar 4 (stage 0) - narrator
+        "Setelah memilih tangga darurat, ternyata tangga darurat terdekat terbakar dan ada debris yang menghalangi jalan.",
+        // Gambar 5 (stage 1) - Jiro takut
+        "Jiro: Aku harus cari jalan lain—ke sisi bangunan!",
+        // Gambar 6 (stage 2) - narrator
+        "Tangga darurat satunya terlihat aman. Jiro segera beralih ke tangga tersebut dan mulai turun.",
+        // Gambar 7 (stage 3) - Jiro takut
+        "Jiro: Turun cepat, jangan berhenti!",
+        // Gambar 8 (stage 4) - narrator
+        "Asap makin tebal di beberapa tingkat, namun tangga ini masih cukup aman untuk dilewati.",
+        // Gambar 9 (stage 5) - narrator
+        "Jiro sampai di ujung tangga darurat. Pintu keluar menuju lobby sudah dekat.",
+        // Gambar 10 (stage 6) - Jiro biasa
+        "Jiro: Aku sampai di lobby. Di sini tampak sepi — harus segera ke parkiran depan!",
+        // Gambar 11 (stage 7) - Jiro biasa melihat gedung
+        "Jiro: Lihat... gedung itu terbakar dan ada bekas ledakan. Semoga semua orang sudah keluar."
     };
+
+    // parallel arrays for speaker handling: if true, line is narrator (no Jiro shown)
+    [SerializeField] private bool[] isNarrator = new bool[] { true, false, true, false, true, true, false, false };
+    // for Jiro lines, whether to use the 'takut' expression
+    [SerializeField] private bool[] isJiroTakut = new bool[] { false, true, false, true, false, false, false, true };
 
     private GameManager gameManager;
     private Coroutine sequenceRoutine;
@@ -50,6 +70,7 @@ public class Cutscene_IntroEps3 : MonoBehaviour, ICutscene
     private bool nextClicked;
     private bool finished;
     private bool isAlarmBlinking;
+    [SerializeField] private float typingSpeed = 0.035f;
 
     public void BeginCutscene(GameManager gm)
     {
@@ -57,8 +78,6 @@ public class Cutscene_IntroEps3 : MonoBehaviour, ICutscene
         nextClicked = false;
         finished = false;
         isAlarmBlinking = false;
-        isTyping = false;
-        skipTypingRequested = false;
 
         // Pastikan gameObject aktif sebelum StartCoroutine
         gameObject.SetActive(true);
@@ -69,20 +88,15 @@ public class Cutscene_IntroEps3 : MonoBehaviour, ICutscene
             sequenceRoutine = null;
         }
 
-        StopAlarmBlink();
-
-        // Mute ambiance audio for stage 0 (set volume to 0)
-        if (gameManager != null && gameManager.ambianceAudioSource != null)
-        {
-            gameManager.ambianceAudioSource.volume = 0f;
-        }
-
         HookNextButton();
 
         if (panelDialog != null)
         {
             panelDialog.SetActive(true);
         }
+
+        // Alarm harus menyala dari stage awal
+        StartAlarmBlink();
 
         sequenceRoutine = StartCoroutine(PlaySequence());
     }
@@ -96,7 +110,7 @@ public class Cutscene_IntroEps3 : MonoBehaviour, ICutscene
 
         if (nextButton == null)
         {
-            
+            Debug.LogWarning("Cutscene_AlternateStairs: nextButton belum di-assign.");
             return;
         }
 
@@ -112,11 +126,12 @@ public class Cutscene_IntroEps3 : MonoBehaviour, ICutscene
 
     private IEnumerator PlaySequence()
     {
-        for (int stage = 0; stage < dialogLines.Length; stage++)
+        int stages = dialogueLines.Length;
+        for (int stage = 0; stage < stages; stage++)
         {
             ApplyStage(stage);
 
-            yield return StartCoroutine(TypeLine(dialogLines[stage]));
+            yield return StartCoroutine(TypeLine(dialogueLines[stage]));
             yield return StartCoroutine(WaitForAdvance());
         }
 
@@ -134,11 +149,13 @@ public class Cutscene_IntroEps3 : MonoBehaviour, ICutscene
 
     private IEnumerator WaitForAdvance()
     {
+        // Wait until typing finished and user advances
         while (isTyping)
         {
             yield return null;
         }
 
+        // then wait for next click
         nextClicked = false;
         while (!nextClicked)
         {
@@ -152,62 +169,38 @@ public class Cutscene_IntroEps3 : MonoBehaviour, ICutscene
         bool s1 = stage == 1;
         bool s2 = stage == 2;
         bool s3 = stage == 3;
+        bool s4 = stage == 4;
+        bool s5 = stage == 5;
+        bool s6 = stage == 6;
+        bool s7 = stage == 7;
 
-        if (Gambar1MejaLab != null)
-        {
-            Gambar1MejaLab.SetActive(s0);
-        }
+        if (Gambar4_TanggaTerbakar != null) Gambar4_TanggaTerbakar.SetActive(s0);
+        if (Gambar5_BerlariKeSisi != null) Gambar5_BerlariKeSisi.SetActive(s1);
+        if (Gambar6_TanggaSatunya != null) Gambar6_TanggaSatunya.SetActive(s2);
+        if (Gambar7_TanggaLanjut1 != null) Gambar7_TanggaLanjut1.SetActive(s3);
+        if (Gambar8_TanggaLanjut2 != null) Gambar8_TanggaLanjut2.SetActive(s4);
+        if (Gambar9_TanggaTerakhir != null) Gambar9_TanggaTerakhir.SetActive(s5);
+        if (Gambar10_Lobby != null) Gambar10_Lobby.SetActive(s6);
+        if (Gambar11_Parkiran != null) Gambar11_Parkiran.SetActive(s7);
 
-        if (Gambar2DalamLab != null)
-        {
-            Gambar2DalamLab.SetActive(s1 || s2);
-        }
+        // Speaker handling
+        bool narrator = false;
+        if (isNarrator != null && stage < isNarrator.Length) narrator = isNarrator[stage];
 
-        if (Gambar3LuarLab != null)
-        {
-            Gambar3LuarLab.SetActive(s3);
-        }
+        bool jiroTakutState = false;
+        if (isJiroTakut != null && stage < isJiroTakut.Length) jiroTakutState = isJiroTakut[stage];
 
-        if (jiroBiasa != null)
-        {
-            jiroBiasa.SetActive(s3);
-        }
+        if (jiroBiasa != null) jiroBiasa.SetActive(!narrator && !jiroTakutState);
+        if (jiroTakut != null) jiroTakut.SetActive(!narrator && jiroTakutState);
 
-        if (jiroTakut != null)
-        {
-            jiroTakut.SetActive(s2);
-        }
-
-        if (s1 || s2 || s3)
-        {
-            StartAlarmBlink();
-        }
-        else
+        // Red panel alarm should stop when gambar10 or gambar11 active (stage 6 or 7)
+        if (stage >= 6)
         {
             StopAlarmBlink();
         }
-
-        // Play explosion sound once at stage 1
-        if (s1 && sfxAudioSource != null && explosionSound != null)
+        else
         {
-            sfxAudioSource.PlayOneShot(explosionSound);
-        }
-
-        // Handle ambiance audio: mute at stage 0, unmute at stage 1+
-        if (gameManager != null && gameManager.ambianceAudioSource != null)
-        {
-            if (s0)
-            {
-                // Mute ambiance at stage 0
-                gameManager.ambianceAudioSource.volume = 0f;
-                gameManager.ambianceAudioSource2.volume = 0f;
-            }
-            else
-            {
-                // Restore ambiance volume at stage 1 onwards (default 1.0)
-                gameManager.ambianceAudioSource.volume = 1f;
-                gameManager.ambianceAudioSource2.volume = 1f;
-            }
+            StartAlarmBlink();
         }
     }
 
@@ -218,7 +211,6 @@ public class Cutscene_IntroEps3 : MonoBehaviour, ICutscene
             return;
         }
 
-        // Paksa warna overlay merah transparan sesuai request: 255,0,0 dengan alpha 50.
         Image panelImage = redPanelAlarm.GetComponent<Image>();
         if (panelImage != null)
         {
@@ -226,7 +218,7 @@ public class Cutscene_IntroEps3 : MonoBehaviour, ICutscene
         }
 
         isAlarmBlinking = true;
-
+        // start alarm audio loop if provided
         if (alarmAudioSource != null && alarmLoopSound != null)
         {
             alarmAudioSource.clip = alarmLoopSound;
@@ -261,18 +253,14 @@ public class Cutscene_IntroEps3 : MonoBehaviour, ICutscene
     private IEnumerator BlinkAlarmRoutine()
     {
         bool visible = false;
-
         while (isAlarmBlinking)
         {
             visible = !visible;
-            redPanelAlarm.SetActive(visible);
+            if (redPanelAlarm != null) redPanelAlarm.SetActive(visible);
             yield return new WaitForSeconds(alarmBlinkInterval);
         }
 
-        if (redPanelAlarm != null)
-        {
-            redPanelAlarm.SetActive(false);
-        }
+        if (redPanelAlarm != null) redPanelAlarm.SetActive(false);
     }
 
     private IEnumerator TypeLine(string line)
@@ -310,10 +298,7 @@ public class Cutscene_IntroEps3 : MonoBehaviour, ICutscene
 
     private void OnNextClicked()
     {
-        if (finished)
-        {
-            return;
-        }
+        if (finished) return;
 
         if (isTyping)
         {
@@ -326,11 +311,7 @@ public class Cutscene_IntroEps3 : MonoBehaviour, ICutscene
 
     public void Complete()
     {
-        if (finished)
-        {
-            return;
-        }
-
+        if (finished) return;
         finished = true;
 
         if (nextButton != null && nextListener != null)
@@ -338,22 +319,13 @@ public class Cutscene_IntroEps3 : MonoBehaviour, ICutscene
             nextButton.onClick.RemoveListener(nextListener);
         }
 
-        if (panelDialog != null)
-        {
-            panelDialog.SetActive(false);
-        }
+        if (panelDialog != null) panelDialog.SetActive(false);
 
         StopAlarmBlink();
 
-        if (gameManager != null)
-        {
-            gameManager.OnCutsceneComplete();
-        }
+        if (gameManager != null) gameManager.OnCutsceneComplete();
 
-        if (destroyOnFinish)
-        {
-            Destroy(gameObject);
-        }
+        if (destroyOnFinish) Destroy(gameObject);
     }
 
     private void OnDisable()
