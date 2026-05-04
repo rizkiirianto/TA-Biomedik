@@ -46,7 +46,7 @@
       "stepType": "dialog",
       "speakerName": "Narator",
       "instruction": "Jiro mendengar teriakan di area parkiran bawah gedung dan dia melihat Siti yang histeris terduduk dengan pecahan kaca tertancap di pahanya dan lengan yang mengalami luka bakar.",
-      "narrativeImage": "SitiTerluka",
+      "narrativeImage": "Siti_Teriak",
       "dialogSfx": "TeriakanWanita",
       "options": []
     },
@@ -61,8 +61,16 @@
     {
       "stepType": "dialog",
       "speakerName": "Narator",
+      "instruction": "Seorang pria tiba tiba melompat dari sela-sela retakan gedung lantai 2 yang terbakar, itu Tono anak jurusan sebelah",
+      "narrativeImage": "Tono_Lompat",
+      "dialogSfx": "TeriakanLelaki",
+      "options": []
+    },
+    {
+      "stepType": "dialog",
+      "speakerName": "Narator",
       "instruction": "Tono tergeletak setelah melompat dari lantai dua. Punggung dan lengannya hangus terbakar, sementara jelaga tebal menempel di sekitar hidung dan mulutnya. Napasnya terdengar serak dan mengi, tanda cedera inhalasi yang berat.",
-      "narrativeImage": "TonoLompat",
+      "narrativeImage": "Tono_Terkapar",
       "dialogSfx": "TeriakanLelaki",
       "options": []
     },
