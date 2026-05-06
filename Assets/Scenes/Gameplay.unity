@@ -997,6 +997,16 @@ MonoBehaviour:
   typingSpeed: 0.03
   operatorReplyDelaySeconds: 5
   finishDelaySeconds: 0.9
+  useGeminiOperator: 1
+  geminiApiKey: AIzaSyAQ5abD-YHeJyHkUfhs0bhS-geQpsKNX2M
+  geminiModel: gemini-2.5-flash
+  geminiTemperature: 0.4
+  geminiMaxOutputTokens: 320
+  geminiContextTurns: 6
+  geminiTimeoutSeconds: 12
+  geminiMaxRetries: 2
+  geminiRetryBackoffSeconds: 1.2
+  geminiRetryBackoffMultiplier: 2
 --- !u!1 &884141995
 GameObject:
   m_ObjectHideFlags: 0
