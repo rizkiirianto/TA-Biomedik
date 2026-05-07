@@ -164,14 +164,12 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        // Dev mode: tekan K untuk skip satu step
-        if (Input.GetKeyDown(KeyCode.K))
+        if (Input.GetKeyDown(KeyCode.Alpha0) || Input.GetKeyDown(KeyCode.Keypad0))
         {
             OnSkipButtonClicked();
         }
 
-        // Dev mode: tekan J untuk mundur satu step
-        if (Input.GetKeyDown(KeyCode.J))
+        if (Input.GetKeyDown(KeyCode.Alpha9) || Input.GetKeyDown(KeyCode.Keypad9))
         {
             OnPreviousButtonClicked();
         }

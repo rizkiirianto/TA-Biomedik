@@ -5599,6 +5599,8 @@ MonoBehaviour:
     prefab: {fileID: 1516539701399686886, guid: 905a664a06b3478439f16c80cc37c457, type: 3}
   - id: CPRCoreGameplay
     prefab: {fileID: 3306360705634286469, guid: 7393539453ad20c43bcb0a22f48a77d9, type: 3}
+  - id: Call112_Episode3
+    prefab: {fileID: 7017766079765322474, guid: d70a6f4fa8cf03f479716f95cc265170, type: 3}
   cutsceneRegistry:
   - id: RizalBerdarah
     prefab: {fileID: 5309542488858055867, guid: aff32489a6ed1f9459ff83001b7e3b07, type: 3}

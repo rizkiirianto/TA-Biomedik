@@ -22,6 +22,10 @@ public class Minigame_Call112Eps3 : MonoBehaviour, IMiniGame
     [SerializeField] private TextMeshProUGUI historyText;
     [SerializeField] private Button historyPanelButton;
 
+    [Header("Patient Panel")]
+    [SerializeField] private GameObject patientPanel;
+    [SerializeField] private Button patientPanelButton;
+
     [Header("Conversation")]
     [SerializeField, TextArea(2, 4)] private string openingOperatorLine = "112, layanan darurat. Sebutkan lokasi dan apa yang terjadi.";
     [SerializeField, TextArea(2, 4)] private string completionFeedback = "Panggilan 112 selesai. Bantuan sedang menuju lokasi. Segera lakukan pertolongan pertama pada korban kritis.";
@@ -29,19 +33,31 @@ public class Minigame_Call112Eps3 : MonoBehaviour, IMiniGame
     [SerializeField, Min(0f)] private float operatorReplyDelaySeconds = 5f;
     [SerializeField, Min(0f)] private float finishDelaySeconds = 0.9f;
 
-    [Header("Keyword Rules")]
-    private readonly List<KeywordRule> keywordRules = new List<KeywordRule>();
+    private enum QuestionState
+    {
+        EmergencyLocation,
+        Safety,
+        VictimCount,
+        Victim1,
+        Victim2,
+        Victim3,
+        Closing
+    }
 
-    // Target kategori yang harus dikumpulkan pemain untuk menyelesaikan minigame
-    private readonly List<string> requiredCategories = new List<string> 
-    { 
-        "Lokasi", 
-        "Kejadian", 
-        "JumlahKorban", 
-        "KondisiKorban",
-        "Konfirmasi"
-    };
-    private HashSet<string> achievedCategories = new HashSet<string>();
+    private enum VictimType
+    {
+        Budi,
+        Siti,
+        Tono
+    }
+
+    private QuestionState currentState = QuestionState.EmergencyLocation;
+    private readonly HashSet<VictimType> identifiedVictims = new HashSet<VictimType>();
+
+    // remember partial info across multiple user messages
+    private bool recordedLocationInfo = false;
+    private bool recordedHasLedakan = false;
+    private bool recordedHasKebakaran = false;
 
     private GameManager gameManager;
     private bool isInitialized;
@@ -52,18 +68,6 @@ public class Minigame_Call112Eps3 : MonoBehaviour, IMiniGame
     private readonly StringBuilder historyBuilder = new StringBuilder();
     private bool operatorSkipRequested;
     
-    [Serializable]
-    private sealed class KeywordRule
-    {
-        public string id;
-        public bool enabled = true;
-        public bool requireAllKeywords;
-        public string progressCategory; // Kategori progres yang akan dicentang jika rule ini terpanggil
-        public List<string> keywords = new List<string>();
-        public List<string> excludeKeywords = new List<string>();
-        [TextArea(2, 4)] public List<string> responses = new List<string>();
-    }
-
     private string lastOperatorReply = string.Empty;
     private readonly Dictionary<string, int> lastRuleResponseIndex = new Dictionary<string, int>();
 
@@ -84,7 +88,6 @@ public class Minigame_Call112Eps3 : MonoBehaviour, IMiniGame
 
         isInitialized = true;
         isCompleting = false;
-        SeedKeywordRules();
 
         if (jiroNelpon != null) jiroNelpon.SetActive(true);
 
@@ -107,6 +110,12 @@ public class Minigame_Call112Eps3 : MonoBehaviour, IMiniGame
             historyPanelButton.onClick.AddListener(OnHistoryButtonPressed);
         }
 
+        if (patientPanelButton!= null) 
+        {
+            patientPanelButton.onClick.RemoveListener(OnPatientButtonPressed);
+            patientPanelButton.onClick.AddListener(OnPatientButtonPressed);
+        }
+
         if (nextButton != null)
         {
             nextButton.onClick.RemoveListener(OnNextButtonPressed);
@@ -123,6 +132,7 @@ public class Minigame_Call112Eps3 : MonoBehaviour, IMiniGame
         if (finishRoutine != null) StopCoroutine(finishRoutine);
         if (sendButton != null) sendButton.onClick.RemoveListener(OnSendButtonPressed);
         if (historyPanelButton != null) historyPanelButton.onClick.RemoveListener(OnHistoryButtonPressed);
+        if (patientPanelButton != null) patientPanelButton.onClick.RemoveListener(OnPatientButtonPressed);
         if (nextButton != null) nextButton.onClick.RemoveListener(OnNextButtonPressed);
     }
 
@@ -148,6 +158,12 @@ public class Minigame_Call112Eps3 : MonoBehaviour, IMiniGame
         SetHistoryPanelVisible(!isVisible);
     }
 
+    private void OnPatientButtonPressed()
+    {
+        bool isVisible = patientPanel != null && patientPanel.activeSelf;
+        SetPatientPanelVisible(!isVisible);
+    }
+
     private void OnNextButtonPressed()
     {
         operatorSkipRequested = true;
@@ -165,7 +181,11 @@ public class Minigame_Call112Eps3 : MonoBehaviour, IMiniGame
         lastOperatorReply = string.Empty;
         lastRuleResponseIndex.Clear();
         historyBuilder.Clear();
-        achievedCategories.Clear();
+        identifiedVictims.Clear();
+        recordedLocationInfo = false;
+        recordedHasLedakan = false;
+        recordedHasKebakaran = false;
+        currentState = QuestionState.EmergencyLocation;
         SetHistoryText(string.Empty);
 
         SetTranscriptLine(string.Empty);
@@ -190,24 +210,7 @@ public class Minigame_Call112Eps3 : MonoBehaviour, IMiniGame
 
         if (typingRoutine != null) StopCoroutine(typingRoutine);
 
-        // Cek apakah pesan pemain mengenai Keyword Rule
-        string keywordReply = GetKeywordRuleReply(message);
-        
-        if (!string.IsNullOrEmpty(keywordReply))
-        {
-            queuedOperatorReply = keywordReply;
-        }
-        else
-        {
-            // Jika pemain mengetik asal/tidak kena keyword, berikan fallback hint
-            queuedOperatorReply = GetFallbackHint();
-        }
-
-        // Jika semua kategori sudah tercapai, timpa balasan dengan instruksi dispatch
-        if (IsConversationComplete() && !string.IsNullOrEmpty(keywordReply))
-        {
-            queuedOperatorReply = keywordReply + " " + BuildDispatchReply();
-        }
+        queuedOperatorReply = HandleMessageForState(message);
 
         typingRoutine = StartCoroutine(TypeConversationTurn(message));
     }
@@ -325,6 +328,13 @@ public class Minigame_Call112Eps3 : MonoBehaviour, IMiniGame
         else FocusInputField();
     }
 
+    public void SetPatientPanelVisible(bool visible)
+    {
+        if (patientPanel == null) return;
+
+        patientPanel.SetActive(visible);
+    }
+
     private void ScrollHistoryToBottom()
     {
         if (historyScrollRect == null) return;
@@ -343,402 +353,379 @@ public class Minigame_Call112Eps3 : MonoBehaviour, IMiniGame
         if (text != null) text.text = value;
     }
 
-    private string GetKeywordRuleReply(string rawMessage)
+    private string HandleMessageForState(string rawMessage)
     {
-        if (keywordRules == null || keywordRules.Count == 0) return string.Empty;
-
         string message = Normalize(rawMessage);
-        for (int i = 0; i < keywordRules.Count; i++)
-        {
-            KeywordRule rule = keywordRules[i];
-            if (rule == null || !rule.enabled || rule.responses == null || rule.responses.Count == 0) continue;
 
-            if (IsRuleMatch(message, rule))
+        switch (currentState)
+        {
+            case QuestionState.EmergencyLocation:
+                return HandleEmergencyLocation(message);
+            case QuestionState.Safety:
+                return HandleSafety(message);
+            case QuestionState.VictimCount:
+                return HandleVictimCount(message);
+            case QuestionState.Victim1:
+            case QuestionState.Victim2:
+            case QuestionState.Victim3:
+                return HandleVictimDetails(message);
+            case QuestionState.Closing:
+                return BuildClosingResponse();
+            default:
+                return "Mohon jelaskan kondisi Anda saat ini.";
+        }
+    }
+
+    private string HandleEmergencyLocation(string message)
+    {
+        // update stored info so user can answer location and emergency across multiple messages
+        if (HasLocationInfo(message)) recordedLocationInfo = true;
+        if (HasLedakanInfo(message)) recordedHasLedakan = true;
+        if (HasKebakaranInfo(message)) recordedHasKebakaran = true;
+
+        bool hasLocation = recordedLocationInfo || HasLocationInfo(message);
+        bool hasLedakan = recordedHasLedakan || HasLedakanInfo(message);
+        bool hasKebakaran = recordedHasKebakaran || HasKebakaranInfo(message);
+        bool hasEmergency = hasLedakan && hasKebakaran;
+
+        if (!hasLocation && !hasEmergency)
+        {
+            return PickVariant("state1_both", new List<string>
             {
-                // Jika match dan punya kategori progres, tambahkan ke Hashset
-                if (!string.IsNullOrEmpty(rule.progressCategory))
+                "Bisa tolong sebutkan lokasi Anda dan kondisi daruratnya.",
+                "Di mana lokasi Anda dan apa kondisi daruratnya?",
+                "Mohon jelaskan lokasi dan kondisi darurat yang terjadi."
+            });
+        }
+
+        if (!hasLocation)
+        {
+            return PickVariant("state1_location", new List<string>
+            {
+                "Bisakah tolong beri tau lokasi Anda di mana? ",
+                "Mohon sebutkan lokasi yang detail",
+                "Dimana Anda berada saat ini?"
+            });
+        }
+
+        if (!hasEmergency)
+        {
+            if (!hasLedakan && hasKebakaran)
+            {
+                return PickVariant("state1_need_ledakan", new List<string>
                 {
-                    achievedCategories.Add(rule.progressCategory);
-                }
-                return PickRuleResponse(rule);
+                    "Apakah Anda tahu asal api itu dari mana? Apakah ada suara ledakan yang Anda dengar?",
+                    "Apakah ada suara atau petunjuk asal api itu?",
+                    "Bisa jelaskan apakah ada suara keras sebelum api muncul?"
+                });
+            }
+
+            if (!hasKebakaran && hasLedakan)
+            {
+                return PickVariant("state1_need_kebakaran", new List<string>
+                {
+                    "Apakah Anda bisa melihat api atau asap dari ledakan itu? Bagaimana dampaknya?",
+                    "Apakah ada api atau asap setelah ledakan? Seberapa besar dampaknya?",
+                    "Bisa jelaskan apakah terlihat api dan asap setelah ledakan?"
+                });
+            }
+
+            return PickVariant("state1_emergency", new List<string>
+            {
+                "Apa kondisi darurat yang terjadi disana?",
+                "Mohon jelaskan kondisi darurat yang terjadi!",
+                "Apa yang terjadi di lokasi saat ini?"
+            });
+        }
+
+        currentState = QuestionState.Safety;
+        return PickVariant("state1_ok", new List<string>
+        {
+            "Baik, lokasi dan kondisi darurat dicatat. Apakah posisi Anda aman?",
+            "Saya catat lokasi dan kondisi darurat. Apakah Anda sudah di tempat aman?",
+            "Lokasi dan kondisi darurat dicatat. Posisi Anda aman?"
+        });
+    }
+
+    private string HandleSafety(string message)
+    {
+        if (!HasSafetyInfo(message))
+        {
+            return PickVariant("state2_need", new List<string>
+            {
+                "Apakah posisi Anda aman saat ini?",
+                "Mohon pastikan posisi Anda aman. Sudah aman?",
+                "Anda sudah berada di tempat aman?"
+            });
+        }
+
+        currentState = QuestionState.VictimCount;
+        return PickVariant("state2_ok", new List<string>
+        {
+            "Baik. Apakah ada korban lain di lokasi?",
+            "Baik. Ada berapa orang lain yang terdampak di lokasi selain anda?",
+            "Posisi aman dicatat. Apakah ada korban lain?"
+        });
+    }
+
+    private string HandleVictimCount(string message)
+    {
+        if (!HasVictimCountInfo(message))
+        {
+            return PickVariant("state3_need", new List<string>
+            {
+                "Pastikan jumlah korban di lokasi benar sesuai yang anda lihat",
+                "Mohon bantu sebutkan jumlah korban yang terdampak.",
+                "Coba pastikan ada berapa jumlah korban!"
+            });
+        }
+
+        currentState = QuestionState.Victim1;
+        return PickVariant("state3_ok", new List<string>
+        {
+            "Baik, ada tiga korban. Bisakah anda jelaskan kondisi korban pertama?",
+            "Tiga korban dicatat. Bagaimana kondisi korban pertama?",
+            "Baik, tiga korban. Tolong jelaskan kondisi korban pertama!"
+        });
+    }
+
+    private string HandleVictimDetails(string message)
+    {
+        List<VictimType> detected = DetectVictims(message);
+        List<VictimType> newVictims = new List<VictimType>();
+        for (int i = 0; i < detected.Count; i++)
+        {
+            if (!identifiedVictims.Contains(detected[i]))
+            {
+                newVictims.Add(detected[i]);
             }
         }
 
-        return string.Empty;
-    }
-
-    private string GetFallbackHint()
-    {
-        if (!achievedCategories.Contains("Lokasi"))
-            return "Maaf, saya tidak menangkap lokasi Anda. Berada di gedung atau area mana?";
-        if (!achievedCategories.Contains("Kejadian"))
-            return "Bisa diperjelas apa insiden utamanya? Apakah ada kebakaran atau hal lain?";
-        if (!achievedCategories.Contains("JumlahKorban"))
-            return "Berapa perkiraan jumlah korban di lokasi saat ini?";
-        if (!achievedCategories.Contains("KondisiKorban"))
-            return "Mohon jelaskan secara spesifik luka korban (perdarahan, patah tulang, atau luka bakar).";
-        if (!achievedCategories.Contains("Konfirmasi"))
-            return "Bantuan segera dikirim. Balas 'siap' jika Anda sudah mengerti instruksi untuk bertahan.";
-
-        return "Mohon sampaikan detail lebih lanjut agar kami bisa merespons dengan tepat.";
-    }
-
-    private void SeedKeywordRules()
-    {
-        if (keywordRules.Count > 0)
+        if (newVictims.Count == 0)
         {
+            return AskForNextVictim();
+        }
+
+        string advice = BuildVictimAdvice(newVictims, 2);
+        for (int i = 0; i < newVictims.Count; i++)
+        {
+            identifiedVictims.Add(newVictims[i]);
+        }
+
+        UpdateVictimStateAfterProgress();
+
+        if (currentState == QuestionState.Closing)
+        {
+            return advice + " " + BuildClosingResponse();
+        }
+
+        return advice + " " + AskForNextVictim();
+    }
+
+    private void UpdateVictimStateAfterProgress()
+    {
+        int count = identifiedVictims.Count;
+        if (count >= 3)
+        {
+            currentState = QuestionState.Closing;
             return;
         }
 
-        // ==========================================
-        // 1. RULES FEEDBACK & NARASI (Tanpa Kategori Progres)
-        // ==========================================
-        keywordRules.Add(new KeywordRule
+        if (currentState == QuestionState.Victim1)
         {
-            id = "bohong",
-            keywords = new List<string> { "bohong", "becanda", "prank" },
-            responses = new List<string>
-            {
-                "Ini jalur darurat. Mohon berikan informasi yang benar agar bantuan bisa dikirim.",
-                "Ini layanan darurat. Mohon sampaikan kejadian sebenarnya agar petugas bisa membantu.",
-                "Mohon tidak bercanda. Kami butuh informasi yang benar untuk kirim bantuan."
-            }
-        });
-
-        keywordRules.Add(new KeywordRule
+            currentState = count >= 2 ? QuestionState.Victim3 : QuestionState.Victim2;
+        }
+        else if (currentState == QuestionState.Victim2)
         {
-            id = "panik",
-            keywords = new List<string> { "panik", "takut", "tolong" },
-            responses = new List<string>
-            {
-                "Tenang. Tarik napas, saya akan bantu. Sebutkan lokasi tepatnya.",
-                "Saya dengarkan. Tetap tenang dan sebutkan lokasi secara jelas.",
-                "Tenang dulu. Sebutkan lokasi agar bantuan bisa dikirim."
-            }
-        });
-
-        keywordRules.Add(new KeywordRule
+            currentState = QuestionState.Victim3;
+        }
+        else if (currentState == QuestionState.Victim3 && count < 3)
         {
-            id = "awal_lantai3",
-            keywords = new List<string> { "lantai 3", "lt 3" },
-            responses = new List<string>
-            {
-                "Baik, Anda awalnya di lantai 3. Sekarang Anda berada di mana?",
-                "Catat posisi awal di lantai 3. Lokasi Anda sekarang di mana?",
-                "Baik, awal di lantai 3. Mohon sebutkan lokasi Anda saat ini."
-            }
-        });
-
-        keywordRules.Add(new KeywordRule
-        {
-            id = "tangga_runtuh",
-            keywords = new List<string> { "tangga", "runtuh", "ambruk" },
-            // Catatan: Jika requireAllKeywords = true, player HARUS mengetik kata tangga AND runtuh AND ambruk sekaligus.
-            // Jika maksudmu "tangga" DAN ("runtuh" ATAU "ambruk"), lebih baik hapus "ambruk" dari list ini agar lebih mudah terpanggil.
-            requireAllKeywords = true, 
-            responses = new List<string>
-            {
-                "Baik. Tangga darurat runtuh dicatat. Anda sudah di area aman?",
-                "Saya catat tangga runtuh. Mohon pastikan Anda di lokasi aman.",
-                "Baik, tangga darurat runtuh. Apakah masih ada akses evakuasi lain?"
-            }
-        });
-
-        keywordRules.Add(new KeywordRule
-        {
-            id = "lari_tangga_lain",
-            keywords = new List<string> { "lari", "tangga", "satunya", "tangga lain", "tangga kedua" },
-            responses = new List<string>
-            {
-                "Baik. Anda menuju tangga lain. Pastikan tetap aman saat evakuasi.",
-                "Baik, pindah ke tangga darurat lain dicatat. Pastikan jalur aman.",
-                "Saya catat Anda ke tangga lain. Hati-hati dan utamakan keselamatan."
-            }
-        });
-
-        keywordRules.Add(new KeywordRule
-        {
-            id = "turun_aman",
-            keywords = new List<string> { "turun", "aman", "selamat", "berhasil turun" },
-            responses = new List<string>
-            {
-                "Baik, Anda sudah turun dengan aman. Tetap di area aman dan sebutkan lokasi saat ini.",
-                "Baik, Anda selamat turun. Mohon tetap aman dan sampaikan lokasi Anda.",
-                "Catat Anda berhasil turun aman. Sekarang Anda berada di mana?"
-            }
-        });
-
-
-        // ==========================================
-        // 2. RULES LOKASI
-        // ==========================================
-        keywordRules.Add(new KeywordRule
-        {
-            id = "lokasi_tower2",
-            progressCategory = "Lokasi",
-            keywords = new List<string> { "tower 2", "tower2", "menara 2", "menara2" },
-            responses = new List<string>
-            {
-                "Baik, Tower 2 ITS, bantuan sudah saya kirimkan menuju kesana",
-                "Tower 2 dicatat. Apa yang terjadi?",
-                "Baik, Tower 2. Apakah anda bisa ceritakan apa yang terjadi?."
-            }
-        });
-
-        keywordRules.Add(new KeywordRule
-        {
-            id = "lokasi_kurang_spesifik",
-            // Tidak ada progressCategory karena belum spesifik
-            keywords = new List<string> { "kampus", "gedung", "institut", "fakultas" },
-            excludeKeywords = new List<string> { "tower 2", "tower2", "menara 2", "menara2" },
-            responses = new List<string> 
-            { 
-                "Di kampus sebelah mana tepatnya? Tolong sebutkan nama gedung atau towernya.",
-                "Area kampus terlalu luas. Sebutkan spesifik Anda berada di tower mana.",
-                "Bisa lebih spesifik? Gedung atau tower apa yang Anda maksud?"
-            }
-        });
-
-        keywordRules.Add(new KeywordRule
-        {
-            id = "parkiran_bawah",
-            progressCategory = "Lokasi",
-            keywords = new List<string> { "parkiran", "parkir", "basement", "bawah gedung" },
-            responses = new List<string>
-            {
-                "Baik, Anda di parkiran bawah. Tetap di area aman dan tunggu bantuan.",
-                "Lokasi pemanggil di parkiran dicatat. Mohon tetap aman.",
-                "Baik, parkiran bawah. Apakah korban bersama Anda saat ini?"
-            }
-        });
-
-        keywordRules.Add(new KeywordRule
-        {
-            id = "lihat_korban_parkiran",
-            progressCategory = "Lokasi",
-            keywords = new List<string> { "lihat", "melihat", "korban", "parkiran", "parkir" },
-            requireAllKeywords = false, // Kuubah jadi false agar tidak perlu mengetik ke-5 kata sekaligus
-            responses = new List<string>
-            {
-                "Baik, Anda melihat korban di parkiran. Jelaskan kondisi masing-masing korban.",
-                "Catat korban di parkiran. Berapa korban dan bagaimana kondisinya?",
-                "Baik. Korban di parkiran dicatat. Mohon jelaskan kondisi mereka."
-            }
-        });
-
-
-        // ==========================================
-        // 3. RULES KEJADIAN
-        // ==========================================
-        keywordRules.Add(new KeywordRule
-        {
-            id = "lantai2_ledakan",
-            progressCategory = "Kejadian",
-            keywords = new List<string> { "lantai 2", "lt 2", "ledakan", "meledak" },
-            requireAllKeywords = false, // Sama seperti di atas, disarankan false agar lebih fleksibel
-            responses = new List<string>
-            {
-                "Baik, ledakan di lantai 2 dicatat. Di bagian mana lantai 2?",
-                "Baik, lantai 2 dan ledakan dicatat. Ada api atau asap tebal?",
-                "Saya catat ledakan di lantai 2. Sebutkan titik terdekat."
-            }
-        });
-
-        keywordRules.Add(new KeywordRule
-        {
-            id = "kebakaran",
-            progressCategory = "Kejadian",
-            keywords = new List<string> { "kebakaran", "terbakar", "api", "asap" },
-            responses = new List<string>
-            {
-                "Baik. Ada kebakaran. Berapa korban di lokasi?",
-                "Baik, ada kebakaran. Sebutkan jumlah korban.",
-                "Saya catat kebakaran. Ada berapa korban?"
-            }
-        });
-
-
-        // ==========================================
-        // 4. RULES JUMLAH KORBAN
-        // ==========================================
-        keywordRules.Add(new KeywordRule
-        {
-            id = "jumlah_korban_3",
-            progressCategory = "JumlahKorban",
-            keywords = new List<string> { "3 korban", "tiga korban", "3 orang", "tiga orang" },
-            responses = new List<string>
-            {
-                "Baik, ada tiga korban. Jelaskan kondisi masing-masing korban.",
-                "Tiga korban dicatat. Mohon jelaskan kondisi tiap korban.",
-                "Baik, tiga korban. Siapa yang stabil dan siapa yang kritis?"
-            }
-        });
-
-
-        // ==========================================
-        // 5. RULES KONDISI KORBAN
-        // ==========================================
-        keywordRules.Add(new KeywordRule
-        {
-            id = "korban1_asap_ringan",
-            progressCategory = "KondisiKorban",
-            keywords = new List<string> { "terhirup asap sedikit", "hirup asap sedikit", "asap ringan", "mostly fine", "masih sadar", "stabil" },
-            responses = new List<string>
-            {
-                "Baik. Pindahkan korban stabil ke udara bersih jika aman.",
-                "Korban stabil dicatat. Pastikan berada di area berudara bersih.",
-                "Baik. Jauhkan korban stabil dari asap dan pantau kondisinya."
-            }
-        });
-
-        keywordRules.Add(new KeywordRule
-        {
-            id = "korban2_perdarahan_kaca",
-            progressCategory = "KondisiKorban",
-            keywords = new List<string> { "pecahan kaca", "kaki berdarah", "perdarahan", "berdarah" },
-            responses = new List<string>
-            {
-                "Tekan luka dengan kain bersih dan beri tekanan stabil jika aman.",
-                "Hentikan perdarahan dengan menekan luka memakai kain bersih.",
-                "Tekan luka dan tahan tekanan bila aman."
-            }
-        });
-
-        keywordRules.Add(new KeywordRule
-        {
-            id = "korban2_luka_bakar2",
-            progressCategory = "KondisiKorban",
-            keywords = new List<string> { "luka bakar 2", "derajat 2", "second degree" },
-            responses = new List<string>
-            {
-                "Untuk luka bakar derajat dua, dinginkan ringan bila aman dan jangan diolesi.",
-                "Luka bakar derajat dua dicatat. Dinginkan ringan dan jangan beri salep.",
-                "Baik. Dinginkan luka bakar derajat dua bila aman."
-            }
-        });
-
-        keywordRules.Add(new KeywordRule
-        {
-            id = "korban3_luka_bakar_berat",
-            progressCategory = "KondisiKorban",
-            keywords = new List<string> { "luka bakar hebat", "luka bakar luas", "terbakar parah", "derajat 3", "third degree" },
-            responses = new List<string>
-            {
-                "Prioritaskan keselamatan. Jauhkan dari sumber panas dan pantau napas.",
-                "Baik. Jauhkan dari panas dan fokus pada pernapasan korban.",
-                "Catat luka bakar berat. Pastikan udara bersih dan pantau napas."
-            }
-        });
-
-        keywordRules.Add(new KeywordRule
-        {
-            id = "korban3_airway",
-            progressCategory = "KondisiKorban",
-            keywords = new List<string> { "airway", "jalan napas", "terbakar di napas", "terhirup asap", "sesak" },
-            responses = new List<string>
-            {
-                "Segera pindahkan ke udara bersih jika aman dan pantau napasnya.",
-                "Baik. Pastikan korban di udara bersih dan awasi napas.",
-                "Catat gangguan napas. Pindahkan ke area bersih bila aman."
-            }
-        });
-
-        keywordRules.Add(new KeywordRule
-        {
-            id = "korban3_pingsan",
-            progressCategory = "KondisiKorban",
-            keywords = new List<string> { "pingsan", "tidak sadar", "hilang kesadaran" },
-            responses = new List<string>
-            {
-                "Cek napas dan respons korban. Jika tidak bernapas, butuh bantuan segera.",
-                "Baik. Periksa napas korban. Jika tidak bernapas, informasikan segera.",
-                "Catat tidak sadar. Pantau napas dan respons korban."
-            }
-        });
-
-        keywordRules.Add(new KeywordRule
-        {
-            id = "korban3_patah_kaki",
-            progressCategory = "KondisiKorban",
-            keywords = new List<string> { "patah", "fraktur", "kaki patah" },
-            responses = new List<string>
-            {
-                "Jangan memindahkan korban kecuali sangat darurat. Stabilkan posisi jika bisa.",
-                "Baik. Hindari memindahkan korban. Stabilkan posisi bila aman.",
-                "Catat patah tulang. Jangan paksa korban bergerak."
-            }
-        });
-
-
-        // ==========================================
-        // 6. RULE KONFIRMASI (Untuk menamatkan game)
-        // ==========================================
-        keywordRules.Add(new KeywordRule
-        {
-            id = "konfirmasi_mengerti",
-            progressCategory = "Konfirmasi",
-            keywords = new List<string> { "siap", "oke", "ok", "mengerti", "dimengerti", "ya" },
-            responses = new List<string> 
-            { 
-                "Instruksi dipahami. Tetap di jalur aman.",
-                "Baik, bantuan segera tiba. Jaga keselamatan Anda.",
-                "Diterima. Lakukan pertolongan pertama semampu Anda hingga tim medis tiba." 
-            }
-        });
+            currentState = QuestionState.Victim2;
+        }
     }
 
-    private static bool IsRuleMatch(string message, KeywordRule rule)
+    private string AskForNextVictim()
     {
-        // 1. Cek Exclude Keywords (Pencegat)
-        if (rule.excludeKeywords != null && rule.excludeKeywords.Count > 0)
+        VictimType next = GetNextMissingVictim();
+        switch (next)
         {
-            for (int i = 0; i < rule.excludeKeywords.Count; i++)
-            {
-                if (!string.IsNullOrWhiteSpace(rule.excludeKeywords[i]) && message.Contains(rule.excludeKeywords[i].Trim().ToLowerInvariant()))
+            case VictimType.Budi:
+                return PickVariant("ask_budi", new List<string>
                 {
-                    return false; // Batal terpicu karena mengandung kata yang dikecualikan
-                }
-            }
+                    "Bagaimana kondisi Budi (korban stabil/asap ringan)?",
+                    "Jelaskan kondisi Budi yang stabil.",
+                    "Mohon jelaskan kondisi korban stabil (Budi)."
+                });
+            case VictimType.Siti:
+                return PickVariant("ask_siti", new List<string>
+                {
+                    "Bagaimana kondisi Siti (perdarahan dan luka bakar)?",
+                    "Jelaskan kondisi Siti yang mengalami perdarahan.",
+                    "Mohon jelaskan kondisi korban kedua (Siti)."
+                });
+            case VictimType.Tono:
+                return PickVariant("ask_tono", new List<string>
+                {
+                    "Bagaimana kondisi Tono (luka bakar berat/patah)?",
+                    "Jelaskan kondisi Tono yang kritis.",
+                    "Mohon jelaskan kondisi korban terakhir (Tono)."
+                });
+            default:
+                return "Mohon jelaskan kondisi korban berikutnya.";
+        }
+    }
+
+    private VictimType GetNextMissingVictim()
+    {
+        if (!identifiedVictims.Contains(VictimType.Budi)) return VictimType.Budi;
+        if (!identifiedVictims.Contains(VictimType.Siti)) return VictimType.Siti;
+        return VictimType.Tono;
+    }
+
+    private List<VictimType> DetectVictims(string message)
+    {
+        List<VictimType> victims = new List<VictimType>();
+        bool mentionsKorban = message.Contains("korban") || message.Contains("orang");
+
+        if (message.Contains("budi") || (mentionsKorban && ContainsAny(message, "hijau", "green", "stabil", "aman", "hanya", "asap ringan", "terhirup asap sedikit", "hirup asap sedikit", "mostly fine")))
+        {
+            victims.Add(VictimType.Budi);
         }
 
-        // 2. Cek Keywords Utama
-        if (rule.keywords == null || rule.keywords.Count == 0) return false;
-
-        if (rule.requireAllKeywords)
+        if (message.Contains("siti") || (mentionsKorban && ContainsAny(message, "perdarahan", "pendarahan", "berdarah", "lengan", "tangan", "derajat 2", "tingkat dua", "luka bakar 2", "second degree")))
         {
-            for (int i = 0; i < rule.keywords.Count; i++)
+            victims.Add(VictimType.Siti);
+        }
+
+        if (message.Contains("tono") || (mentionsKorban && ContainsAny(message, "tingkat tiga", "derajat 3", "luka bakar hebat", "luka bakar luas", "sekujur tubuh", "patah", "kaki patah", "pingsan", "tidak sadar", "airway", "jalan napas")))
+        {
+            victims.Add(VictimType.Tono);
+        }
+
+        return victims;
+    }
+
+    private string BuildVictimAdvice(List<VictimType> victims, int maxCount)
+    {
+        List<string> replies = new List<string>();
+        for (int i = 0; i < victims.Count && replies.Count < maxCount; i++)
+        {
+            replies.Add(GetAdviceForVictim(victims[i]));
+        }
+
+        return string.Join(" ", replies);
+    }
+
+    private string GetAdviceForVictim(VictimType victim)
+    {
+        switch (victim)
+        {
+            case VictimType.Budi:
+                return PickVariant("adv_budi", new List<string>
+                {
+                    "Pindahkan korban stabil ke udara bersih jika aman.",
+                    "Pastikan korban stabil berada di area berudara bersih.",
+                    "Jauhkan korban stabil dari asap dan pantau kondisinya."
+                });
+            case VictimType.Siti:
+                return PickVariant("adv_siti", new List<string>
+                {
+                    "Tekan luka dengan kain bersih dan beri tekanan stabil jika aman. Dinginkan luka bakar bila aman.",
+                    "Hentikan perdarahan dengan menekan luka, dan dinginkan luka bakar secara ringan.",
+                    "Tekan luka dan tahan tekanan, lalu dinginkan luka bakar bila memungkinkan."
+                });
+            case VictimType.Tono:
+                return PickVariant("adv_tono", new List<string>
+                {
+                    "Prioritaskan napas korban. Pindahkan ke udara bersih jika aman dan pantau napas.",
+                    "Jauhkan dari panas dan fokus pada pernapasan korban.",
+                    "Pastikan udara bersih dan pantau napas korban."
+                });
+            default:
+                return "Pastikan korban dalam kondisi aman.";
+        }
+    }
+
+    private bool HasLocationInfo(string message)
+    {
+        return ContainsAny(message,
+            "tower 2", "tower2", "menara 2", "menara2",
+            "tw2", "tw 2", "tw2 its", "tw2, its", "its tw2"
+        );
+    }
+
+    private bool HasEmergencyInfo(string message)
+    {
+        return HasLedakanInfo(message) && HasKebakaranInfo(message);
+    }
+
+    private bool HasLedakanInfo(string message)
+    {
+        return ContainsAny(message, "ledakan", "meledak", "suara keras");
+    }
+
+    private bool HasKebakaranInfo(string message)
+    {
+        return ContainsAny(message, "kebakaran", "terbakar", "api", "asap");
+    }
+
+    private bool HasSafetyInfo(string message)
+    {
+        return ContainsAny(message, "aman", "selamat", "parkiran", "parkir", "lantai 1", "di luar", "turun", "evakuasi", "lobby");
+    }
+
+    private bool HasVictimCountInfo(string message)
+    {
+        bool hasKorbanWord = ContainsAny(message, "korban", "orang");
+        bool hasThree = ContainsAny(message, "3", "tiga");
+        return hasKorbanWord && hasThree;
+    }
+
+    private static bool ContainsAny(string message, params string[] keywords)
+    {
+        if (string.IsNullOrEmpty(message) || keywords == null || keywords.Length == 0)
+        {
+            return false;
+        }
+
+        string normalizedMessage = Normalize(message);
+        if (string.IsNullOrEmpty(normalizedMessage))
+        {
+            return false;
+        }
+
+        for (int i = 0; i < keywords.Length; i++)
+        {
+            string keyword = keywords[i];
+            if (string.IsNullOrWhiteSpace(keyword))
             {
-                if (!string.IsNullOrWhiteSpace(rule.keywords[i]) && !message.Contains(rule.keywords[i].Trim().ToLowerInvariant()))
-                    return false;
+                continue;
             }
-            return true;
-        }
 
-        for (int i = 0; i < rule.keywords.Count; i++)
-        {
-            if (!string.IsNullOrWhiteSpace(rule.keywords[i]) && message.Contains(rule.keywords[i].Trim().ToLowerInvariant()))
+            string normalizedKeyword = Normalize(keyword);
+            if (string.IsNullOrEmpty(normalizedKeyword))
+            {
+                continue;
+            }
+
+            if (normalizedMessage.Contains(normalizedKeyword))
+            {
                 return true;
+            }
         }
 
         return false;
     }
 
-    private string PickRuleResponse(KeywordRule rule)
+    private string BuildClosingResponse()
     {
-        List<int> candidates = new List<int>();
-        for (int i = 0; i < rule.responses.Count; i++)
+        return PickVariant("closing", new List<string>
         {
-            if (string.IsNullOrWhiteSpace(rule.responses[i])) continue;
-            if (!string.Equals(rule.responses[i].Trim(), lastOperatorReply, StringComparison.Ordinal))
-            {
-                candidates.Add(i);
-            }
-        }
-
-        int chosenIndex = candidates.Count > 0 ? candidates[UnityEngine.Random.Range(0, candidates.Count)] : UnityEngine.Random.Range(0, rule.responses.Count);
-        string selected = rule.responses[chosenIndex] ?? string.Empty;
-        lastRuleResponseIndex[rule.id ?? string.Empty] = chosenIndex;
-        return selected.Trim();
+            "Baik, bantuan segera tiba. Jaga keselamatan Anda.",
+            "Diterima. Tim dalam perjalanan. Tetap di area aman.",
+            "Instruksi dipahami. Bantuan menuju lokasi."
+        }) + " " + BuildDispatchReply();
     }
 
     private string BuildDispatchReply()
@@ -748,22 +735,63 @@ public class Minigame_Call112Eps3 : MonoBehaviour, IMiniGame
 
     private string GetNextPrompt()
     {
-        if (!achievedCategories.Contains("Lokasi")) return "Sebutkan lokasi kejadian.";
-        if (!achievedCategories.Contains("Kejadian")) return "Jelaskan apa yang baru saja terjadi.";
-        if (!achievedCategories.Contains("JumlahKorban")) return "Sebutkan jumlah korban.";
-        if (!achievedCategories.Contains("KondisiKorban")) return "Jelaskan kondisi cedera pada para korban.";
-        if (!achievedCategories.Contains("Konfirmasi")) return "Ketik 'siap' jika mengerti instruksi operator.";
-        
-        return string.Empty;
+        switch (currentState)
+        {
+            case QuestionState.EmergencyLocation:
+                return "Ada kondisi darurat apa dan di mana?";
+            case QuestionState.Safety:
+                return "Apakah posisi Anda aman?";
+            case QuestionState.VictimCount:
+                return "Apakah ada korban lain di sana?";
+            case QuestionState.Victim1:
+            case QuestionState.Victim2:
+            case QuestionState.Victim3:
+                return AskForNextVictim();
+            case QuestionState.Closing:
+                return "Ketik 'siap' jika mengerti instruksi operator.";
+            default:
+                return string.Empty;
+        }
     }
 
     private bool IsConversationComplete()
     {
-        foreach (string req in requiredCategories)
+        return currentState == QuestionState.Closing;
+    }
+
+    private string PickVariant(string key, List<string> options)
+    {
+        if (options == null || options.Count == 0)
         {
-            if (!achievedCategories.Contains(req)) return false;
+            return string.Empty;
         }
-        return true;
+
+        int lastIndex = -1;
+        if (lastRuleResponseIndex.TryGetValue(key, out int storedIndex))
+        {
+            lastIndex = storedIndex;
+        }
+
+        List<int> candidates = new List<int>();
+        for (int i = 0; i < options.Count; i++)
+        {
+            if (string.IsNullOrWhiteSpace(options[i]))
+            {
+                continue;
+            }
+
+            if (i != lastIndex && !string.Equals(options[i].Trim(), lastOperatorReply, StringComparison.Ordinal))
+            {
+                candidates.Add(i);
+            }
+        }
+
+        int chosenIndex = candidates.Count > 0
+            ? candidates[UnityEngine.Random.Range(0, candidates.Count)]
+            : UnityEngine.Random.Range(0, options.Count);
+
+        lastRuleResponseIndex[key] = chosenIndex;
+        return options[chosenIndex].Trim();
     }
 
     private void StartCompletionSequence()
