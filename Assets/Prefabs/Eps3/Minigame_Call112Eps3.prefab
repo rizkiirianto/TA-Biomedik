@@ -2503,6 +2503,57 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!1 &6813886728589102715
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3216566500063429711}
+  - component: {fileID: 3482372609415995799}
+  m_Layer: 0
+  m_Name: Ollama_API_Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3216566500063429711
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6813886728589102715}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -767.892, y: -922.2397, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2047800341423061067}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3482372609415995799
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6813886728589102715}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d155a2da12c7a774f8f6aa8a8d308e51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OllamaManager
+  ollamaUrl: http://localhost:11434/api/generate
+  modelName: qwen2.5:3b
+  systemPrompt: "Kamu adalah operator darurat 112. Tugasmu HANYA menyusun ulang kalimat
+    (rephrase) agar terdengar natural dan profesional. \r\nATURAN MUTLAK:\r\n1. JANGAN
+    PERNAH menambahkan pertanyaan, asumsi, atau informasi medismu sendiri. \r\n2.
+    Gunakan Bahasa Indonesia formal. \r\n3. Langsung berikan dialog balasannya tanpa
+    embel-embel awalan."
 --- !u!1 &7017766079765322474
 GameObject:
   m_ObjectHideFlags: 0
@@ -2512,7 +2563,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2047800341423061067}
-  - component: {fileID: 5781764171898083014}
+  - component: {fileID: 3970717677933074332}
   m_Layer: 0
   m_Name: Minigame_Call112Eps3
   m_TagString: Untagged
@@ -2535,9 +2586,10 @@ Transform:
   m_Children:
   - {fileID: 8465462215305204615}
   - {fileID: 8712757439148993469}
+  - {fileID: 3216566500063429711}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5781764171898083014
+--- !u!114 &3970717677933074332
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2546,9 +2598,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 7017766079765322474}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d24cbf57e77f59d41adcdfd2f4d8f88b, type: 3}
+  m_Script: {fileID: 11500000, guid: a72da7a91d0ffb64aa7ead87debd7912, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Minigame_Call112Eps3
+  m_EditorClassIdentifier: Assembly-CSharp::Minigame_Call112Eps3LLM
   text: {fileID: 777415481670164582}
   playerInputField: {fileID: 4101330557842710199}
   sendButton: {fileID: 2357268427770811813}
@@ -2561,11 +2613,13 @@ MonoBehaviour:
   historyPanelButton: {fileID: 5081637470021478715}
   patientPanel: {fileID: 1853418034197216627}
   patientPanelButton: {fileID: 3351780606977211918}
-  openingOperatorLine: 112, layanan darurat. Apa kondisi darurat anda ?
-  completionFeedback: Panggilan 112 selesai. Bantuan sedang menuju lokasi.
+  openingOperatorLine: 112, layanan darurat. Sebutkan lokasi dan apa yang terjadi.
+  completionFeedback: Panggilan 112 selesai. Bantuan sedang menuju lokasi. Segera
+    lakukan pertolongan pertama pada korban kritis.
   typingSpeed: 0.03
   operatorReplyDelaySeconds: 5
   finishDelaySeconds: 0.9
+  ollamaManager: {fileID: 3482372609415995799}
 --- !u!1 &7319602318572283627
 GameObject:
   m_ObjectHideFlags: 0

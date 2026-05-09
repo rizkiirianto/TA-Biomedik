@@ -2,10 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Networking;
 
 public class Minigame_Call112Eps3LLM : MonoBehaviour, IMiniGame
 {
@@ -23,41 +23,47 @@ public class Minigame_Call112Eps3LLM : MonoBehaviour, IMiniGame
     [SerializeField] private TextMeshProUGUI historyText;
     [SerializeField] private Button historyPanelButton;
 
+    [Header("Patient Panel")]
+    [SerializeField] private GameObject patientPanel;
+    [SerializeField] private Button patientPanelButton;
+
     [Header("Conversation")]
+    
     [SerializeField, TextArea(2, 4)] private string openingOperatorLine = "112, layanan darurat. Sebutkan lokasi dan apa yang terjadi.";
-    [SerializeField, TextArea(2, 4)] private string completionFeedback = "Panggilan 112 selesai. Bantuan sedang menuju lokasi.";
+    [SerializeField, TextArea(2, 4)] private string completionFeedback = "Panggilan 112 selesai. Bantuan sedang menuju lokasi. Segera lakukan pertolongan pertama pada korban kritis.";
     [SerializeField, Min(0.005f)] private float typingSpeed = 0.03f;
     [SerializeField, Min(0f)] private float operatorReplyDelaySeconds = 5f;
     [SerializeField, Min(0f)] private float finishDelaySeconds = 0.9f;
 
-    [Header("LLM (Gemini)")]
-    [SerializeField] private bool useGeminiOperator = false;
-    [SerializeField] private string geminiApiKey;
-    [SerializeField] private string geminiModel = "gemini-2.5-flash";
-    [SerializeField, Range(0f, 1f)] private float geminiTemperature = 0.4f;
-    [SerializeField, Min(16)] private int geminiMaxOutputTokens = 320;
-    [SerializeField, Min(1)] private int geminiContextTurns = 6;
-    [SerializeField, Min(1f)] private float geminiTimeoutSeconds = 12f;
-    [SerializeField, Range(0, 5)] private int geminiMaxRetries = 2;
-    [SerializeField, Min(0.2f)] private float geminiRetryBackoffSeconds = 1.2f;
-    [SerializeField, Min(1f)] private float geminiRetryBackoffMultiplier = 2f;
+    [Header("AI Manager")]
+    [SerializeField] private OllamaManager ollamaManager;
 
-    private sealed class MessageFacts
+    private enum QuestionState
     {
-        public bool HasLocation;
-        public bool HasIncident;
-        public bool HasVictimCount;
-        public bool HasGreenVictim;
-        public bool HasRedVictim;
-        public bool HasBleeding;
-        public bool HasSecondDegreeBurn;
-        public bool HasThirdDegreeBurn;
-        public bool HasAirwayBurn;
-        public bool HasBrokenLeg;
-        public bool HasAcknowledgement;
+        EmergencyLocation,
+        Safety,
+        VictimCount,
+        Victim1,
+        Victim2,
+        Victim3,
+        Closing
     }
 
-    private readonly MessageFacts collectedFacts = new MessageFacts();
+    private enum VictimType
+    {
+        Budi,
+        Siti,
+        Tono
+    }
+
+    private QuestionState currentState = QuestionState.EmergencyLocation;
+    private readonly HashSet<VictimType> identifiedVictims = new HashSet<VictimType>();
+
+    // remember partial info across multiple user messages
+    private bool recordedLocationInfo = false;
+    private bool recordedHasLedakan = false;
+    private bool recordedHasKebakaran = false;
+
     private GameManager gameManager;
     private bool isInitialized;
     private bool isCompleting;
@@ -66,14 +72,7 @@ public class Minigame_Call112Eps3LLM : MonoBehaviour, IMiniGame
     private string queuedOperatorReply = string.Empty;
     private readonly StringBuilder historyBuilder = new StringBuilder();
     private bool operatorSkipRequested;
-    private readonly List<ChatTurn> conversationTurns = new List<ChatTurn>();
-
-    [Serializable]
-    private sealed class ChatTurn
-    {
-        public string Speaker;
-        public string Message;
-    }
+    
 
     private void Start()
     {
@@ -88,18 +87,12 @@ public class Minigame_Call112Eps3LLM : MonoBehaviour, IMiniGame
 
     private void InitializeMinigame()
     {
-        if (isInitialized)
-        {
-            return;
-        }
+        if (isInitialized) return;
 
         isInitialized = true;
         isCompleting = false;
 
-        if (jiroNelpon != null)
-        {
-            jiroNelpon.SetActive(true);
-        }
+        if (jiroNelpon != null) jiroNelpon.SetActive(true);
 
         if (playerInputField != null)
         {
@@ -120,6 +113,12 @@ public class Minigame_Call112Eps3LLM : MonoBehaviour, IMiniGame
             historyPanelButton.onClick.AddListener(OnHistoryButtonPressed);
         }
 
+        if (patientPanelButton!= null) 
+        {
+            patientPanelButton.onClick.RemoveListener(OnPatientButtonPressed);
+            patientPanelButton.onClick.AddListener(OnPatientButtonPressed);
+        }
+
         if (nextButton != null)
         {
             nextButton.onClick.RemoveListener(OnNextButtonPressed);
@@ -127,51 +126,25 @@ public class Minigame_Call112Eps3LLM : MonoBehaviour, IMiniGame
         }
 
         SetNextButtonActive(false);
-
         ResetConversation();
     }
 
     private void OnDestroy()
     {
-        if (typingRoutine != null)
-        {
-            StopCoroutine(typingRoutine);
-            typingRoutine = null;
-        }
-
-        if (finishRoutine != null)
-        {
-            StopCoroutine(finishRoutine);
-            finishRoutine = null;
-        }
-
-        if (sendButton != null)
-        {
-            sendButton.onClick.RemoveListener(OnSendButtonPressed);
-        }
-
-        if (historyPanelButton != null)
-        {
-            historyPanelButton.onClick.RemoveListener(OnHistoryButtonPressed);
-        }
-
-        if (nextButton != null)
-        {
-            nextButton.onClick.RemoveListener(OnNextButtonPressed);
-        }
+        // Simpan log sisa jika script dihancurkan (misal pindah scene atau stop play)
+        SaveHistoryLog();
+        if (typingRoutine != null) StopCoroutine(typingRoutine);
+        if (finishRoutine != null) StopCoroutine(finishRoutine);
+        if (sendButton != null) sendButton.onClick.RemoveListener(OnSendButtonPressed);
+        if (historyPanelButton != null) historyPanelButton.onClick.RemoveListener(OnHistoryButtonPressed);
+        if (patientPanelButton != null) patientPanelButton.onClick.RemoveListener(OnPatientButtonPressed);
+        if (nextButton != null) nextButton.onClick.RemoveListener(OnNextButtonPressed);
     }
 
     private void Update()
     {
-        if (!isInitialized || isCompleting || playerInputField == null)
-        {
-            return;
-        }
-
-        if (!playerInputField.isFocused)
-        {
-            return;
-        }
+        if (!isInitialized || isCompleting || playerInputField == null) return;
+        if (!playerInputField.isFocused) return;
 
         if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
         {
@@ -190,6 +163,12 @@ public class Minigame_Call112Eps3LLM : MonoBehaviour, IMiniGame
         SetHistoryPanelVisible(!isVisible);
     }
 
+    private void OnPatientButtonPressed()
+    {
+        bool isVisible = patientPanel != null && patientPanel.activeSelf;
+        SetPatientPanelVisible(!isVisible);
+    }
+
     private void OnNextButtonPressed()
     {
         operatorSkipRequested = true;
@@ -204,39 +183,25 @@ public class Minigame_Call112Eps3LLM : MonoBehaviour, IMiniGame
         }
 
         queuedOperatorReply = string.Empty;
+        
         historyBuilder.Clear();
+        identifiedVictims.Clear();
+        recordedLocationInfo = false;
+        recordedHasLedakan = false;
+        recordedHasKebakaran = false;
+        currentState = QuestionState.EmergencyLocation;
         SetHistoryText(string.Empty);
-        ResetFacts();
 
         SetTranscriptLine(string.Empty);
         AppendOperatorLine(openingOperatorLine);
-        TrackConversationTurn("Operator 112", openingOperatorLine);
         UpdatePrompt("Ketik jawabanmu lalu tekan Enter atau tombol kirim.");
         SetNextButtonActive(false);
         FocusInputField();
     }
 
-    private void ResetFacts()
-    {
-        collectedFacts.HasLocation = false;
-        collectedFacts.HasIncident = false;
-        collectedFacts.HasVictimCount = false;
-        collectedFacts.HasGreenVictim = false;
-        collectedFacts.HasRedVictim = false;
-        collectedFacts.HasBleeding = false;
-        collectedFacts.HasSecondDegreeBurn = false;
-        collectedFacts.HasThirdDegreeBurn = false;
-        collectedFacts.HasAirwayBurn = false;
-        collectedFacts.HasBrokenLeg = false;
-        collectedFacts.HasAcknowledgement = false;
-    }
-
     private void SendCurrentMessage()
     {
-        if (isCompleting || playerInputField == null || isTypingMessage)
-        {
-            return;
-        }
+        if (isCompleting || playerInputField == null || isTypingMessage) return;
 
         string message = playerInputField.text.Trim();
         if (string.IsNullOrEmpty(message))
@@ -247,98 +212,98 @@ public class Minigame_Call112Eps3LLM : MonoBehaviour, IMiniGame
 
         playerInputField.text = string.Empty;
 
-        MessageFacts messageFacts = AnalyzeMessage(message);
-        MergeFacts(messageFacts);
+        if (typingRoutine != null) StopCoroutine(typingRoutine);
 
-        if (typingRoutine != null)
-        {
-            StopCoroutine(typingRoutine);
-        }
+        // 1. Dapatkan "Tujuan Balasan" dari Rule-Based / State Machine (Misal: "Bisa tolong sebutkan lokasi Anda?")
+        string intendedOperatorReply = HandleMessageForState(message);
 
-        if (useGeminiOperator)
-        {
-            typingRoutine = StartCoroutine(TypeConversationTurnWithGemini(message, messageFacts));
-        }
-        else
-        {
-            queuedOperatorReply = BuildOperatorReply(messageFacts);
-            typingRoutine = StartCoroutine(TypeConversationTurn(message));
-        }
+        // 2. Mulai proses hybrid dengan AI
+        typingRoutine = StartCoroutine(ProcessMessageHybrid(message, intendedOperatorReply));
     }
 
     private bool isTypingMessage;
 
-    private IEnumerator TypeConversationTurn(string playerMessage)
+    private IEnumerator ProcessMessageHybrid(string playerMessage, string intendedReply)
     {
         isTypingMessage = true;
         SetInputInteractable(false);
         SetJiroVisible(true);
         SetNextButtonActive(true);
 
+        // 1. Ketik pesan Jiro
         yield return StartCoroutine(TypeTranscriptLine("Jiro", playerMessage));
         AppendHistoryLine("Jiro", playerMessage);
 
-        if (!string.IsNullOrEmpty(queuedOperatorReply))
+        operatorSkipRequested = false;
+        yield return StartCoroutine(WaitForOperatorDelayOrClick());
+
+        SetJiroVisible(false);
+        SetNextButtonActive(false);
+
+        // 2. Tampilkan indikator mengetik
+        SetTranscriptLine("Operator 112: sedang mengetik...");
+
+        // 3. Bangun Prompt untuk AI (Hindari penggunaan struktur label seperti "Pesan:")
+        string llmPrompt = $"Pelapor baru saja berkata: \"{playerMessage}\"\nSebagai operator, sampaikan pesan ini kepadanya dengan natural: \"{intendedReply}\"\n\nTuliskan LANGSUNG kalimat balasanmu. Jangan gunakan tanda kutip dan jangan sebutkan identitasmu di awal kalimat, JANGAN menyebutkan nama korban atau kondisi medis yang TIDAK ada dalam Instruksi Operator, Jika pesan berisi tindakan medis, gunakan kalimat perintah yang sopan (contoh: 'Tolong pindahkan...', 'Berikan tekanan...'), JANGAN gunakan kata ganti 'kami' seolah-olah kamu yang melakukannya di lokasi.";
+        
+        bool isLLMDone = false;
+        string finalReply = intendedReply; // Gunakan teks rule-based sebagai fallback jika AI gagal
+
+        if (ollamaManager != null)
         {
-            operatorSkipRequested = false;
-            yield return StartCoroutine(WaitForOperatorDelayOrClick());
-            SetJiroVisible(false);
-            SetNextButtonActive(false);
-            yield return StartCoroutine(TypeTranscriptLine("Operator 112", queuedOperatorReply));
-            AppendHistoryLine("Operator 112", queuedOperatorReply);
+            ollamaManager.GenerateResponse(llmPrompt, (response) =>
+            {
+                if (!string.IsNullOrEmpty(response) && !response.Contains("gangguan"))
+                {
+                    // --- SAFETY NET: Bersihkan teks bocor dan halusinasi ---
+                    string cleanResponse = response
+                        .Replace("Pesan Pelapor:", "")
+                        .Replace("Pesan pelapor:", "")
+                        .Replace("Instruksi Operator:", "")
+                        .Replace("Instruksi operator:", "")
+                        .Replace("Tujuan Balasan Operator:", "")
+                        .Replace("Operator 112:", "")
+                        .Replace("Operator:", "")
+                        .Replace("\"", "") // Hapus tanda kutip jika AI menambahkannya
+                        .Replace("*", "") // Hapus format markdown asterisk jika ada
+                        .Trim(); 
+                    
+                    // Pastikan teks tidak kosong setelah dibersihkan
+                    if (!string.IsNullOrWhiteSpace(cleanResponse))
+                    {
+                        finalReply = cleanResponse;
+                    }
+                }
+                isLLMDone = true;
+            });
+
+            while (!isLLMDone) yield return null;
         }
         else
         {
-            SetJiroVisible(false);
-            SetNextButtonActive(false);
+            // Jika lupa masukin OllamaManager ke Inspector
+            isLLMDone = true;
         }
 
-        queuedOperatorReply = string.Empty;
+        // 4. Ketik hasil akhir dari AI
+        yield return StartCoroutine(TypeTranscriptLine("Operator 112", finalReply));
+        AppendHistoryLine("Operator 112", finalReply);
+        
+
         isTypingMessage = false;
         SetInputInteractable(true);
         FocusInputField();
 
+        // 5. Cek kelanjutan game
         if (IsConversationComplete())
         {
             StartCompletionSequence();
         }
-
-        UpdatePrompt(GetNextPrompt());
-        typingRoutine = null;
-    }
-
-    private IEnumerator TypeConversationTurnWithGemini(string playerMessage, MessageFacts messageFacts)
-    {
-        isTypingMessage = true;
-        SetInputInteractable(false);
-        SetJiroVisible(true);
-        SetNextButtonActive(false);
-
-        yield return StartCoroutine(TypeTranscriptLine("Jiro", playerMessage));
-        AppendHistoryLine("Jiro", playerMessage);
-
-        SetJiroVisible(false);
-        UpdatePrompt("Menunggu balasan operator...");
-
-        yield return StartCoroutine(FetchGeminiReply(playerMessage, messageFacts));
-
-        if (!string.IsNullOrEmpty(queuedOperatorReply))
+        else
         {
-            yield return StartCoroutine(TypeTranscriptLine("Operator 112", queuedOperatorReply));
-            AppendHistoryLine("Operator 112", queuedOperatorReply);
+            UpdatePrompt(GetNextPrompt());
         }
 
-        queuedOperatorReply = string.Empty;
-        isTypingMessage = false;
-        SetInputInteractable(true);
-        FocusInputField();
-
-        if (IsConversationComplete())
-        {
-            StartCompletionSequence();
-        }
-
-        UpdatePrompt(GetNextPrompt());
         typingRoutine = null;
     }
 
@@ -347,19 +312,10 @@ public class Minigame_Call112Eps3LLM : MonoBehaviour, IMiniGame
         float remaining = Mathf.Max(0f, operatorReplyDelaySeconds);
         while (remaining > 0f)
         {
-            if (operatorSkipRequested)
-            {
-                break;
-            }
-
+            if (operatorSkipRequested) break;
             remaining -= Time.deltaTime;
             yield return null;
         }
-    }
-
-    private void AppendPlayerLine(string message)
-    {
-        AppendTranscriptLine("Jiro", message);
     }
 
     private void AppendOperatorLine(string message)
@@ -390,79 +346,45 @@ public class Minigame_Call112Eps3LLM : MonoBehaviour, IMiniGame
 
     private void AppendHistoryLine(string speaker, string message)
     {
-        if (historyBuilder.Length > 0)
-        {
-            historyBuilder.AppendLine();
-        }
+        if (historyBuilder.Length > 0) historyBuilder.AppendLine();
 
         historyBuilder.Append(speaker);
         historyBuilder.Append(": ");
         historyBuilder.Append(message.Trim());
 
         SetHistoryText(historyBuilder.ToString());
-        TrackConversationTurn(speaker, message);
         if (historyPanel != null && historyPanel.activeSelf)
         {
             ScrollHistoryToBottom();
         }
     }
 
-    private void TrackConversationTurn(string speaker, string message)
-    {
-        if (string.IsNullOrWhiteSpace(speaker) || string.IsNullOrWhiteSpace(message))
-        {
-            return;
-        }
-
-        conversationTurns.Add(new ChatTurn
-        {
-            Speaker = speaker.Trim(),
-            Message = message.Trim()
-        });
-
-        int maxTurns = Mathf.Max(2, geminiContextTurns * 2);
-        int excess = conversationTurns.Count - maxTurns;
-        if (excess > 0)
-        {
-            conversationTurns.RemoveRange(0, excess);
-        }
-    }
-
     private void SetHistoryText(string value)
     {
-        if (historyText != null)
-        {
-            historyText.text = value;
-        }
+        if (historyText != null) historyText.text = value;
     }
 
     public void SetHistoryPanelVisible(bool visible)
     {
-        if (historyPanel == null)
-        {
-            return;
-        }
+        if (historyPanel == null) return;
 
         historyPanel.SetActive(visible);
         SetInputActive(!visible);
         SetInputInteractable(!visible && !isCompleting && !isTypingMessage);
-        if (visible)
-        {
-            ScrollHistoryToBottom();
-        }
-        else
-        {
-            FocusInputField();
-        }
+        if (visible) ScrollHistoryToBottom();
+        else FocusInputField();
+    }
+
+    public void SetPatientPanelVisible(bool visible)
+    {
+        if (patientPanel == null) return;
+
+        patientPanel.SetActive(visible);
     }
 
     private void ScrollHistoryToBottom()
     {
-        if (historyScrollRect == null)
-        {
-            return;
-        }
-
+        if (historyScrollRect == null) return;
         StartCoroutine(ScrollHistoryToBottomNextFrame());
     }
 
@@ -470,628 +392,358 @@ public class Minigame_Call112Eps3LLM : MonoBehaviour, IMiniGame
     {
         yield return null;
         Canvas.ForceUpdateCanvases();
-
-        if (historyScrollRect != null)
-        {
-            historyScrollRect.verticalNormalizedPosition = 0f;
-        }
+        if (historyScrollRect != null) historyScrollRect.verticalNormalizedPosition = 0f;
     }
 
     private void SetTranscriptLine(string value)
     {
-        if (text != null)
+        if (text != null) text.text = value;
+    }
+
+    private string HandleMessageForState(string rawMessage)
+    {
+        string message = Normalize(rawMessage);
+
+        switch (currentState)
         {
-            text.text = value;
+            case QuestionState.EmergencyLocation:
+                return HandleEmergencyLocation(message);
+            case QuestionState.Safety:
+                return HandleSafety(message);
+            case QuestionState.VictimCount:
+                return HandleVictimCount(message);
+            case QuestionState.Victim1:
+            case QuestionState.Victim2:
+            case QuestionState.Victim3:
+                return HandleVictimDetails(message);
+            case QuestionState.Closing:
+                return BuildClosingResponse();
+            default:
+                return "Mohon jelaskan kondisi Anda saat ini.";
         }
     }
 
-    private IEnumerator FetchGeminiReply(string playerMessage, MessageFacts messageFacts)
+    private string HandleEmergencyLocation(string message)
     {
-        if (string.IsNullOrWhiteSpace(geminiApiKey) || string.IsNullOrWhiteSpace(geminiModel))
+        // update stored info so user can answer location and emergency across multiple messages
+        if (HasLocationInfo(message)) recordedLocationInfo = true;
+        if (HasLedakanInfo(message)) recordedHasLedakan = true;
+        if (HasKebakaranInfo(message)) recordedHasKebakaran = true;
+
+        bool hasLocation = recordedLocationInfo || HasLocationInfo(message);
+        bool hasLedakan = recordedHasLedakan || HasLedakanInfo(message);
+        bool hasKebakaran = recordedHasKebakaran || HasKebakaranInfo(message);
+        bool hasEmergency = hasLedakan && hasKebakaran;
+
+        if (!hasLocation && !hasEmergency)
         {
-            queuedOperatorReply = BuildOperatorReply(messageFacts);
-            yield break;
+            return "Bisa tolong sebutkan lokasi Anda dan kondisi daruratnya.";
         }
 
-        string prompt = BuildGeminiPrompt(playerMessage, messageFacts);
-        GeminiRequest request = new GeminiRequest
+        if (!hasLocation)
         {
-            contents = new[]
-            {
-                new GeminiContent
-                {
-                    role = "user",
-                    parts = new[] { new GeminiPart { text = prompt } }
-                }
-            },
-            generationConfig = new GeminiGenerationConfig
-            {
-                temperature = geminiTemperature,
-                maxOutputTokens = geminiMaxOutputTokens
-            }
-        };
+            return "Bisakah tolong beri tahu lokasi Anda di mana?";
+        }
 
-        string json = JsonUtility.ToJson(request);
-        string url = $"https://generativelanguage.googleapis.com/v1beta/models/{geminiModel}:generateContent?key={geminiApiKey.Trim()}";
-
-        int maxAttempts = Mathf.Max(0, geminiMaxRetries) + 1;
-        float backoffSeconds = Mathf.Max(0.2f, geminiRetryBackoffSeconds);
-
-        for (int attempt = 1; attempt <= maxAttempts; attempt++)
+        if (!hasEmergency)
         {
-            using (UnityWebRequest webRequest = new UnityWebRequest(url, "POST"))
+            if (!hasLedakan && hasKebakaran)
             {
-                byte[] bodyRaw = Encoding.UTF8.GetBytes(json);
-                webRequest.uploadHandler = new UploadHandlerRaw(bodyRaw);
-                webRequest.downloadHandler = new DownloadHandlerBuffer();
-                webRequest.SetRequestHeader("Content-Type", "application/json");
-                webRequest.timeout = Mathf.CeilToInt(geminiTimeoutSeconds);
-
-                yield return webRequest.SendWebRequest();
-
-                if (webRequest.result == UnityWebRequest.Result.Success)
-                {
-                    string responseText = webRequest.downloadHandler.text;
-                    if (!TryParseGeminiText(responseText, out string replyText))
-                    {
-                        Debug.LogWarning("Gemini response parse failed.");
-                        queuedOperatorReply = BuildOperatorReply(messageFacts);
-                        yield break;
-                    }
-
-                    string sanitized = SanitizeGeminiReply(replyText, messageFacts);
-                    if (!IsLikelyCompleteSentence(sanitized))
-                    {
-                        string continuationPrompt = BuildContinuationPrompt(sanitized);
-                        GeminiReplyHolder continuation = new GeminiReplyHolder();
-                        yield return StartCoroutine(RequestGeminiOnce(continuationPrompt, GetContinuationMaxTokens(), continuation));
-                        if (!string.IsNullOrWhiteSpace(continuation.Text))
-                        {
-                            sanitized = MergeContinuation(sanitized, continuation.Text);
-                        }
-                    }
-
-                    queuedOperatorReply = sanitized;
-                    yield break;
-                }
-
-                string errorBody = webRequest.downloadHandler != null
-                    ? webRequest.downloadHandler.text
-                    : string.Empty;
-                bool shouldRetry = attempt < maxAttempts && ShouldRetryGemini(webRequest, errorBody);
-                Debug.LogWarning($"Gemini request failed (attempt {attempt}/{maxAttempts}): {webRequest.error}. Body: {errorBody}");
-
-                if (!shouldRetry)
-                {
-                    queuedOperatorReply = BuildOperatorReply(messageFacts);
-                    yield break;
-                }
+                return "Apakah Anda tahu asal api itu dari mana? Apakah ada suara ledakan yang Anda dengar?";
             }
 
-            yield return new WaitForSeconds(backoffSeconds);
-            backoffSeconds *= Mathf.Max(1f, geminiRetryBackoffMultiplier);
-        }
-    }
-
-    private bool ShouldRetryGemini(UnityWebRequest webRequest, string errorBody)
-    {
-        if (webRequest == null)
-        {
-            return false;
-        }
-
-        bool isRateLimited = webRequest.responseCode == 429 || webRequest.responseCode == 503;
-        if (isRateLimited)
-        {
-            return true;
-        }
-
-        if (string.IsNullOrWhiteSpace(errorBody))
-        {
-            return false;
-        }
-
-        string lowered = errorBody.ToLowerInvariant();
-        return lowered.Contains("unavailable") || lowered.Contains("too many requests");
-    }
-
-    private sealed class GeminiReplyHolder
-    {
-        public string Text;
-    }
-
-    private IEnumerator RequestGeminiOnce(string prompt, int maxTokens, GeminiReplyHolder holder)
-    {
-        if (holder == null)
-        {
-            yield break;
-        }
-
-        holder.Text = string.Empty;
-
-        GeminiRequest request = new GeminiRequest
-        {
-            contents = new[]
+            if (!hasKebakaran && hasLedakan)
             {
-                new GeminiContent
-                {
-                    role = "user",
-                    parts = new[] { new GeminiPart { text = prompt } }
-                }
-            },
-            generationConfig = new GeminiGenerationConfig
-            {
-                temperature = geminiTemperature,
-                maxOutputTokens = maxTokens
-            }
-        };
-
-        string json = JsonUtility.ToJson(request);
-        string url = $"https://generativelanguage.googleapis.com/v1beta/models/{geminiModel}:generateContent?key={geminiApiKey.Trim()}";
-
-        using (UnityWebRequest webRequest = new UnityWebRequest(url, "POST"))
-        {
-            byte[] bodyRaw = Encoding.UTF8.GetBytes(json);
-            webRequest.uploadHandler = new UploadHandlerRaw(bodyRaw);
-            webRequest.downloadHandler = new DownloadHandlerBuffer();
-            webRequest.SetRequestHeader("Content-Type", "application/json");
-            webRequest.timeout = Mathf.CeilToInt(geminiTimeoutSeconds);
-
-            yield return webRequest.SendWebRequest();
-
-            if (webRequest.result != UnityWebRequest.Result.Success)
-            {
-                yield break;
+                return "Apakah Anda bisa melihat api atau asap dari ledakan itu? Bagaimana dampaknya?";
             }
 
-            string responseText = webRequest.downloadHandler.text;
-            if (TryParseGeminiText(responseText, out string replyText))
+            return "Apa kondisi darurat yang terjadi di sana?";
+        }
+
+        currentState = QuestionState.Safety;
+        return "Baik, lokasi dan kondisi darurat dicatat. Apakah posisi Anda aman?";
+    }
+
+    private string HandleSafety(string message)
+    {
+        if (!HasSafetyInfo(message))
+        {
+            return "Apakah posisi Anda aman saat ini?";
+        }
+
+        currentState = QuestionState.VictimCount;
+        return "Baik. Apakah ada korban lain di lokasi?";
+    }
+
+    private string HandleVictimCount(string message)
+    {
+        if (!HasVictimCountInfo(message))
+        {
+            return "Pastikan jumlah korban di lokasi benar sesuai yang anda lihat.";
+        }
+
+        currentState = QuestionState.Victim1;
+        return "Baik, ada tiga korban. Bisakah anda jelaskan kondisi korban pertama?";
+    }
+
+    private string HandleVictimDetails(string message)
+    {
+        List<VictimType> detectedInThisTurn = DetectVictims(message);
+        List<VictimType> newlyIdentified = new List<VictimType>();
+
+        foreach (var victim in detectedInThisTurn)
+        {
+            if (!identifiedVictims.Contains(victim))
             {
-                holder.Text = replyText;
-            }
-        }
-    }
-
-    private static bool IsLikelyCompleteSentence(string text)
-    {
-        if (string.IsNullOrWhiteSpace(text))
-        {
-            return true;
-        }
-
-        string trimmed = text.TrimEnd();
-        char last = trimmed[trimmed.Length - 1];
-        return last == '.' || last == '?' || last == '!';
-    }
-
-    private static string MergeContinuation(string baseText, string continuation)
-    {
-        if (string.IsNullOrWhiteSpace(continuation))
-        {
-            return baseText;
-        }
-
-        string trimmedContinuation = continuation.Trim();
-        int overlap = FindOverlap(baseText, trimmedContinuation);
-        string suffix = overlap > 0 ? trimmedContinuation.Substring(overlap).TrimStart() : trimmedContinuation;
-        string spacer = baseText.EndsWith(" ") || string.IsNullOrEmpty(suffix) ? string.Empty : " ";
-        return (baseText + spacer + suffix).Trim();
-    }
-
-    private string BuildContinuationPrompt(string partialReply)
-    {
-        string seed = GetContinuationSeed(partialReply, 80);
-        return $"Lanjutkan 1 kalimat terakhir secara langsung tanpa mengulang. Mulai tepat setelah teks ini: \"{seed}\"";
-    }
-
-    private int GetContinuationMaxTokens()
-    {
-        int half = Mathf.Max(24, geminiMaxOutputTokens / 3);
-        return Mathf.Min(80, half);
-    }
-
-    private static int FindOverlap(string baseText, string continuation)
-    {
-        if (string.IsNullOrEmpty(baseText) || string.IsNullOrEmpty(continuation))
-        {
-            return 0;
-        }
-
-        int maxCheck = Mathf.Min(baseText.Length, continuation.Length);
-        for (int len = maxCheck; len >= 6; len--)
-        {
-            string suffix = baseText.Substring(baseText.Length - len, len);
-            if (continuation.StartsWith(suffix, StringComparison.OrdinalIgnoreCase))
-            {
-                return len;
+                newlyIdentified.Add(victim);
+                identifiedVictims.Add(victim);
             }
         }
 
-        return 0;
-    }
-
-    private static string GetContinuationSeed(string text, int maxChars)
-    {
-        if (string.IsNullOrWhiteSpace(text))
+        // Jika pemain ngomong tapi tidak ada keyword korban yang terdeteksi
+        if (newlyIdentified.Count == 0)
         {
-            return string.Empty;
+            return "Bisa tolong deskripsikan lebih detail luka atau kondisi korban tersebut? Apakah ada perdarahan atau luka bakar?";
         }
 
-        string trimmed = text.Trim();
-        if (trimmed.Length <= maxChars)
+        // Berikan saran medis HANYA untuk korban yang baru saja disebutkan
+        string medicalAdvice = BuildVictimAdvice(newlyIdentified, 2);
+        
+        UpdateVictimStateAfterProgress();
+
+        if (currentState == QuestionState.Closing)
         {
-            return trimmed;
+            return medicalAdvice + " " + BuildClosingResponse();
         }
 
-        return trimmed.Substring(trimmed.Length - maxChars, maxChars);
+        // Gabungkan saran medis dengan pertanyaan untuk korban selanjutnya
+        return medicalAdvice + " " + AskForNextVictim();
     }
-    private string BuildGeminiPrompt(string playerMessage, MessageFacts messageFacts)
-    {
-        StringBuilder builder = new StringBuilder();
-        builder.AppendLine("Peran: Operator 112 Indonesia.");
-        builder.AppendLine("Gaya: formal, ringkas, 2-3 kalimat.");
-        builder.AppendLine("Tujuan: kumpulkan info inti, tanya spesifik bila kurang.");
-        builder.AppendLine("Butuh: lokasi; insiden; jumlah korban; kondisi hijau/merah + luka; konfirmasi 'siap'.");
-        builder.AppendLine("Status: " + BuildFactsStatusSummary());
-        builder.AppendLine("Riwayat singkat:");
 
-        int start = Mathf.Max(0, conversationTurns.Count - (geminiContextTurns * 2));
-        for (int i = start; i < conversationTurns.Count; i++)
+    private void UpdateVictimStateAfterProgress()
+    {
+        int count = identifiedVictims.Count;
+        if (count >= 3)
         {
-            ChatTurn turn = conversationTurns[i];
-            builder.AppendLine($"{turn.Speaker}: {turn.Message}");
-        }
-
-        builder.AppendLine($"Jiro: {playerMessage}");
-        builder.AppendLine("Balas sebagai Operator 112.");
-        return builder.ToString();
-    }
-
-    private string BuildFactsStatusSummary()
-    {
-        StringBuilder builder = new StringBuilder();
-        builder.Append(collectedFacts.HasLocation ? "lokasi=ok" : "lokasi=perlu");
-        builder.Append(collectedFacts.HasIncident ? ", insiden=ok" : ", insiden=perlu");
-        builder.Append(collectedFacts.HasVictimCount ? ", korban=ok" : ", korban=perlu");
-        builder.Append(collectedFacts.HasGreenVictim ? ", hijau=ok" : ", hijau=perlu");
-        builder.Append(collectedFacts.HasRedVictim ? ", merah=ok" : ", merah=perlu");
-        builder.Append(collectedFacts.HasBleeding ? ", darah=ok" : ", darah=perlu");
-        builder.Append(collectedFacts.HasSecondDegreeBurn ? ", bakar2=ok" : ", bakar2=perlu");
-        builder.Append(collectedFacts.HasThirdDegreeBurn ? ", bakar3=ok" : ", bakar3=perlu");
-        builder.Append(collectedFacts.HasAirwayBurn ? ", napas=ok" : ", napas=perlu");
-        builder.Append(collectedFacts.HasBrokenLeg ? ", patah=ok" : ", patah=perlu");
-        builder.Append(collectedFacts.HasAcknowledgement ? ", siap=ok" : ", siap=perlu");
-        return builder.ToString();
-    }
-
-    private string SanitizeGeminiReply(string replyText, MessageFacts messageFacts)
-    {
-        if (string.IsNullOrWhiteSpace(replyText))
-        {
-            return BuildOperatorReply(messageFacts);
-        }
-
-        string normalized = replyText.Trim();
-        if (normalized.Length > 400)
-        {
-            normalized = normalized.Substring(0, 400).Trim();
-        }
-
-        return normalized;
-    }
-
-    private bool TryParseGeminiText(string json, out string replyText)
-    {
-        replyText = string.Empty;
-
-        if (string.IsNullOrWhiteSpace(json))
-        {
-            return false;
-        }
-
-        GeminiResponse response;
-        try
-        {
-            response = JsonUtility.FromJson<GeminiResponse>(json);
-        }
-        catch (Exception)
-        {
-            return false;
-        }
-
-        if (response?.candidates == null || response.candidates.Length == 0)
-        {
-            return false;
-        }
-
-        GeminiContent content = response.candidates[0].content;
-        if (content == null || content.parts == null || content.parts.Length == 0)
-        {
-            return false;
-        }
-
-        replyText = content.parts[0].text ?? string.Empty;
-        return !string.IsNullOrWhiteSpace(replyText);
-    }
-
-    [Serializable]
-    private sealed class GeminiRequest
-    {
-        public GeminiContent[] contents;
-        public GeminiGenerationConfig generationConfig;
-    }
-
-    [Serializable]
-    private sealed class GeminiGenerationConfig
-    {
-        public float temperature = 0.4f;
-        public int maxOutputTokens = 160;
-    }
-
-    [Serializable]
-    private sealed class GeminiResponse
-    {
-        public GeminiCandidate[] candidates;
-    }
-
-    [Serializable]
-    private sealed class GeminiCandidate
-    {
-        public GeminiContent content;
-    }
-
-    [Serializable]
-    private sealed class GeminiContent
-    {
-        public string role;
-        public GeminiPart[] parts;
-    }
-
-    [Serializable]
-    private sealed class GeminiPart
-    {
-        public string text;
-    }
-
-    private void UpdatePrompt(string message)
-    {
-        if (promptText != null)
-        {
-            promptText.text = message;
-        }
-    }
-
-    private void FocusInputField()
-    {
-        if (playerInputField == null || isCompleting || !playerInputField.interactable)
-        {
+            currentState = QuestionState.Closing;
             return;
         }
 
-        playerInputField.ActivateInputField();
-        playerInputField.Select();
-    }
-
-    private void SetInputInteractable(bool interactable)
-    {
-        if (playerInputField != null)
+        if (currentState == QuestionState.Victim1)
         {
-            playerInputField.interactable = interactable;
+            currentState = count >= 2 ? QuestionState.Victim3 : QuestionState.Victim2;
         }
-
-        if (sendButton != null)
+        else if (currentState == QuestionState.Victim2)
         {
-            sendButton.interactable = interactable;
+            currentState = QuestionState.Victim3;
+        }
+        else if (currentState == QuestionState.Victim3 && count < 3)
+        {
+            currentState = QuestionState.Victim2;
         }
     }
 
-    private void SetInputActive(bool active)
+    private string AskForNextVictim()
     {
-        if (playerInputField != null)
+        int count = identifiedVictims.Count;
+
+        // Jika belum ada korban yang disebutkan sama sekali
+        if (count == 0)
         {
-            playerInputField.gameObject.SetActive(active);
+            return "Bisa tolong jelaskan bagaimana kondisi korban yang Anda lihat di sana?";
+        }
+        
+        // Jika sudah ada 1 atau 2 korban, tanyakan korban berikutnya secara umum
+        if (count < 3)
+        {
+            return "Baik, data korban dicatat. Bagaimana dengan kondisi korban lainnya yang ada di lokasi?";
         }
 
-        if (sendButton != null)
+        return "Apakah ada informasi tambahan mengenai para korban?";
+    }
+
+    private VictimType GetNextMissingVictim()
+    {
+        if (!identifiedVictims.Contains(VictimType.Budi)) return VictimType.Budi;
+        if (!identifiedVictims.Contains(VictimType.Siti)) return VictimType.Siti;
+        return VictimType.Tono;
+    }
+
+    private List<VictimType> DetectVictims(string message)
+    {
+        List<VictimType> victims = new List<VictimType>();
+
+        // Deteksi tanpa harus mewajibkan kata "korban"
+        if (message.Contains("budi") || ContainsAny(message, "hijau", "green", "stabil", "aman", "hanya", "asap ringan", "terhirup asap sedikit", "hirup asap sedikit", "mostly fine"))
         {
-            sendButton.gameObject.SetActive(active);
+            victims.Add(VictimType.Budi);
+        }
+
+        if (message.Contains("siti") || ContainsAny(message, "perdarahan", "pendarahan", "berdarah", "lengan", "tangan", "derajat 2", "tingkat dua", "luka bakar 2", "second degree"))
+        {
+            victims.Add(VictimType.Siti);
+        }
+
+        if (message.Contains("tono") || ContainsAny(message, "tingkat tiga", "tingkat 3", "derajat 3", "derajat tiga", "luka bakar parah", "terbakar", "luka bakar hebat", "luka bakar luas", "sekujur tubuh", "patah", "kaki patah", "pingsan", "tidak sadar", "airway", "jalan napas"))
+        {
+            victims.Add(VictimType.Tono);
+        }
+
+        return victims;
+    }
+
+    private string BuildVictimAdvice(List<VictimType> victims, int maxCount)
+    {
+        List<string> replies = new List<string>();
+        for (int i = 0; i < victims.Count && replies.Count < maxCount; i++)
+        {
+            replies.Add(GetAdviceForVictim(victims[i]));
+        }
+
+        return string.Join(" ", replies);
+    }
+
+    private string GetAdviceForVictim(VictimType victim)
+    {
+        switch (victim)
+        {
+            case VictimType.Budi:
+                return "Pindahkan korban stabil ke udara bersih jika aman.";
+            case VictimType.Siti:
+                return "Tekan luka dengan kain bersih dan beri tekanan stabil jika aman.";
+            case VictimType.Tono:
+                return "Prioritaskan napas korban: pindahkan ke udara bersih jika aman dan pantau napas.";
+            default:
+                return "Pastikan korban dalam kondisi aman.";
         }
     }
 
-    private void SetJiroVisible(bool visible)
+    private bool HasLocationInfo(string message)
     {
-        if (jiroNelpon != null)
-        {
-            jiroNelpon.SetActive(visible);
-        }
+        return ContainsAny(message,
+            "tower 2", "tower2", "menara 2", "menara2",
+            "tw2", "tw 2", "tw2 its", "tw2, its", "its tw2"
+        );
     }
 
-    private void SetNextButtonActive(bool active)
+    private bool HasEmergencyInfo(string message)
     {
-        if (nextButton != null)
-        {
-            nextButton.gameObject.SetActive(active);
-        }
+        return HasLedakanInfo(message) && HasKebakaranInfo(message);
     }
 
-    private MessageFacts AnalyzeMessage(string rawMessage)
+    private bool HasLedakanInfo(string message)
     {
-        string message = Normalize(rawMessage);
-        MessageFacts facts = new MessageFacts
-        {
-            HasLocation = ContainsAny(message, "kampus", "gedung", "lab", "laboratorium", "lantai", "ruang", "gedung kampus", "alamat"),
-            HasIncident = ContainsAny(message, "ledakan", "meledak", "explosion", "kebakaran", "terbakar", "api", "asap"),
-            HasVictimCount = ContainsAny(message, "3 korban", "3 orang", "tiga korban", "tiga orang", "jumlah korban", "ada 3", "ada tiga"),
-            HasGreenVictim = ContainsAny(message, "hijau", "green", "mostly okay", "stabil", "masih sadar", "baik-baik saja"),
-            HasRedVictim = ContainsAny(message, "merah", "red", "kritis", "gawat", "parah"),
-            HasBleeding = ContainsAny(message, "darah", "berdarah", "perdarahan", "bleeding"),
-            HasSecondDegreeBurn = ContainsAny(message, "derajat 2", "2nd degree", "second degree", "luka bakar 2", "burn 2"),
-            HasThirdDegreeBurn = ContainsAny(message, "derajat 3", "3rd degree", "third degree", "luka bakar 3", "burn 3"),
-            HasAirwayBurn = ContainsAny(message, "jalan napas", "airway", "napas", "terhirup asap"),
-            HasBrokenLeg = ContainsAny(message, "patah", "broken leg", "kaki patah", "fraktur"),
-            HasAcknowledgement = ContainsAny(message, "siap", "oke", "ok", "mengerti", "dimengerti", "ya")
-        };
-
-        return facts;
+        return ContainsAny(message, "ledakan", "meledak", "suara keras");
     }
 
-    private void MergeFacts(MessageFacts messageFacts)
+    private bool HasKebakaranInfo(string message)
     {
-        collectedFacts.HasLocation |= messageFacts.HasLocation;
-        collectedFacts.HasIncident |= messageFacts.HasIncident;
-        collectedFacts.HasVictimCount |= messageFacts.HasVictimCount;
-        collectedFacts.HasGreenVictim |= messageFacts.HasGreenVictim;
-        collectedFacts.HasRedVictim |= messageFacts.HasRedVictim;
-        collectedFacts.HasBleeding |= messageFacts.HasBleeding;
-        collectedFacts.HasSecondDegreeBurn |= messageFacts.HasSecondDegreeBurn;
-        collectedFacts.HasThirdDegreeBurn |= messageFacts.HasThirdDegreeBurn;
-        collectedFacts.HasAirwayBurn |= messageFacts.HasAirwayBurn;
-        collectedFacts.HasBrokenLeg |= messageFacts.HasBrokenLeg;
-        collectedFacts.HasAcknowledgement |= messageFacts.HasAcknowledgement;
+        return ContainsAny(message, "kebakaran", "terbakar", "api", "asap");
     }
 
-    private string BuildOperatorReply(MessageFacts messageFacts)
+    private bool HasSafetyInfo(string message)
     {
-        if (!collectedFacts.HasLocation)
+        return ContainsAny(message, "aman", "selamat", "parkiran", "parkir", "lantai 1", "di luar", "turun", "evakuasi", "lobby");
+    }
+
+    private bool HasVictimCountInfo(string message)
+    {
+        //bool hasKorbanWord = ContainsAny(message, "korban", "orang");
+        bool hasThree = ContainsAny(message, "3", "tiga");
+        return hasThree;
+    }
+
+    private static bool ContainsAny(string message, params string[] keywords)
+    {
+        if (string.IsNullOrEmpty(message) || keywords == null || keywords.Length == 0)
         {
-            return "Saya butuh lokasi tepatnya dulu. Sebutkan gedung, lantai, atau titik terdekat di kampus.";
+            return false;
         }
 
-        if (!collectedFacts.HasIncident)
+        string normalizedMessage = Normalize(message);
+        if (string.IsNullOrEmpty(normalizedMessage))
         {
-            return "Lokasi sudah saya catat. Sekarang jelaskan kejadian utamanya: ada ledakan, kebakaran, atau asap tebal?";
+            return false;
         }
 
-        if (!collectedFacts.HasVictimCount)
+        for (int i = 0; i < keywords.Length; i++)
         {
-            return "Baik, saya catat ada insiden darurat. Ada berapa korban di lokasi itu?";
+            string keyword = keywords[i];
+            if (string.IsNullOrWhiteSpace(keyword))
+            {
+                continue;
+            }
+
+            string normalizedKeyword = Normalize(keyword);
+            if (string.IsNullOrEmpty(normalizedKeyword))
+            {
+                continue;
+            }
+
+            if (normalizedMessage.Contains(normalizedKeyword))
+            {
+                return true;
+            }
         }
 
-        if (!collectedFacts.HasGreenVictim || !collectedFacts.HasRedVictim)
-        {
-            return "Sebutkan pembagian kondisi korban. Siapa yang relatif aman atau hijau, dan siapa yang merah atau kritis?";
-        }
+        return false;
+    }
 
-        if (!collectedFacts.HasBleeding || !collectedFacts.HasSecondDegreeBurn || !collectedFacts.HasThirdDegreeBurn || !collectedFacts.HasAirwayBurn || !collectedFacts.HasBrokenLeg)
-        {
-            return "Sekarang jelaskan luka masing-masing korban secara singkat: perdarahan, luka bakar, gangguan napas, atau patah tulang.";
-        }
-
-        if (!collectedFacts.HasAcknowledgement)
-        {
-            return BuildDispatchReply() + " Balas 'siap' kalau kamu sudah mengerti instruksi terakhir.";
-        }
-
-        return completionFeedback;
+    private string BuildClosingResponse()
+    {
+        return "Baik, bantuan segera tiba. Jaga keselamatan Anda." + " " + BuildDispatchReply();
     }
 
     private string BuildDispatchReply()
     {
-        StringBuilder reply = new StringBuilder();
-        reply.Append("Baik, bantuan sedang saya kirim sekarang.");
-
-        if (collectedFacts.HasBleeding)
-        {
-            reply.Append(" Untuk korban dengan perdarahan, tekan luka dengan kain bersih jika aman.");
-        }
-
-        if (collectedFacts.HasSecondDegreeBurn)
-        {
-            reply.Append(" Untuk luka bakar derajat dua, jauhkan dari sumber panas dan dinginkan ringan bila aman.");
-        }
-
-        if (collectedFacts.HasThirdDegreeBurn || collectedFacts.HasAirwayBurn)
-        {
-            reply.Append(" Untuk luka bakar luas atau gangguan jalan napas, prioritaskan udara bersih dan pantau napas korban.");
-        }
-
-        if (collectedFacts.HasBrokenLeg)
-        {
-            reply.Append(" Jangan memaksa korban dengan patah tulang untuk berdiri atau berjalan.");
-        }
-
-        reply.Append(" Tetap di area aman dan tunggu petugas.");
-        return reply.ToString();
+        return "Ambulans dan pemadam sudah diberangkatkan. Tetap di jalur aman dan jangan matikan telepon jika tidak terpaksa.";
     }
 
     private string GetNextPrompt()
     {
-        if (!collectedFacts.HasLocation)
+        switch (currentState)
         {
-            return "Mulai dengan lokasi kamu berada.";
+            case QuestionState.EmergencyLocation:
+                return "Ada kondisi darurat apa dan di mana?";
+            case QuestionState.Safety:
+                return "Apakah posisi Anda aman?";
+            case QuestionState.VictimCount:
+                return "Apakah ada korban lain di sana?";
+            case QuestionState.Victim1:
+            case QuestionState.Victim2:
+            case QuestionState.Victim3:
+                return AskForNextVictim();
+            case QuestionState.Closing:
+                return "Ketik 'siap' jika mengerti instruksi operator.";
+            default:
+                return string.Empty;
         }
-
-        if (!collectedFacts.HasIncident)
-        {
-            return "Jelaskan kejadian daruratnya.";
-        }
-
-        if (!collectedFacts.HasVictimCount)
-        {
-            return "Sebutkan jumlah korban.";
-        }
-
-        if (!collectedFacts.HasGreenVictim || !collectedFacts.HasRedVictim)
-        {
-            return "Tulis kondisi korban: hijau dan merah.";
-        }
-
-        if (!collectedFacts.HasBleeding || !collectedFacts.HasSecondDegreeBurn || !collectedFacts.HasThirdDegreeBurn || !collectedFacts.HasAirwayBurn || !collectedFacts.HasBrokenLeg)
-        {
-            return "Tambahkan detail cedera masing-masing korban.";
-        }
-
-        if (!collectedFacts.HasAcknowledgement)
-        {
-            return "Ketik 'siap' untuk mengakhiri panggilan.";
-        }
-
-        return string.Empty;
     }
 
     private bool IsConversationComplete()
     {
-        return collectedFacts.HasLocation
-            && collectedFacts.HasIncident
-            && collectedFacts.HasVictimCount
-            && collectedFacts.HasGreenVictim
-            && collectedFacts.HasRedVictim
-            && collectedFacts.HasBleeding
-            && collectedFacts.HasSecondDegreeBurn
-            && collectedFacts.HasThirdDegreeBurn
-            && collectedFacts.HasAirwayBurn
-            && collectedFacts.HasBrokenLeg
-            && collectedFacts.HasAcknowledgement;
+        return currentState == QuestionState.Closing;
     }
+
+    
 
     private void StartCompletionSequence()
     {
-        if (isCompleting)
-        {
-            return;
-        }
+        if (isCompleting) return;
 
         isCompleting = true;
-
         SetInputInteractable(false);
+        // --- Panggil fungsi simpan log di sini ---
+        SaveHistoryLog();
 
-        if (finishRoutine != null)
-        {
-            StopCoroutine(finishRoutine);
-        }
-
+        if (finishRoutine != null) StopCoroutine(finishRoutine);
         finishRoutine = StartCoroutine(FinishAfterDelay());
     }
 
     private IEnumerator FinishAfterDelay()
     {
         yield return new WaitForSeconds(finishDelaySeconds);
-
-        if (gameManager != null)
-        {
-            gameManager.OnMiniGameComplete(completionFeedback);
-        }
-
+        if (gameManager != null) gameManager.OnMiniGameComplete(completionFeedback);
         finishRoutine = null;
     }
 
@@ -1100,16 +752,61 @@ public class Minigame_Call112Eps3LLM : MonoBehaviour, IMiniGame
         return string.IsNullOrWhiteSpace(message) ? string.Empty : message.Trim().ToLowerInvariant();
     }
 
-    private static bool ContainsAny(string message, params string[] keywords)
+    private void UpdatePrompt(string message)
     {
-        for (int i = 0; i < keywords.Length; i++)
-        {
-            if (!string.IsNullOrWhiteSpace(keywords[i]) && message.Contains(keywords[i]))
-            {
-                return true;
-            }
-        }
+        if (promptText != null) promptText.text = message;
+    }
 
-        return false;
+    private void FocusInputField()
+    {
+        if (playerInputField == null || isCompleting || !playerInputField.interactable) return;
+        playerInputField.ActivateInputField();
+        playerInputField.Select();
+    }
+
+    private void SetInputInteractable(bool interactable)
+    {
+        if (playerInputField != null) playerInputField.interactable = interactable;
+        if (sendButton != null) sendButton.interactable = interactable;
+    }
+
+    private void SetInputActive(bool active)
+    {
+        if (playerInputField != null) playerInputField.gameObject.SetActive(active);
+        if (sendButton != null) sendButton.gameObject.SetActive(active);
+    }
+
+    private void SetJiroVisible(bool visible)
+    {
+        if (jiroNelpon != null) jiroNelpon.SetActive(visible);
+    }
+
+    private void SetNextButtonActive(bool active)
+    {
+        if (nextButton != null) nextButton.gameObject.SetActive(active);
+    }
+
+    private void SaveHistoryLog()
+    {
+        // Jangan simpan kalau log-nya kosong
+        if (historyBuilder.Length == 0) return;
+
+        // Bikin nama file unik pakai format Waktu_Tanggal (Contoh: Call112Log_20260509_204530.txt)
+        string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+        string fileName = $"Call112Log_{timestamp}.txt";
+
+        // Lokasi aman bawaan Unity
+        string filePath = Path.Combine(Application.persistentDataPath, fileName);
+
+        try
+        {
+            // Tulis isi historyBuilder ke dalam file teks
+            File.WriteAllText(filePath, historyBuilder.ToString());
+            Debug.LogWarning($"[LOG SAVED] Transkrip berhasil disimpan di: {filePath}");
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"[LOG ERROR] Gagal menyimpan transkrip: {e.Message}");
+        }
     }
 }
