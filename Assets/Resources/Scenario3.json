@@ -78,7 +78,7 @@
       "stepType": "minigame",
       "minigameID": "Call112_Episode3",
       "instruction": "Call for backup.",
-      "narrativeImage": "Korban-korban",
+      "narrativeImage": "TigaKorban",
       "goldTime": 12,
       "silverTime": 18,
       "options": []
@@ -87,17 +87,43 @@
       "stepType": "minigame",
       "minigameID": "TriageQuick",
       "instruction": "Prioritaskan pertolongan: identifikasi luka bakar luas, tanda cedera inhalasi, dan pilih korban dengan risiko kematian paling cepat.",
-      "narrativeImage": "AreaTriase",
+      "narrativeImage": "TigaKorban",
       "goldTime": 18,
       "silverTime": 25,
       "options": []
     },
     {
       "stepType": "quiz",
+      "instruction": "Apa assignment yang kita berikan pada Budi untuk menolong Siti?",
+      "quizTimeSeconds": 10,
+      "lowTimeCueSeconds": 3,
+      "backgroundImage": "BudidanSiti",
+      "optionParentTarget": "optionParents2",
+      "optionParentPosX": -150.0,
+      "options": [
+        {
+          "text": "Cabut benda tajam dan bersihkan luka",
+          "isCorrect": false,
+          "feedback": "Jangan cabut benda tajam — itu dapat memperburuk pendarahan."
+        },
+        {
+          "text": "Tekan kuat di sekitar area dan aplikasikan pembalut tekan",
+          "isCorrect": true,
+          "feedback": "Benar. Tekanan langsung dan pembalut tekan efektif menghentikan pendarahan arteri sementara."
+        },
+        {
+          "text": "Beri minum agar korban tidak syok",
+          "isCorrect": false,
+          "feedback": "Berbahaya. Jangan beri minum pada korban trauma."
+        }
+      ]
+    },
+    {
+      "stepType": "quiz",
       "instruction": "Mengapa Tono diberi prioritas Merah?",
       "quizTimeSeconds": 14,
       "lowTimeCueSeconds": 5,
-      "backgroundImage": "Tono_Critical",
+      "backgroundImage": "Tono_Terkapar",
       "optionParentTarget": "optionParents2",
       "optionParentPosX": -150.0,
       "options": [
@@ -119,17 +145,10 @@
       ]
     },
     {
-      "stepType": "dialog",
-      "speakerName": "Narator",
-      "instruction": "Tono tiba-tiba kritis dan kehilangan kesadaran. .",
-      "narrativeImage": "Tono_Critical",
-      "options": []
-    },
-    {
       "stepType": "minigame",
-      "minigameID": "JawThrustSequence",
+      "minigameID": "HeadTiltChinLift",
       "instruction": "Buka jalan napas dengan head-tilt/chin-lift karena tidak ada cedera leher, lalu cek apakah udara masih bisa lewat.",
-      "narrativeImage": "JawThrust",
+      "narrativeImage": "HeadTiltChinLift",
       "goldTime": 14,
       "silverTime": 20,
       "options": []
