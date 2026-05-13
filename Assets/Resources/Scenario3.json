@@ -109,7 +109,8 @@
         {
           "text": "Tekan kuat di sekitar area dan aplikasikan pembalut tekan",
           "isCorrect": true,
-          "feedback": "Benar. Tekanan langsung dan pembalut tekan efektif menghentikan pendarahan arteri sementara."
+          "narrative": "Benar. Tekanan langsung dan pembalut tekan efektif menghentikan pendarahan arteri sementara.",
+          "narrativeImage": "BudidanSiti"
         },
         {
           "text": "Beri minum agar korban tidak syok",
@@ -126,6 +127,7 @@
       "backgroundImage": "Tono_Terkapar",
       "optionParentTarget": "optionParents2",
       "optionParentPosX": -150.0,
+      "optionParentPosY": 350.0,
       "options": [
         {
           "text": "Karena masih bisa berjalan sendiri",
@@ -133,9 +135,10 @@
           "feedback": "Tidak tepat — kemampuan berjalan tidak menjelaskan kegawatan napasnya."
         },
         {
-          "text": "Karena luka bakar luas dan cedera inhalasi membuatnya berisiko sangat tinggi, tetapi napasnya masih ada meski lemah",
+          "text": "Karena luka bakar luas dan cedera inhalasi membuatnya berisiko sangat tinggi ditambah nafasnya yang kian melemah",
           "isCorrect": true,
-          "feedback": "Benar. Pada tahap ini Tono masih bernapas tipis, jadi ia masih diprioritaskan Merah sambil diawasi ketat."
+          "narrativeImage": "Tono_Terkapar",
+          "narrative": "Tono kini berhenti bernafas dan membutuhkan bantuan secepatnya!"
         },
         {
           "text": "Karena tidak ada tanda bahaya sama sekali",
@@ -161,17 +164,8 @@
       "options": []
     },
     {
-      "stepType": "minigame",
-      "minigameID": "BleedControl",
-      "instruction": "Kontrol perdarahan arteri pada paha Siti. Tekan kuat dan tumpuk pembalut jika perlu.",
-      "narrativeImage": "BleedingPaha",
-      "goldTime": 12,
-      "silverTime": 18,
-      "options": []
-    },
-    {
       "stepType": "quiz",
-      "instruction": "Apa tindakan awal terbaik untuk pendarahan arteri di paha?",
+      "instruction": "Apa tindakan terbaik untuk pendarahan arteri di paha Siti?",
       "quizTimeSeconds": 10,
       "lowTimeCueSeconds": 3,
       "backgroundImage": "BleedingPaha",
@@ -200,7 +194,7 @@
       "instruction": "Luka bakar yang dimiliki Siti adalah tingkat...",
       "quizTimeSeconds": 10,
       "lowTimeCueSeconds": 3,
-      "backgroundImage": "Burn2Arm",
+      "backgroundImage": "LukaBakarSiti",
       "optionParentTarget": "optionParents2",
       "optionParentPosX": -150.0,
       "options": [
@@ -212,7 +206,8 @@
         {
           "text": "Tingkat 2, karena kulitnya tampak kemerahan/lepuh pada lengan dan belum hangus seluruhnya",
           "isCorrect": true,
-          "feedback": "Benar. Luka bakar Siti lebih sesuai dengan derajat 2, sehingga perlu pendinginan dan penutupan luka yang benar."
+          "narrativeImage": "LukaBakarSiti",
+          "narrative": "Benar. Luka bakar Siti lebih sesuai dengan derajat 2, sehingga perlu pendinginan dan penutupan luka yang benar."
         },
         {
           "text": "Tingkat 3, karena kulit putih pucat/hangus dan terasa kaku",
@@ -224,11 +219,63 @@
     {
       "stepType": "minigame",
       "minigameID": "BurnTreatment2",
-      "instruction": "Tangani luka bakar derajat 2 pada lengan Siti: dinginkan luka dengan air mengalir, lepas aksesori di sekitar luka, lalu tutup dengan kasa steril atau kain bersih tanpa memecahkan lepuh.",
+      "instruction": "Siti mengalami luka bakar derajat 2 di lengannya. Dinginkan luka dengan air mengalir bersuhu ruangan (bukan es) untuk menghentikan proses pembakaran dan meredakan nyeri. Kemudian, segera lepaskan jam tangan atau perhiasan di sekitar luka sebelum terjadi pembengkakan jaringan (edema).",
       "narrativeImage": "Burn2Arm",
       "goldTime": 15,
       "silverTime": 22,
       "options": []
+    },
+    {
+      "stepType": "quiz",
+      "instruction": "Kamu menyadari adanya gelembung berisi cairan (lepuhan) pada luka bakar Siti. Apa yang harus kamu lakukan terhadap lepuhan tersebut?",
+      "quizTimeSeconds": 15,
+      "lowTimeCueSeconds": 5,
+      "backgroundImage": "",
+      "optionParentTarget": "optionParents2",
+      "options": [
+        {
+          "text": "Memecahkannya agar cairannya keluar dan cepat kering",
+          "isCorrect": false,
+          "feedback": "Salah. Memecahkan lepuhan akan membuka jalan bagi bakteri dan menyebabkan infeksi."
+        },
+        {
+          "text": "Membiarkannya utuh apa adanya sebagai pelindung alami",
+          "isCorrect": true,
+          "narrativeImage": "LukaBakarSiti",
+          "narrative": "Tepat sekali. Lepuhan yang utuh berfungsi sebagai perban biologis alami yang melindungi luka dari infeksi bakteri. Dilarang keras memecahkannya."
+        },
+        {
+          "text": "Mengoleskan salep dan menekannya hingga pecah",
+          "isCorrect": false,
+          "feedback": "Tidak tepat. Lepuhan tidak boleh dipecahkan dengan sengaja menggunakan cara apapun."
+        }
+      ]
+    },
+    {
+      "stepType": "quiz",
+      "instruction": "Budi panik dan menawarkan pasta gigi serta mentega untuk dioleskan pada luka bakar Siti agar cepat dingin. Bagaimana tindakanmu?",
+      "quizTimeSeconds": 15,
+      "lowTimeCueSeconds": 5,
+      "backgroundImage": "",
+      "optionParentTarget": "optionParents2",
+      "options": [
+        {
+          "text": "Menerima saran Budi dan mengoleskan pasta gigi",
+          "isCorrect": false,
+          "feedback": "Sangat berbahaya! Pasta gigi mengandung bahan kimia yang bisa mengiritasi luka."
+        },
+        {
+          "text": "Melarangnya, karena bahan rumahan akan memperparah luka",
+          "isCorrect": true,
+          "narrativeImage": "LukaBakarSiti",
+          "narrative": "Langkah yang sangat tepat! Bahan rumahan seperti pasta gigi atau mentega akan memerangkap panas, memperburuk kondisi luka, dan menyulitkan pembersihan medis di rumah sakit nanti."
+        },
+        {
+          "text": "Mengoleskan mentega karena bisa menyerap panas",
+          "isCorrect": false,
+          "feedback": "Salah. Mentega berbahan dasar lemak justru akan memerangkap panas di dalam luka."
+        }
+      ]
     },
     {
       "stepType": "cutscene",

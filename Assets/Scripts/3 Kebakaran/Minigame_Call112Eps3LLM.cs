@@ -73,7 +73,6 @@ public class Minigame_Call112Eps3LLM : MonoBehaviour, IMiniGame
     private readonly StringBuilder historyBuilder = new StringBuilder();
     private bool operatorSkipRequested;
     
-
     private void Start()
     {
         InitializeMinigame();
@@ -272,7 +271,16 @@ public class Minigame_Call112Eps3LLM : MonoBehaviour, IMiniGame
                     if (!string.IsNullOrWhiteSpace(cleanResponse))
                     {
                         finalReply = cleanResponse;
+                        Debug.Log("[LLM] Jawaban berhasil di-generate dari Ollama.");
                     }
+                    else
+                    {
+                        Debug.Log("[LLM Fallback] Jawaban Ollama kosong setelah dibersihkan, menggunakan intendedReply.");
+                    }
+                }
+                else
+                {
+                    Debug.Log("[LLM Fallback] Jawaban dari Ollama kosong atau error (gangguan), menggunakan intendedReply.");
                 }
                 isLLMDone = true;
             });
@@ -281,6 +289,7 @@ public class Minigame_Call112Eps3LLM : MonoBehaviour, IMiniGame
         }
         else
         {
+            Debug.Log("[LLM Fallback] OllamaManager tidak terpasang, menggunakan intendedReply.");
             // Jika lupa masukin OllamaManager ke Inspector
             isLLMDone = true;
         }
@@ -380,6 +389,17 @@ public class Minigame_Call112Eps3LLM : MonoBehaviour, IMiniGame
         if (patientPanel == null) return;
 
         patientPanel.SetActive(visible);
+        
+        if (patientPanelButton != null)
+        {
+            RectTransform btnRect = patientPanelButton.GetComponent<RectTransform>();
+            if (btnRect != null)
+            {
+                Vector2 pos = btnRect.anchoredPosition;
+                pos.x = visible ? 45f : 235f;
+                btnRect.anchoredPosition = pos;
+            }
+        }
     }
 
     private void ScrollHistoryToBottom()

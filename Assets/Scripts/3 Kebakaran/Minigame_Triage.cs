@@ -31,6 +31,8 @@ public class Minigame_Triage : MonoBehaviour, IMiniGame
     [SerializeField] private Button kategoriTriageButton;
     [SerializeField] private TextMeshProUGUI textButtonKategori;
     [SerializeField] private GameObject panelKategoriTriage;
+    [Header("Panel Budi Meninggal")]
+    [SerializeField] private GameObject panelTonoMeninggal;
 
     private GameManager gameManager;
     private enum Patient { None, Tono, Siti, Budi }
@@ -39,6 +41,7 @@ public class Minigame_Triage : MonoBehaviour, IMiniGame
     private Patient currentPatient = Patient.None;
     private HashSet<Patient> completedPatients = new HashSet<Patient>();
     private bool awaitingFinalAction = false;
+    private bool awaitingBudiAssignment = false;
     private Button btnTono;
     private Button btnSiti;
     private Button btnBudi;
@@ -113,6 +116,8 @@ public class Minigame_Triage : MonoBehaviour, IMiniGame
         currentPatient = Patient.None;
         completedPatients.Clear();
         awaitingFinalAction = false;
+        awaitingBudiAssignment = false;
+        if (panelTonoMeninggal != null) panelTonoMeninggal.SetActive(false);
     }
 
     // Update is called once per frame
@@ -133,14 +138,30 @@ public class Minigame_Triage : MonoBehaviour, IMiniGame
     {
         if (awaitingFinalAction)
         {
-            // Final action stage: only clicking Budi completes the minigame
-            if (p == Patient.Budi)
+            if (awaitingBudiAssignment)
             {
-                gameManager.OnMiniGameComplete("Jiro menolong Budi. Minigame selesai.");
+                if (p == Patient.Siti)
+                {
+                    gameManager.OnMiniGameComplete("Budi ditugaskan menolong Siti. Minigame selesai.");
+                }
+                else if (p == Patient.Tono)
+                {
+                    StartCoroutine(ShowTonoMeninggalPanel());
+                }
             }
             else
             {
-                if (textFeedback != null) textFeedback.text = "Jiro tidak bisa menolong dua orang disaat bersamaan";
+                // Final action stage
+                if (p == Patient.Budi)
+                {
+                    awaitingBudiAssignment = true;
+                    if (textUtama != null) textUtama.text = "Budi tidak memiliki basic pertolongan pertama. Kita tugaskan Budi untuk menolong siapa?";
+                    if (btnBudi != null) btnBudi.interactable = false; // Disable Budi since choice is between Tono and Siti
+                }
+                else
+                {
+                    if (textFeedback != null) textFeedback.text = "Jiro tidak bisa menolong dua orang disaat bersamaan";
+                }
             }
             return;
         }
@@ -248,5 +269,18 @@ public class Minigame_Triage : MonoBehaviour, IMiniGame
         {
             SetCategoryButtonsInteractable(true);
         }
+    }
+
+    private IEnumerator ShowTonoMeninggalPanel()
+    {
+        if (panelTonoMeninggal != null) panelTonoMeninggal.SetActive(true);
+        if (btnSiti != null) btnSiti.interactable = false;
+        if (btnBudi != null) btnBudi.interactable = false;
+
+        yield return new WaitForSeconds(3f);
+
+        if (panelTonoMeninggal != null) panelTonoMeninggal.SetActive(false);
+        if (btnSiti != null) btnSiti.interactable = true;
+        if (btnBudi != null) btnBudi.interactable = true;
     }
 }
