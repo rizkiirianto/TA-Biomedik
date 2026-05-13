@@ -107,10 +107,10 @@
           "feedback": "Jangan cabut benda tajam — itu dapat memperburuk pendarahan."
         },
         {
-          "text": "Tekan kuat di sekitar area dan aplikasikan pembalut tekan",
+          "text": "Tekan kuat di sekitar area perdarahan tanpa menggeser kacanya",
           "isCorrect": true,
           "narrative": "Benar. Tekanan langsung dan pembalut tekan efektif menghentikan pendarahan arteri sementara.",
-          "narrativeImage": "BudidanSiti"
+          "narrativeImage": "BudiTolongSiti"
         },
         {
           "text": "Beri minum agar korban tidak syok",
@@ -130,20 +130,20 @@
       "optionParentPosY": 350.0,
       "options": [
         {
-          "text": "Karena masih bisa berjalan sendiri",
+          "text": "Karena luka bakar derajat tiga di tubuhnya membutuhkan tindakan pembersihan dan pembedahan luka dengan segera",
           "isCorrect": false,
-          "feedback": "Tidak tepat — kemampuan berjalan tidak menjelaskan kegawatan napasnya."
+          "feedback": "Kurang tepat. Prioritas Merah diberikan karena adanya ancaman jalan napas (cedera inhalasi), bukan pembedahan luka."
         },
         {
-          "text": "Karena luka bakar luas dan cedera inhalasi membuatnya berisiko sangat tinggi ditambah nafasnya yang kian melemah",
+          "text": "Karena luka bakar luas dan cedera inhalasi berisiko menutup jalan napasnya yang kini mulai kian melemah",
           "isCorrect": true,
           "narrativeImage": "Tono_Terkapar",
           "narrative": "Tono kini berhenti bernafas dan membutuhkan bantuan secepatnya!"
         },
         {
-          "text": "Karena tidak ada tanda bahaya sama sekali",
+          "text": "Karena Tono mengalami syok nyeri yang sangat hebat akibat luka bakar luas sehingga tidak mampu lagi berjalan",
           "isCorrect": false,
-          "feedback": "Terdapat tanda luka bakar luas dan cedera inhalasi yang jelas, jadi ini bukan kondisi aman."
+          "feedback": "Kurang tepat. Tidak mampu berjalan bukan penentu utama. Ancaman jalan napas adalah alasan utama status Kritis/Merah."
         }
       ]
     },
@@ -151,41 +151,36 @@
       "stepType": "minigame",
       "minigameID": "HeadTiltChinLift",
       "instruction": "Buka jalan napas dengan head-tilt/chin-lift karena tidak ada cedera leher, lalu cek apakah udara masih bisa lewat.",
-      "narrativeImage": "HeadTiltChinLift",
+      "narrativeImage": "BudiTolongSiti",
       "goldTime": 14,
       "silverTime": 20,
       "options": []
     },
     {
-      "stepType": "cutscene",
-      "cutsceneID": "RelakanTono",
-      "instruction": "Tidak ada ada udara yang masuk atau keluar. Jiro sadar jalan napas bagian dalam Tono sudah tertutup pembengkakan akibat inhalasi asap panas. Di tengah triase massal, ia melepas tangan dari Tono, melabelinya sebagai Kategori Hitam, lalu berlari menyelamatkan Siti.",
-      "narrativeImage": "TonoMeninggal",
-      "options": []
-    },
-    {
       "stepType": "quiz",
-      "instruction": "Apa tindakan terbaik untuk pendarahan arteri di paha Siti?",
+      "instruction": "Perdarahan di paha Siti sudah sangat berkurang. Apa tindakan terbaik untuk perdarahan arteri di paha Siti?",
       "quizTimeSeconds": 10,
       "lowTimeCueSeconds": 3,
-      "backgroundImage": "BleedingPaha",
+      "backgroundImage": "BudiTolongSiti",
       "optionParentTarget": "optionParents2",
       "optionParentPosX": -150.0,
+      "optionParentPosY": -220.0,
       "options": [
         {
-          "text": "Cabut benda tajam dan bersihkan luka",
+          "text": "Segera cabut pecahan kaca agar luka bisa dibersihkan dan dibalut",
           "isCorrect": false,
-          "feedback": "Jangan cabut benda tajam — itu dapat memperburuk pendarahan."
+          "feedback": "Sangat berbahaya! Mencabut pecahan kaca akan membuka sumbatan alami luka dan memicu perdarahan masif yang fatal."
         },
         {
-          "text": "Tekan kuat di sekitar area dan aplikasikan pembalut tekan",
+          "text": "Minta Budi memberikan tekanan kuat di sekeliling kaca tanpa menekannya masuk",
           "isCorrect": true,
-          "feedback": "Benar. Tekanan langsung dan pembalut tekan efektif menghentikan pendarahan arteri sementara."
+          "narrativeImage": "BudiTolongSiti",
+          "narrative": "Tepat sekali! Benda tajam yang menancap tidak boleh dicabut. Tekanan kuat di sekelilingnya sudah cukup untuk mengontrol perdarahan arteri sementara."
         },
         {
-          "text": "Beri minum agar korban tidak syok",
+          "text": "Ikat pangkal paha Siti sekuat mungkin menggunakan tali atau sabuk",
           "isCorrect": false,
-          "feedback": "Berbahaya. Jangan beri minum pada korban trauma."
+          "feedback": "Kurang tepat. Torniket darurat adalah pilihan paling akhir. Tekanan langsung di sekeliling luka jauh lebih diutamakan!"
         }
       ]
     },
@@ -253,7 +248,7 @@
     },
     {
       "stepType": "quiz",
-      "instruction": "Budi panik dan menawarkan pasta gigi serta mentega untuk dioleskan pada luka bakar Siti agar cepat dingin. Bagaimana tindakanmu?",
+      "instruction": "Budi menawarkan pasta gigi serta mentega untuk dioleskan pada luka bakar Siti agar cepat dingin. Bagaimana tindakanmu?",
       "quizTimeSeconds": 15,
       "lowTimeCueSeconds": 5,
       "backgroundImage": "",

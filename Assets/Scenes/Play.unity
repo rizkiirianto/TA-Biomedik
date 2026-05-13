@@ -2984,10 +2984,10 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 65
+  m_fontSize: 40
   m_fontSizeBase: 40
   m_fontWeight: 400
-  m_enableAutoSizing: 1
+  m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
@@ -3532,10 +3532,10 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 72
+  m_fontSize: 40
   m_fontSizeBase: 40
   m_fontWeight: 400
-  m_enableAutoSizing: 1
+  m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
@@ -5603,6 +5603,8 @@ MonoBehaviour:
     prefab: {fileID: 7017766079765322474, guid: d70a6f4fa8cf03f479716f95cc265170, type: 3}
   - id: TriageQuick
     prefab: {fileID: 1059998708834183719, guid: f610dd5e2fd061640916a6d29900e78d, type: 3}
+  - id: HeadTiltChinLift
+    prefab: {fileID: 8322597833072271402, guid: ccf13bc6364987046b121a2691f452bb, type: 3}
   cutsceneRegistry:
   - id: RizalBerdarah
     prefab: {fileID: 5309542488858055867, guid: aff32489a6ed1f9459ff83001b7e3b07, type: 3}
@@ -6469,10 +6471,10 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 72
+  m_fontSize: 40
   m_fontSizeBase: 40
   m_fontWeight: 400
-  m_enableAutoSizing: 1
+  m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
