@@ -212,46 +212,11 @@
       ]
     },
     {
-      "stepType": "minigame",
-      "minigameID": "BurnTreatment2",
-      "instruction": "Siti mengalami luka bakar derajat 2 di lengannya. Dinginkan luka dengan air mengalir bersuhu ruangan (bukan es) untuk menghentikan proses pembakaran dan meredakan nyeri. Kemudian, segera lepaskan jam tangan atau perhiasan di sekitar luka sebelum terjadi pembengkakan jaringan (edema).",
-      "narrativeImage": "Burn2Arm",
-      "goldTime": 15,
-      "silverTime": 22,
-      "options": []
-    },
-    {
       "stepType": "quiz",
-      "instruction": "Kamu menyadari adanya gelembung berisi cairan (lepuhan) pada luka bakar Siti. Apa yang harus kamu lakukan terhadap lepuhan tersebut?",
+      "instruction": "Budi menawarkan pasta gigi untuk dioleskan pada luka bakar Siti agar cepat dingin. Bagaimana tindakanmu?",
       "quizTimeSeconds": 15,
       "lowTimeCueSeconds": 5,
-      "backgroundImage": "",
-      "optionParentTarget": "optionParents2",
-      "options": [
-        {
-          "text": "Memecahkannya agar cairannya keluar dan cepat kering",
-          "isCorrect": false,
-          "feedback": "Salah. Memecahkan lepuhan akan membuka jalan bagi bakteri dan menyebabkan infeksi."
-        },
-        {
-          "text": "Membiarkannya utuh apa adanya sebagai pelindung alami",
-          "isCorrect": true,
-          "narrativeImage": "LukaBakarSiti",
-          "narrative": "Tepat sekali. Lepuhan yang utuh berfungsi sebagai perban biologis alami yang melindungi luka dari infeksi bakteri. Dilarang keras memecahkannya."
-        },
-        {
-          "text": "Mengoleskan salep dan menekannya hingga pecah",
-          "isCorrect": false,
-          "feedback": "Tidak tepat. Lepuhan tidak boleh dipecahkan dengan sengaja menggunakan cara apapun."
-        }
-      ]
-    },
-    {
-      "stepType": "quiz",
-      "instruction": "Budi menawarkan pasta gigi serta mentega untuk dioleskan pada luka bakar Siti agar cepat dingin. Bagaimana tindakanmu?",
-      "quizTimeSeconds": 15,
-      "lowTimeCueSeconds": 5,
-      "backgroundImage": "",
+      "backgroundImage": "LukaBakarSiti",
       "optionParentTarget": "optionParents2",
       "options": [
         {
@@ -269,6 +234,41 @@
           "text": "Mengoleskan mentega karena bisa menyerap panas",
           "isCorrect": false,
           "feedback": "Salah. Mentega berbahan dasar lemak justru akan memerangkap panas di dalam luka."
+        }
+      ]
+    },
+    {
+      "stepType": "minigame",
+      "minigameID": "BurnTreatment2",
+      "instruction": "Siti mengalami luka bakar derajat 2 di lengannya. Dinginkan luka dengan air mengalir bersuhu ruangan (bukan es) untuk menghentikan proses pembakaran dan meredakan nyeri. Kemudian, segera lepaskan jam tangan atau perhiasan di sekitar luka sebelum terjadi pembengkakan jaringan (edema).",
+      "narrativeImage": "LukaBakarSitiBasah",
+      "goldTime": 15,
+      "silverTime": 22,
+      "options": []
+    },
+    {
+      "stepType": "quiz",
+      "instruction": "Kamu menyadari adanya gelembung berisi cairan (lepuhan) pada luka bakar Siti. Apa yang harus kamu lakukan terhadap lepuhan tersebut?",
+      "quizTimeSeconds": 15,
+      "lowTimeCueSeconds": 5,
+      "backgroundImage": "LukaBakarSitiBasah",
+      "optionParentTarget": "optionParents2",
+      "options": [
+        {
+          "text": "Memecahkannya agar cairannya keluar dan cepat kering",
+          "isCorrect": false,
+          "feedback": "Salah. Memecahkan lepuhan akan membuka jalan bagi bakteri dan menyebabkan infeksi."
+        },
+        {
+          "text": "Membiarkannya utuh apa adanya sebagai pelindung alami",
+          "isCorrect": true,
+          "narrativeImage": "LukaBakarSitiBasah",
+          "narrative": "Tepat sekali. Lepuhan yang utuh berfungsi sebagai perban biologis alami yang melindungi luka dari infeksi bakteri. Dilarang keras memecahkannya."
+        },
+        {
+          "text": "Mengoleskan salep dan menekannya hingga pecah",
+          "isCorrect": false,
+          "feedback": "Tidak tepat. Lepuhan tidak boleh dipecahkan dengan sengaja menggunakan cara apapun."
         }
       ]
     },
