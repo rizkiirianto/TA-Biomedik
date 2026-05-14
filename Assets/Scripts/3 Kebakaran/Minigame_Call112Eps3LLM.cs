@@ -64,6 +64,8 @@ public class Minigame_Call112Eps3LLM : MonoBehaviour, IMiniGame
     private bool recordedHasLedakan = false;
     private bool recordedHasKebakaran = false;
 
+    private int failedAttempts = 0;
+
     private GameManager gameManager;
     private bool isInitialized;
     private bool isCompleting;
@@ -189,6 +191,7 @@ public class Minigame_Call112Eps3LLM : MonoBehaviour, IMiniGame
         recordedHasLedakan = false;
         recordedHasKebakaran = false;
         currentState = QuestionState.EmergencyLocation;
+        failedAttempts = 0;
         SetHistoryText(string.Empty);
 
         SetTranscriptLine(string.Empty);
@@ -213,8 +216,29 @@ public class Minigame_Call112Eps3LLM : MonoBehaviour, IMiniGame
 
         if (typingRoutine != null) StopCoroutine(typingRoutine);
 
+        QuestionState prevState = currentState;
+        int prevVictimCount = identifiedVictims.Count;
+        bool prevLoc = recordedLocationInfo;
+        bool prevLed = recordedHasLedakan;
+        bool prevKeb = recordedHasKebakaran;
+
         // 1. Dapatkan "Tujuan Balasan" dari Rule-Based / State Machine (Misal: "Bisa tolong sebutkan lokasi Anda?")
         string intendedOperatorReply = HandleMessageForState(message);
+
+        bool progressMade = (prevState != currentState) ||
+                            (prevVictimCount != identifiedVictims.Count) ||
+                            (!prevLoc && recordedLocationInfo) ||
+                            (!prevLed && recordedHasLedakan) ||
+                            (!prevKeb && recordedHasKebakaran);
+
+        if (progressMade)
+        {
+            failedAttempts = 0;
+        }
+        else
+        {
+            failedAttempts++;
+        }
 
         // 2. Mulai proses hybrid dengan AI
         typingRoutine = StartCoroutine(ProcessMessageHybrid(message, intendedOperatorReply));
@@ -721,6 +745,11 @@ public class Minigame_Call112Eps3LLM : MonoBehaviour, IMiniGame
 
     private string GetNextPrompt()
     {
+        if (failedAttempts >= 1)
+        {
+            return GetHintPrompt();
+        }
+
         switch (currentState)
         {
             case QuestionState.EmergencyLocation:
@@ -735,6 +764,40 @@ public class Minigame_Call112Eps3LLM : MonoBehaviour, IMiniGame
                 return AskForNextVictim();
             case QuestionState.Closing:
                 return "Ketik 'siap' jika mengerti instruksi operator.";
+            default:
+                return string.Empty;
+        }
+    }
+
+    private string GetHintPrompt()
+    {
+        switch (currentState)
+        {
+            case QuestionState.EmergencyLocation:
+                if (!recordedLocationInfo) return "Petunjuk: Coba sebutkan lokasi kejadian, misalnya 'Tower 2 ITS'.";
+                if (!recordedHasKebakaran && !recordedHasLedakan) return "Petunjuk: Coba sebutkan kejadiannya, misalnya 'Ada ledakan dan kebakaran'.";
+                if (!recordedHasLedakan) return "Petunjuk: Coba sebutkan penyebab api, misalnya 'Terdengar ledakan'.";
+                if (!recordedHasKebakaran) return "Petunjuk: Coba sebutkan dampak dari ledakan, misalnya 'Terjadi kebakaran'.";
+                return "Petunjuk: Sebutkan lokasi dan kejadian dengan jelas.";
+            case QuestionState.Safety:
+                return "Petunjuk: Coba sebutkan bahwa posisi Anda 'aman' atau sedang 'evakuasi'.";
+            case QuestionState.VictimCount:
+                return "Petunjuk: Coba sebutkan jumlah korban, misalnya 'Ada 3 korban'.";
+            case QuestionState.Victim1:
+            case QuestionState.Victim2:
+            case QuestionState.Victim3:
+                List<string> missing = new List<string>();
+                if (!identifiedVictims.Contains(VictimType.Budi)) missing.Add("Budi (kondisi stabil)");
+                if (!identifiedVictims.Contains(VictimType.Siti)) missing.Add("Siti (pendarahan/luka bakar derajat 2)");
+                if (!identifiedVictims.Contains(VictimType.Tono)) missing.Add("Tono (luka bakar derajat 3/patah tulang)");
+                
+                if (missing.Count > 0)
+                {
+                    return "Petunjuk: Coba sebutkan kondisi korban: " + string.Join(" atau ", missing) + ".";
+                }
+                return AskForNextVictim();
+            case QuestionState.Closing:
+                return "Petunjuk: Ketik 'siap'.";
             default:
                 return string.Empty;
         }

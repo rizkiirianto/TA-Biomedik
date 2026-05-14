@@ -218,6 +218,7 @@
       "lowTimeCueSeconds": 5,
       "backgroundImage": "LukaBakarSiti",
       "optionParentTarget": "optionParents2",
+      "optionParentPosX": -150.0,
       "options": [
         {
           "text": "Menerima saran Budi dan mengoleskan pasta gigi",
@@ -253,6 +254,7 @@
       "lowTimeCueSeconds": 5,
       "backgroundImage": "LukaBakarSitiBasah",
       "optionParentTarget": "optionParents2",
+      "optionParentPosX": -150.0,
       "options": [
         {
           "text": "Memecahkannya agar cairannya keluar dan cepat kering",
