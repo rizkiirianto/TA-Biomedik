@@ -86,9 +86,9 @@ public class MinigameHeadtiltChinlift : MonoBehaviour, IMiniGame
 
             // Ketika masuk sequence kalimat ini yang aktif adalah gambar tonoCloseUp
             // 7. Pada intinya Jiro tidak bisa menolong Tono lebih lanjut
-            "Tono berhenti bernapas dan Jiro tidak memiliki peralatan medis untuk menolongnya lebih lanjut.",
+            "Tono berhenti bernapas dan Jiro tidak memiliki peralatan medis dan pengetahuan untuk menolongnya lebih lanjut.",
             // 8. Tunjukkan keputusasaan dan kesedihan Jiro karena tidak bisa menolong Tono
-            "Rasa putus asa dan kesedihan yang mendalam menyelimuti Jiro. Ia hanya bisa terdiam menatap Tono.",
+            "Jiro hanya bisa terdiam menatap Tono.",
             "Jiro melepas tangan dari Tono, melabelinya sebagai Kategori Hitam, lalu berlari untuk membantu Budi menyelamatkan Siti."
         };
 

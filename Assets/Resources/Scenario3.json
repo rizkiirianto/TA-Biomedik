@@ -18,17 +18,17 @@
       "optionParentPosY": -225.0,
       "options": [
         {
-          "text": "Turun dengan menggunakan Lift",
+          "text": "Gunakan Lift",
           "isCorrect": false,
           "feedback": "salah"
         },
         {
-          "text": "Kembali dan berlindung di lab",
+          "text": "Berlindung di lab",
           "isCorrect": false,
           "feedback": "Terlihat logis, tetapi pada triase awal insiden massal kamu harus memilah semua korban (termasuk yang tidak terlihat) dengan cepat."
         },
         {
-          "text": "Lurus terus ke arah tangga darurat",
+          "text": "Lurus ke tangga darurat",
           "isCorrect": true,
           "narrative": "Pintu darurat tertutup puing dan api.",
           "narrativeImage": "TanggaDarurat_Tertutup"
@@ -47,7 +47,7 @@
       "speakerName": "Narator",
       "instruction": "Jiro mendengar teriakan di area parkiran bawah gedung dan dia melihat Siti yang histeris terduduk dengan pecahan kaca tertancap di pahanya dan lengan yang mengalami luka bakar.",
       "narrativeImage": "Siti_Teriak",
-      "dialogSfx": "TeriakanWanita",
+      "dialogSfx": "Dialog/WomanCrying",
       "options": []
     },
     {
@@ -55,23 +55,23 @@
       "speakerName": "Narator",
       "instruction": "Dari lobi muncul seorang mahasiswa bernama Budi yang terbatuk-batuk akibat menghirup asap dari api yang berkobar.",
       "narrativeImage": "BudiMuncul",
-      "dialogSfx": "Batuk-batuk",
+      "dialogSfx": "Dialog/BudiBatuk",
       "options": []
     },
     {
       "stepType": "dialog",
       "speakerName": "Narator",
-      "instruction": "Seorang pria tiba tiba melompat dari sela-sela retakan gedung lantai 2 yang terbakar, itu Tono anak jurusan sebelah",
+      "instruction": "Seorang pria tiba tiba melompat dari atas gedung yang terbakar, itu Tono anak jurusan sebelah",
       "narrativeImage": "Tono_Lompat",
-      "dialogSfx": "TeriakanLelaki",
+      "dialogSfx": "Dialog/TonoLompat",
       "options": []
     },
     {
       "stepType": "dialog",
       "speakerName": "Narator",
-      "instruction": "Tono tergeletak setelah melompat dari lantai dua. Punggung dan lengannya hangus terbakar, sementara jelaga tebal menempel di sekitar hidung dan mulutnya. Napasnya terdengar serak dan mengi, tanda cedera inhalasi yang berat.",
+      "instruction": "Tono tergeletak dengan kaki yang patah setelah melompat dari atas gedung. Punggung dan lengannya hangus terbakar, sementara jelaga tebal menempel di sekitar hidung dan mulutnya. Napasnya terdengar serak dan mengi, tanda cedera inhalasi yang berat.",
       "narrativeImage": "Tono_Terkapar",
-      "dialogSfx": "TeriakanLelaki",
+      "dialogSfx": "Dialog/TonoLanding",
       "options": []
     },
     {
@@ -102,18 +102,18 @@
       "optionParentPosX": -150.0,
       "options": [
         {
-          "text": "Cabut benda tajam dan bersihkan luka",
+          "text": "Cabut pecahan kaca",
           "isCorrect": false,
           "feedback": "Jangan cabut benda tajam — itu dapat memperburuk pendarahan."
         },
         {
-          "text": "Tekan kuat di sekitar area perdarahan tanpa menggeser kacanya",
+          "text": "Beri tekanan di area perdarahan",
           "isCorrect": true,
           "narrative": "Benar. Tekanan langsung dan pembalut tekan efektif menghentikan pendarahan arteri sementara.",
           "narrativeImage": "BudiTolongSiti"
         },
         {
-          "text": "Beri minum agar korban tidak syok",
+          "text": "Beri minum air putih",
           "isCorrect": false,
           "feedback": "Berbahaya. Jangan beri minum pada korban trauma."
         }
@@ -130,20 +130,20 @@
       "optionParentPosY": 350.0,
       "options": [
         {
-          "text": "Karena luka bakar derajat tiga di tubuhnya membutuhkan tindakan pembersihan dan pembedahan luka dengan segera",
+          "text": "Luka bakar parah di sekujur tubuh yang dia miliki",
           "isCorrect": false,
-          "feedback": "Kurang tepat. Prioritas Merah diberikan karena adanya ancaman jalan napas (cedera inhalasi), bukan pembedahan luka."
+          "feedback": "Kurang tepat"
         },
         {
-          "text": "Karena luka bakar luas dan cedera inhalasi berisiko menutup jalan napasnya yang kini mulai kian melemah",
+          "text": "Cedera inhalasi yang menutup jalan nafasnya",
           "isCorrect": true,
           "narrativeImage": "Tono_Terkapar",
           "narrative": "Tono kini berhenti bernafas dan membutuhkan bantuan secepatnya!"
         },
         {
-          "text": "Karena Tono mengalami syok nyeri yang sangat hebat akibat luka bakar luas sehingga tidak mampu lagi berjalan",
+          "text": "Fraktur pada kaki Tono",
           "isCorrect": false,
-          "feedback": "Kurang tepat. Tidak mampu berjalan bukan penentu utama. Ancaman jalan napas adalah alasan utama status Kritis/Merah."
+          "feedback": "Kurang tepat."
         }
       ]
     },
@@ -167,18 +167,18 @@
       "optionParentPosY": -220.0,
       "options": [
         {
-          "text": "Segera cabut pecahan kaca agar luka bisa dibersihkan dan dibalut",
+          "text": "Beri torniket darurat dengan sabuk atau tali",
           "isCorrect": false,
           "feedback": "Sangat berbahaya! Mencabut pecahan kaca akan membuka sumbatan alami luka dan memicu perdarahan masif yang fatal."
         },
         {
-          "text": "Minta Budi memberikan tekanan kuat di sekeliling kaca tanpa menekannya masuk",
+          "text": "Terus pertahankan tekanan di area perdarahan",
           "isCorrect": true,
           "narrativeImage": "BudiTolongSiti",
           "narrative": "Tepat sekali! Benda tajam yang menancap tidak boleh dicabut. Tekanan kuat di sekelilingnya sudah cukup untuk mengontrol perdarahan arteri sementara."
         },
         {
-          "text": "Ikat pangkal paha Siti sekuat mungkin menggunakan tali atau sabuk",
+          "text": "Cabut pecahan kaca secara perlahan dan hati-hati",
           "isCorrect": false,
           "feedback": "Kurang tepat. Torniket darurat adalah pilihan paling akhir. Tekanan langsung di sekeliling luka jauh lebih diutamakan!"
         }
@@ -194,18 +194,18 @@
       "optionParentPosX": -150.0,
       "options": [
         {
-          "text": "Tingkat 1, karena hanya kemerahan ringan",
+          "text": "Tingkat 1",
           "isCorrect": false,
           "feedback": "Belum tepat. Luka bakar Siti tampak lebih berat dari sekadar kemerahan ringan."
         },
         {
-          "text": "Tingkat 2, karena kulitnya tampak kemerahan/lepuh pada lengan dan belum hangus seluruhnya",
+          "text": "Tingkat 2",
           "isCorrect": true,
           "narrativeImage": "LukaBakarSiti",
           "narrative": "Benar. Luka bakar Siti lebih sesuai dengan derajat 2, sehingga perlu pendinginan dan penutupan luka yang benar."
         },
         {
-          "text": "Tingkat 3, karena kulit putih pucat/hangus dan terasa kaku",
+          "text": "Tingkat 3",
           "isCorrect": false,
           "feedback": "Tidak sesuai. Ciri tingkat 3 adalah kulit putih/hangus dan kaku, bukan kondisi Siti di cerita ini."
         }
@@ -262,7 +262,7 @@
           "feedback": "Salah. Memecahkan lepuhan akan membuka jalan bagi bakteri dan menyebabkan infeksi."
         },
         {
-          "text": "Membiarkannya utuh apa adanya sebagai pelindung alami",
+          "text": "Membiarkannya utuh apa adanya",
           "isCorrect": true,
           "narrativeImage": "LukaBakarSitiBasah",
           "narrative": "Tepat sekali. Lepuhan yang utuh berfungsi sebagai perban biologis alami yang melindungi luka dari infeksi bakteri. Dilarang keras memecahkannya."
@@ -276,7 +276,7 @@
     },
     {
       "stepType": "cutscene",
-      "cutsceneID": "MedicsArrive",
+      "cutsceneID": "MedicsArriveEps3",
       "instruction": "",
       "narrativeImage": "AmbulanceArrive",
       "options": []

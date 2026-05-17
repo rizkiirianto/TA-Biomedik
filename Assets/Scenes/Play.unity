@@ -2934,8 +2934,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000015258789, y: 0}
-  m_SizeDelta: {x: -155.97, y: -225.76}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: -107.92999, y: -225.76}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &925845627
 MonoBehaviour:
@@ -3482,8 +3482,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.000015258789, y: 0.000015258789}
-  m_SizeDelta: {x: -118.78, y: -233.86}
+  m_AnchoredPosition: {x: 0, y: 0.000015258789}
+  m_SizeDelta: {x: -107.92999, y: -233.86}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1009793285
 MonoBehaviour:
@@ -5630,6 +5630,8 @@ MonoBehaviour:
     prefab: {fileID: 3665596802729974619, guid: 1ed733bbb31b902479ace4efa91efbb6, type: 3}
   - id: FoundAltStairs
     prefab: {fileID: 9058733095705184486, guid: a18c4f91b41068449a9bc383a14e531f, type: 3}
+  - id: MedicsArriveEps3
+    prefab: {fileID: 1125348806522618699, guid: 3fd8c27cd1ab6c7418fccc72790718eb, type: 3}
   ambianceAudioSource: {fileID: 1236919084}
   ambianceAudioSource2: {fileID: 1803809904}
   ambianceAudioRegistry:
