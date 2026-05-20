@@ -618,7 +618,7 @@ public class Minigame_Call112Eps3LLM : MonoBehaviour, IMiniGame
         List<VictimType> victims = new List<VictimType>();
 
         // Deteksi tanpa harus mewajibkan kata "korban"
-        if (message.Contains("budi") || ContainsAny(message, "hijau", "green", "stabil", "aman", "hanya", "asap ringan", "terhirup asap sedikit", "hirup asap sedikit", "mostly fine"))
+        if (message.Contains("budi") || ContainsAny(message, "hijau", "green", "stabil", "aman", "hanya", "asap ringan", "terhirup asap sedikit", "hirup asap sedikit", "mostly fine","batuk","batuk-batuk","terbatuk-batuk"))
         {
             victims.Add(VictimType.Budi);
         }
@@ -628,7 +628,7 @@ public class Minigame_Call112Eps3LLM : MonoBehaviour, IMiniGame
             victims.Add(VictimType.Siti);
         }
 
-        if (message.Contains("tono") || ContainsAny(message, "tingkat tiga", "tingkat 3", "derajat 3", "derajat tiga", "luka bakar parah", "terbakar", "luka bakar hebat", "luka bakar luas", "sekujur tubuh", "patah", "kaki patah", "pingsan", "tidak sadar", "airway", "jalan napas"))
+        if (message.Contains("tono") || ContainsAny(message, "tingkat tiga", "tingkat 3", "derajat 3", "derajat tiga", "luka bakar parah", "terbakar", "luka bakar hebat", "luka bakar luas", "sekujur tubuh", "patah", "kaki patah", "pingsan", "tidak sadar", "airway", "jalan napas","jelaga","inhalasi"))
         {
             victims.Add(VictimType.Tono);
         }
@@ -788,7 +788,7 @@ public class Minigame_Call112Eps3LLM : MonoBehaviour, IMiniGame
             case QuestionState.Victim3:
                 List<string> missing = new List<string>();
                 if (!identifiedVictims.Contains(VictimType.Budi)) missing.Add("Budi (kondisi stabil)");
-                if (!identifiedVictims.Contains(VictimType.Siti)) missing.Add("Siti (pendarahan/luka bakar derajat 2)");
+                if (!identifiedVictims.Contains(VictimType.Siti)) missing.Add("Siti (perdarahan/luka bakar derajat 2)");
                 if (!identifiedVictims.Contains(VictimType.Tono)) missing.Add("Tono (luka bakar derajat 3/patah tulang)");
                 
                 if (missing.Count > 0)

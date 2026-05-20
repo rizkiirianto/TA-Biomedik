@@ -238,7 +238,7 @@ public class NosePressMiniGame : MonoBehaviour, IMiniGame
         
         // Non-aktifkan mini-game dan beritahu GameManager untuk lanjut
         this.gameObject.SetActive(false);
-        gameManager.OnMiniGameComplete("Hebat! Tekanan di pangkal hidung bisa menghentikan pendarahan.");
+        gameManager.OnMiniGameComplete("Hebat! Tekanan di pangkal hidung bisa menghentikan perdarahan.");
     }
 
     private void OnFailure(string feedbackMessage)

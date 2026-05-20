@@ -1,31 +1,31 @@
 {
   "steps": [
     {
-    "stepType": "cutscene",
-    "cutsceneID": "LampFlickerRainNight",
-    "instruction": "",
-    "options": []
+      "stepType": "cutscene",
+      "cutsceneID": "LampFlickerRainNight",
+      "instruction": "",
+      "options": []
     },
     {
-    "stepType": "dialog",
-    "speakerName": "Narator",
-    "instruction": "Hujan deras mengguyur malam ini. Lampu ruang tamu tiba-tiba berkedip lalu mati.",
-    "narrativeImage": "Lamp Flicker",
-    "options": []
+      "stepType": "dialog",
+      "speakerName": "Narator",
+      "instruction": "Hujan deras mengguyur malam ini. Lampu ruang tamu tiba-tiba berkedip lalu mati.",
+      "narrativeImage": "Lamp Flicker",
+      "options": []
     },
     {
-    "stepType": "cutscene",
-    "cutsceneID": "CallTechnician",
-    "instruction": "",
-    "narrativeImage": "Korban Jatuh",
-    "options": []
+      "stepType": "cutscene",
+      "cutsceneID": "CallTechnician",
+      "instruction": "",
+      "narrativeImage": "Korban Jatuh",
+      "options": []
     },
     {
-    "stepType": "dialog",
-    "speakerName": "Narator",
-    "instruction": "Tiba-tiba tubuhnya menegang... lalu terjatuh ke lantai.",
-    "narrativeImage": "Korban Jatuh",
-    "options": []
+      "stepType": "dialog",
+      "speakerName": "Narator",
+      "instruction": "Tiba-tiba tubuhnya menegang... lalu terjatuh ke lantai.",
+      "narrativeImage": "Korban Jatuh",
+      "options": []
     },
     {
       "stepType": "minigame",
@@ -39,7 +39,7 @@
     {
       "stepType": "quiz",
       "instruction": "Korban tidak merespon saat dipanggil. Apa langkah selanjutnya?",
-      "quizTimeSeconds": 10,
+      "quizTimeSeconds": 15,
       "lowTimeCueSeconds": 3,
       "backgroundImage": "Korban Jatuh",
       "optionParentTarget": "optionParents2",
@@ -64,7 +64,6 @@
         }
       ]
     },
-
     {
       "stepType": "dialog",
       "speakerName": "Narator",
@@ -84,7 +83,7 @@
     {
       "stepType": "quiz",
       "instruction": "Korban tidak bernapas dan tidak sadar. Apa tindakanmu?",
-      "quizTimeSeconds": 8,
+      "quizTimeSeconds": 15,
       "lowTimeCueSeconds": 3,
       "backgroundImage": "Korban Terbaring",
       "optionParentTarget": "optionParents2",
@@ -112,7 +111,7 @@
     {
       "stepType": "dialog",
       "speakerName": "Jiro",
-      "instruction": "Aku ingat pernah menonton panduan untuk mengikuti beat dari lagu Stayin Alive dari Bee Gees",
+      "instruction": "Aku ingat pernah menonton panduan untuk mengikuti beat 100-120BPM",
       "narrativeImage": "Korban Terbaring",
       "gambarPortrait": 0,
       "options": []
@@ -120,7 +119,7 @@
     {
       "stepType": "dialog",
       "speakerName": "Jiro",
-      "instruction": "Beatnya sekitar 100 BPM jadi aku harus melakukan 2 CPR per detik",
+      "instruction": "Aku akan pasang metronom 120BPM jadi aku harus melakukan 2 CPR per detik",
       "narrativeImage": "Korban Terbaring",
       "gambarPortrait": 0,
       "options": []
@@ -128,7 +127,7 @@
     {
       "stepType": "dialog",
       "speakerName": "Jiro",
-      "instruction": "Tekan sedalam 5-6cm, sekali menekan sekitar 0.25 detik dan lepas selama 0.25 detik",
+      "instruction": "Tekan sedalam 5-6cm, tidak masalah jika tulang rusuk patah yang penting Pak Raka bisa hidup",
       "narrativeImage": "Korban Terbaring",
       "gambarPortrait": 0,
       "options": []
@@ -139,6 +138,20 @@
       "instruction": "Ayo Jiro, kamu harus BISA!!!",
       "narrativeImage": "Korban Terbaring",
       "gambarPortrait": 0,
+      "options": []
+    },
+    {
+      "stepType": "dialog",
+      "speakerName": "Narrator",
+      "instruction": "Tutorial Minigame CPR",
+      "narrativeImage": "TutorialCPR1",
+      "options": []
+    },
+    {
+      "stepType": "dialog",
+      "speakerName": "Narrator",
+      "instruction": "Tutorial Minigame CPR",
+      "narrativeImage": "TutorialCPR2",
       "options": []
     },
     {

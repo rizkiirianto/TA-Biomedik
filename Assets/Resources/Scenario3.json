@@ -10,7 +10,7 @@
       "stepType": "quiz",
       "instruction": "Kemana kita harus pergi?",
       "minigameID": "",
-      "quizTimeSeconds": 12,
+      "quizTimeSeconds": 18,
       "lowTimeCueSeconds": 4,
       "backgroundImage": "DepanLift",
       "optionParentTarget": "optionParents2",
@@ -20,12 +20,12 @@
         {
           "text": "Gunakan Lift",
           "isCorrect": false,
-          "feedback": "salah"
+          "feedback": "Sangat berbahaya! Jangan pernah gunakan lift saat kebakaran karena berisiko terjebak."
         },
         {
           "text": "Berlindung di lab",
           "isCorrect": false,
-          "feedback": "Terlihat logis, tetapi pada triase awal insiden massal kamu harus memilah semua korban (termasuk yang tidak terlihat) dengan cepat."
+          "feedback": "Kurang tepat. Saat terjadi kebakaran, prioritas utama adalah segera mengevakuasi diri dari gedung."
         },
         {
           "text": "Lurus ke tangga darurat",
@@ -69,7 +69,7 @@
     {
       "stepType": "dialog",
       "speakerName": "Narator",
-      "instruction": "Tono tergeletak dengan kaki yang patah setelah melompat dari atas gedung. Punggung dan lengannya hangus terbakar, sementara jelaga tebal menempel di sekitar hidung dan mulutnya. Napasnya terdengar serak dan mengi, tanda cedera inhalasi yang berat.",
+      "instruction": "Tono tergeletak dengan kaki patah dan luka bakar parah. Wajahnya penuh jelaga, serta napasnya serak dan mengi—tanda cedera inhalasi berat.",
       "narrativeImage": "Tono_Terkapar",
       "dialogSfx": "Dialog/TonoLanding",
       "options": []
@@ -95,22 +95,23 @@
     {
       "stepType": "quiz",
       "instruction": "Apa assignment yang kita berikan pada Budi untuk menolong Siti?",
-      "quizTimeSeconds": 10,
+      "quizTimeSeconds": 15,
       "lowTimeCueSeconds": 3,
       "backgroundImage": "BudidanSiti",
       "optionParentTarget": "optionParents2",
       "optionParentPosX": -150.0,
+      "optionParentPosY": -220.0,
       "options": [
         {
           "text": "Cabut pecahan kaca",
           "isCorrect": false,
-          "feedback": "Jangan cabut benda tajam — itu dapat memperburuk pendarahan."
+          "feedback": "Jangan cabut benda tajam — itu dapat memperburuk perdarahan."
         },
         {
-          "text": "Beri tekanan di area perdarahan",
+          "text": "Beri balutan dan tekanan di area perdarahan",
           "isCorrect": true,
-          "narrative": "Benar. Tekanan langsung dan pembalut tekan efektif menghentikan pendarahan arteri sementara.",
-          "narrativeImage": "BudiTolongSiti"
+          "narrative": "Benar. Tekanan langsung dan pembalut efektif menghentikan perdarahan arteri sementara. Pastikan Budi JANGAN menyentuh kaca apalagi mencabutnya",
+          "narrativeImage": "BudiTolongSitiBaru"
         },
         {
           "text": "Beri minum air putih",
@@ -121,8 +122,8 @@
     },
     {
       "stepType": "quiz",
-      "instruction": "Mengapa Tono diberi prioritas Merah?",
-      "quizTimeSeconds": 14,
+      "instruction": "Tono memiliki banyak cedera yang berbahaya, namun apa cedera Tono yang paling urgent untuk ditangani?",
+      "quizTimeSeconds": 21,
       "lowTimeCueSeconds": 5,
       "backgroundImage": "Tono_Terkapar",
       "optionParentTarget": "optionParents2",
@@ -151,7 +152,7 @@
       "stepType": "minigame",
       "minigameID": "HeadTiltChinLift",
       "instruction": "Buka jalan napas dengan head-tilt/chin-lift karena tidak ada cedera leher, lalu cek apakah udara masih bisa lewat.",
-      "narrativeImage": "BudiTolongSiti",
+      "narrativeImage": "BudiTolongSitiBaru",
       "goldTime": 14,
       "silverTime": 20,
       "options": []
@@ -159,9 +160,9 @@
     {
       "stepType": "quiz",
       "instruction": "Perdarahan di paha Siti sudah sangat berkurang. Apa tindakan terbaik untuk perdarahan arteri di paha Siti?",
-      "quizTimeSeconds": 10,
+      "quizTimeSeconds": 15,
       "lowTimeCueSeconds": 3,
-      "backgroundImage": "BudiTolongSiti",
+      "backgroundImage": "BudiTolongSitiBaru",
       "optionParentTarget": "optionParents2",
       "optionParentPosX": -150.0,
       "optionParentPosY": -220.0,
@@ -169,10 +170,10 @@
         {
           "text": "Beri torniket darurat dengan sabuk atau tali",
           "isCorrect": false,
-          "feedback": "Sangat berbahaya! Mencabut pecahan kaca akan membuka sumbatan alami luka dan memicu perdarahan masif yang fatal."
+          "feedback": "Kurang tepat. Torniket darurat adalah pilihan paling akhir. Tekanan langsung di sekeliling luka jauh lebih diutamakan!"
         },
         {
-          "text": "Terus pertahankan tekanan di area perdarahan",
+          "text": "Terus pertahankan balutan dan tekanan di area perdarahan",
           "isCorrect": true,
           "narrativeImage": "BudiTolongSiti",
           "narrative": "Tepat sekali! Benda tajam yang menancap tidak boleh dicabut. Tekanan kuat di sekelilingnya sudah cukup untuk mengontrol perdarahan arteri sementara."
@@ -180,18 +181,20 @@
         {
           "text": "Cabut pecahan kaca secara perlahan dan hati-hati",
           "isCorrect": false,
-          "feedback": "Kurang tepat. Torniket darurat adalah pilihan paling akhir. Tekanan langsung di sekeliling luka jauh lebih diutamakan!"
+          "feedback": "Sangat berbahaya! Mencabut pecahan kaca akan membuka sumbatan alami luka dan memicu perdarahan masif yang fatal."
         }
       ]
     },
     {
       "stepType": "quiz",
       "instruction": "Luka bakar yang dimiliki Siti adalah tingkat...",
-      "quizTimeSeconds": 10,
+      "quizTimeSeconds": 15,
       "lowTimeCueSeconds": 3,
-      "backgroundImage": "LukaBakarSiti",
+      "backgroundImage": "LukaBakarSititanya",
       "optionParentTarget": "optionParents2",
-      "optionParentPosX": -150.0,
+      "optionParentPosX": -465.0,
+      "optionParentPosY": -250.0,
+      "scale": 0.8,
       "options": [
         {
           "text": "Tingkat 1",
@@ -201,7 +204,7 @@
         {
           "text": "Tingkat 2",
           "isCorrect": true,
-          "narrativeImage": "LukaBakarSiti",
+          "narrativeImage": "LukaBakarSitidanjawaban",
           "narrative": "Benar. Luka bakar Siti lebih sesuai dengan derajat 2, sehingga perlu pendinginan dan penutupan luka yang benar."
         },
         {
@@ -214,11 +217,12 @@
     {
       "stepType": "quiz",
       "instruction": "Budi menawarkan pasta gigi untuk dioleskan pada luka bakar Siti agar cepat dingin. Bagaimana tindakanmu?",
-      "quizTimeSeconds": 15,
+      "quizTimeSeconds": 25,
       "lowTimeCueSeconds": 5,
       "backgroundImage": "LukaBakarSiti",
       "optionParentTarget": "optionParents2",
       "optionParentPosX": -150.0,
+      "optionParentPosY": -220.0,
       "options": [
         {
           "text": "Menerima saran Budi dan mengoleskan pasta gigi",
@@ -239,18 +243,9 @@
       ]
     },
     {
-      "stepType": "minigame",
-      "minigameID": "BurnTreatment2",
-      "instruction": "Siti mengalami luka bakar derajat 2 di lengannya. Dinginkan luka dengan air mengalir bersuhu ruangan (bukan es) untuk menghentikan proses pembakaran dan meredakan nyeri. Kemudian, segera lepaskan jam tangan atau perhiasan di sekitar luka sebelum terjadi pembengkakan jaringan (edema).",
-      "narrativeImage": "LukaBakarSitiBasah",
-      "goldTime": 15,
-      "silverTime": 22,
-      "options": []
-    },
-    {
       "stepType": "quiz",
       "instruction": "Kamu menyadari adanya gelembung berisi cairan (lepuhan) pada luka bakar Siti. Apa yang harus kamu lakukan terhadap lepuhan tersebut?",
-      "quizTimeSeconds": 15,
+      "quizTimeSeconds": 25,
       "lowTimeCueSeconds": 5,
       "backgroundImage": "LukaBakarSitiBasah",
       "optionParentTarget": "optionParents2",
@@ -273,6 +268,22 @@
           "feedback": "Tidak tepat. Lepuhan tidak boleh dipecahkan dengan sengaja menggunakan cara apapun."
         }
       ]
+    },
+    {
+      "stepType": "minigame",
+      "minigameID": "BurnTreatment2",
+      "instruction": "Siti mengalami luka bakar derajat 2 di lengannya. Dinginkan luka dengan air mengalir bersuhu ruangan (bukan es) untuk menghentikan proses pembakaran dan meredakan nyeri. Kemudian, segera lepaskan jam tangan atau perhiasan di sekitar luka sebelum terjadi pembengkakan jaringan (edema).",
+      "narrativeImage": "LukaBakarSitiBasah",
+      "goldTime": 15,
+      "silverTime": 22,
+      "options": []
+    },
+    {
+      "stepType": "dialog",
+      "speakerName": "Narator",
+      "instruction": "Terus tuangkan air mengalir pada luka bakar Siti selama 15-20 menit atau hingga petugas medis datang",
+      "narrativeImage": "LukaBakarSitiBasah",
+      "options": []
     },
     {
       "stepType": "cutscene",

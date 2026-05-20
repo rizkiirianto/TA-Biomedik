@@ -25,7 +25,7 @@
       "stepType": "quiz",
       "instruction": "Kamu baru tiba di lokasi. Apa yang PERTAMA kali harus kamu lakukan?",
       "minigameID": "",
-      "quizTimeSeconds": 12,
+      "quizTimeSeconds": 18,
       "lowTimeCueSeconds": 4,
       "backgroundImage": "JiroQuiz1",
       "optionParentTarget": "optionParents",
@@ -74,12 +74,12 @@
       "stepType": "quiz",
       "instruction": "Saksi (Maya) panik tapi ingin membantu. Tugas apa yang paling tepat untuk didelegasikan padanya?",
       "minigameID": "",
-      "quizTimeSeconds": 14,
+      "quizTimeSeconds": 21,
       "lowTimeCueSeconds": 5,
       "backgroundImage": "Maya Panik",
       "optionParentTarget": "optionParents2",
       "optionParentPosX": -150.0,
-      "optionParentPosY":300.0,
+      "optionParentPosY": 300.0,
       "options": [
         {
           "text": "Suruh dia cari air minum",
@@ -119,7 +119,7 @@
       "stepType": "quiz",
       "instruction": "Kalau menelepon 112, informasi PALING pertama yang harus disampaikan apa?",
       "minigameID": "",
-      "quizTimeSeconds": 10,
+      "quizTimeSeconds": 15,
       "lowTimeCueSeconds": 4,
       "backgroundImage": "Maya Calling",
       "optionParentTarget": "optionParents2",
@@ -149,7 +149,7 @@
       "stepType": "quiz",
       "instruction": "Pilih laporan paling efektif untuk operator 112.",
       "minigameID": "",
-      "quizTimeSeconds": 16,
+      "quizTimeSeconds": 24,
       "lowTimeCueSeconds": 6,
       "backgroundImage": "Maya Calling",
       "optionParentTarget": "optionParents2",
@@ -179,7 +179,7 @@
       "stepType": "quiz",
       "instruction": "Operator : Apakah ada bahaya di sekitar?",
       "minigameID": "",
-      "quizTimeSeconds": 10,
+      "quizTimeSeconds": 15,
       "lowTimeCueSeconds": 3,
       "backgroundImage": "Maya Calling",
       "optionParentTarget": "optionParents2",
@@ -214,7 +214,7 @@
     {
       "stepType": "dialog",
       "speakerName": "Jiro",
-      "instruction": "Mas, bisa dengar saya? Siapa nama mas?",
+      "instruction": "Mas, bisa dengar saya? Siapa nama mas? (aku menanyakan ini untuk memastikan apakah ada kerusakan di Airwaynya)",
       "gambarPortrait": 0,
       "narrativeImage": "Rizal_Berdarah",
       "dialogSfx": "Dialog/heartbeat2",
@@ -233,12 +233,12 @@
       "stepType": "quiz",
       "instruction": "Korban menjawab jelas saat dipanggil. Apa maknanya untuk asesmen A (Airway)?",
       "minigameID": "",
-      "quizTimeSeconds": 12,
+      "quizTimeSeconds": 18,
       "lowTimeCueSeconds": 4,
       "backgroundImage": "Rizal_Berdarah",
       "optionParentTarget": "optionParents2",
       "optionParentPosX": -150.0,
-      "optionParentPosY": 300 ,
+      "optionParentPosY": 300,
       "options": [
         {
           "text": "Jalan napas pasti tersumbat",
@@ -248,7 +248,7 @@
         {
           "text": "Airway terbuka, lanjut ke penilaian berikutnya",
           "isCorrect": true,
-          "quizTimeSeconds": 12,
+          "quizTimeSeconds": 18,
           "lowTimeCueSeconds": 4,
           "narrative": "Benar. Respon suara yang jelas menandakan airway terbuka dan tingkat kesadaran minimal kategori Voice (AVPU).",
           "narrativeImage": "Rizal_Berdarah"
@@ -264,7 +264,7 @@
       "stepType": "quiz",
       "instruction": "Asesmen B (Breathing) untuk penolong awam paling tepat dilakukan dengan cara apa?",
       "minigameID": "",
-      "quizTimeSeconds": 12,
+      "quizTimeSeconds": 18,
       "lowTimeCueSeconds": 4,
       "backgroundImage": "Rizal_Berdarah",
       "optionParentTarget": "optionParents2",
@@ -291,38 +291,9 @@
     },
     {
       "stepType": "quiz",
-      "instruction": "Sebelum fokus penuh ke lutut, langkah E (Exposure) awal apa yang paling tepat?",
-      "minigameID": "",
-      "quizTimeSeconds": 11,
-      "lowTimeCueSeconds": 4,
-      "backgroundImage": "dengkul korban",
-      "optionParentTarget": "optionParents2",
-      "optionParentPosX": -150.0,
-      "optionParentPosY": -230.0,
-      "options": [
-        {
-          "text": "Lepas semua pakaian korban di jalan",
-          "isCorrect": false,
-          "feedback": "Tidak aman dan berisiko hipotermia. Cukup buka seperlunya untuk inspeksi cepat."
-        },
-        {
-          "text": "Periksa cepat ada pendarahan lain di balik baju/celana",
-          "isCorrect": true,
-          "narrative": "Benar. Exposure awal berarti mencari luka tersembunyi secara cepat dan aman.",
-          "narrativeImage": "dengkul korban"
-        },
-        {
-          "text": "Abaikan pemeriksaan lain, fokus satu luka saja",
-          "isCorrect": false,
-          "feedback": "Luka tersembunyi bisa terlewat. Tetap lakukan cek cepat sebelum tindakan utama."
-        }
-      ]
-    },
-    {
-      "stepType": "quiz",
       "instruction": "Darah mengalir deras dari paha dan lutut korban. Apa langkah pertamamu?",
       "minigameID": "",
-      "quizTimeSeconds": 9,
+      "quizTimeSeconds": 15,
       "lowTimeCueSeconds": 3,
       "backgroundImage": "dengkul korban",
       "optionParentTarget": "optionParents2",
@@ -337,7 +308,7 @@
         {
           "text": "Lakukan Tekanan Langsung (Direct Pressure)",
           "isCorrect": true,
-          "feedback": "Bagus! Tekan sumber pendarahan sekuat mungkin.",
+          "feedback": "Bagus! Tekan sumber perdarahan sekuat mungkin.",
           "narrative": "Jiro : Benar, aku harus cari sesuatu yang bisa aku gunakan.",
           "narrativeImage": "dengkul korban"
         },
@@ -377,7 +348,7 @@
       "stepType": "quiz",
       "instruction": "Darah masih merembes keluar dari kain pertama. Apa yang harus dilakukan?",
       "minigameID": "",
-      "quizTimeSeconds": 8,
+      "quizTimeSeconds": 15,
       "lowTimeCueSeconds": 3,
       "backgroundImage": "bocorlagi",
       "optionParentTarget": "optionParents2",
@@ -410,45 +381,15 @@
     {
       "stepType": "dialog",
       "speakerName": "Narator",
-      "instruction": "Setelah ditambahkan kain dan tetap ditekan beberapa lama, darah yang keluar terlihat sudah berkurang.",
-      "narrativeImage": "bocorditumpuk",
+      "instruction": "Karena perdarahan ada di alat gerak maka dilakukan elevasi kaki untuk mengangkat posisinya diatas posisi jantung.",
+      "narrativeImage": "KakiElevasi",
       "options": []
-    },
-    {
-      "stepType": "quiz",
-      "instruction": "Untuk asesmen D (Disability), cara aman cek motorik korban di lokasi adalah...",
-      "minigameID": "",
-      "quizTimeSeconds": 13,
-      "lowTimeCueSeconds": 4,
-      "backgroundImage": "bocorditumpuk",
-      "optionParentTarget": "optionParents2",
-      "optionParentPosX": -150.0,
-      "optionParentPosY": -230.0,
-      "options": [
-        {
-          "text": "Minta korban berdiri dan berjalan beberapa langkah",
-          "isCorrect": false,
-          "feedback": "Berbahaya pada korban trauma. Hindari membebani tulang belakang atau cedera lain."
-        },
-        {
-          "text": "Minta korban menggerakkan jari tangan dan kaki",
-          "isCorrect": true,
-          "feedback": "Tepat. Ini cara aman menilai fungsi motorik awal tanpa memindahkan korban.",
-          "narrative": "Riko masih bisa menggerakkan jari tangan dan kaki saat diminta.",
-          "narrativeImage": "bocorditumpuk"
-        },
-        {
-          "text": "Dudukkan korban agar lebih mudah diperiksa",
-          "isCorrect": false,
-          "feedback": "Jangan ubah posisi korban trauma tanpa kebutuhan mendesak."
-        }
-      ]
     },
     {
       "stepType": "dialog",
       "speakerName": "Narator",
-      "instruction": "Cek motorik dilakukan aman dengan meminta korban menggerakkan jari tangan dan kaki tanpa memindahkan tubuhnya.",
-      "narrativeImage": "bocorditumpuk",
+      "instruction": "Setelah ditambahkan kain dan tetap ditekan beberapa lama, darah yang keluar terlihat sudah berkurang.",
+      "narrativeImage": "KakiElevasi",
       "options": []
     },
     {
@@ -456,7 +397,7 @@
       "speakerName": "Rizal (Korban)",
       "instruction": "Saya... pusing... dingin... rasanya ngantuk...",
       "gambarPortrait": 5,
-      "narrativeImage": "KorbanSyok",
+      "narrativeImage": "KakiElevasi",
       "dialogSfx": "Dialog/heartbeat2",
       "options": []
     },
@@ -464,10 +405,10 @@
       "stepType": "quiz",
       "instruction": "Korban pucat, dingin, dan pusing. Ini tanda-tanda SYOK. Apa posisi terbaik untuknya?",
       "minigameID": "",
-      "quizTimeSeconds": 11,
+      "quizTimeSeconds": 18,
       "lowTimeCueSeconds": 4,
       "gambarPortrait": 5,
-      "backgroundImage": "KorbanSyok",
+      "backgroundImage": "KakiElevasi",
       "optionParentTarget": "optionParents2",
       "optionParentPosX": -150.0,
       "optionParentPosY": 300.0,
@@ -478,16 +419,16 @@
           "feedback": "Jangan didudukkan, aliran darah ke otak bisa berkurang."
         },
         {
-          "text": "Tinggikan kaki setinggi mungkin",
+          "text": "Tinggikan juga kaki sebelahnya setinggi mungkin (Shock Position)",
           "isCorrect": false,
-          "feedback": "Dulu disarankan, tapi sekarang cukup posisi datar (supine) agar lebih aman untuk cedera lain."
+          "feedback": "Kurang tepat. Pada korban kecelakaan motor seperti ini yang rawan terdapat cedera lain, hindari menggerakkan area pelvis dari korban."
         },
         {
           "text": "Selimuti & posisikan telentang (Supine)",
           "isCorrect": true,
           "feedback": "Tepat. Jaga suhu tubuh dan biarkan aliran darah lancar ke otak.",
           "narrative": "Kamu menyelimuti Riko dengan jaket agar hangat dan membaringkannya rata.",
-          "narrativeImage": "KOrbanSelimut"
+          "narrativeImage": "KorbanSyokBaru"
         }
       ]
     },
@@ -495,7 +436,7 @@
       "stepType": "dialog",
       "speakerName": "Narator",
       "instruction": "Tangani syok dengan menjaga korban tetap hangat dan posisi telentang datar sambil menunggu ambulans.",
-      "narrativeImage": "KorbanSelimut",
+      "narrativeImage": "KorbanSyokBaru",
       "options": []
     },
     {

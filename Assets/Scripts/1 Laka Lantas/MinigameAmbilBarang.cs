@@ -90,7 +90,7 @@ public class MinigameAmbilBarang : MonoBehaviour, IMiniGame
         // STEP 1: Tampilkan monolog awal Jiro
         yield return StartCoroutine(ShowMonologue(
             "Jiro",
-            "Aku perlu mencari sesuatu di tasku yang bisa membantu menghentikan pendarahan... Mari kita lihat apa yang ada di sini."
+            "Aku perlu mencari sesuatu di tasku yang bisa membantu menghentikan perdarahan... Mari kita lihat apa yang ada di sini."
         ));
 
         // STEP 2: Tunggu pemain klik tombol lanjut
@@ -333,7 +333,7 @@ public class MinigameAmbilBarang : MonoBehaviour, IMiniGame
         string outcomeText;
         if (isCorrect)
         {
-            outcomeText = "Ya! Ini dia yang aku cari. Ini bisa membantu menghentikan pendarahan!";
+            outcomeText = "Ya! Ini dia yang aku cari. Ini bisa membantu menghentikan perdarahan!";
         }
         else
         {
@@ -357,7 +357,7 @@ public class MinigameAmbilBarang : MonoBehaviour, IMiniGame
         switch (itemIndex)
         {
             case 0: // headphone
-                return "Headphone? Ini tidak bisa dipakai buat menghentikan pendarahan.";
+                return "Headphone? Ini tidak bisa dipakai buat menghentikan perdarahan.";
             case 1: // pencilcase
                 return "Tempat pensil juga bukan yang aku butuhkan sekarang.";
             case 2: // buku
@@ -365,7 +365,7 @@ public class MinigameAmbilBarang : MonoBehaviour, IMiniGame
             case 3: // switch
                 return "Sekarang bukan waktunya bermain main.";
             case 5: // botol
-                return "Botol ini jelas bukan item utama untuk menghentikan pendarahan.";
+                return "Botol ini jelas bukan item utama untuk menghentikan perdarahan.";
             default:
                 return "Hmm, sepertinya bukan ini. Aku harus pilih item yang lebih tepat.";
         }
@@ -379,7 +379,7 @@ public class MinigameAmbilBarang : MonoBehaviour, IMiniGame
         // STEP 1: Tampilkan monolog awal Jiro
         yield return StartCoroutine(ShowMonologue(
             "Jiro",
-            "Aku perlu mencari sesuatu di tasku yang bisa membantu menghentikan pendarahan... Mari kita lihat apa yang ada di sini."
+            "Aku perlu mencari sesuatu di tasku yang bisa membantu menghentikan perdarahan... Mari kita lihat apa yang ada di sini."
         ));
 
         // STEP 2: Tunggu pemain klik tombol lanjut

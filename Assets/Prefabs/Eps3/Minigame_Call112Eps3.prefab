@@ -1515,9 +1515,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Tono tergeletak setelah melompat dari lantai dua. Punggung dan lengannya
-    hangus terbakar, sementara jelaga tebal menempel di sekitar hidung dan mulutnya.
-    Napasnya terdengar serak dan mengi, tanda cedera inhalasi yang berat.
+  m_text: Tono tergeletak dengan kaki patah setelah melompat dari atas gedung. Punggung
+    dan lengannya hangus terbakar, sementara jelaga tebal menempel di sekitar hidung
+    dan mulutnya. Napasnya terdengar serak dan mengi, tanda cedera inhalasi yang
+    berat.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
   m_sharedMaterial: {fileID: 2140032, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}

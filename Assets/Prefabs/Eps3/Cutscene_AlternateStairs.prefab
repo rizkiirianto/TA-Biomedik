@@ -1783,8 +1783,8 @@ MonoBehaviour:
   alarmBlinkInterval: 0.25
   dialogueLines:
   - Setelah memilih tangga darurat, ternyata tangga darurat terdekat terbakar dan
-    ada debris yang menghalangi jalan.
-  - "Jiro: Aku harus cari jalan lain\u2014ke sisi bangunan!"
+    ada reruntuhan yang menghalangi jalan.
+  - "Jiro: Aku harus cari jalan lain\u2014ke sisi lain bangunan!"
   - Tangga darurat satunya terlihat aman. Jiro segera beralih ke tangga tersebut
     dan mulai turun.
   - 'Jiro: Turun cepat, jangan berhenti!'

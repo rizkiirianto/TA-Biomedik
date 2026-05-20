@@ -464,6 +464,8 @@ public class GameManager : MonoBehaviour
                 currentPos.y = quizStep.optionParentPosY;
             }
             targetOptionParentRect.anchoredPosition = currentPos;
+            float finalScale = quizStep.scale > 0f ? quizStep.scale : 1f;
+            targetOptionParentRect.localScale = new Vector3(finalScale, finalScale, finalScale);
         }
 
         currentQuestionAttempts = 0;
@@ -654,9 +656,9 @@ public class GameManager : MonoBehaviour
             {
                 activeOptionParent.SetActive(false);
             }
-            // Otomatis sembunyikan feedback panel setelah 2 detik
-            StartCoroutine(HideFeedbackPanelAfterDelay(2f));
-            StartCoroutine(ShowOptionParentPanelAfterDelay(2f, activeOptionParent));
+            // Otomatis sembunyikan feedback panel setelah 5 detik
+            StartCoroutine(HideFeedbackPanelAfterDelay(5f));
+            StartCoroutine(ShowOptionParentPanelAfterDelay(5f, activeOptionParent));
         }
     }
 

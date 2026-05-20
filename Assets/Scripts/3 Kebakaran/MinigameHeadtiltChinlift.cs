@@ -82,11 +82,10 @@ public class MinigameHeadtiltChinlift : MonoBehaviour, IMiniGame
             "Jiro menempelkan telinganya ke dekat wajah Tono untuk mendengarkan suara napas.",
             // 6. Jiro tidak bisa mendengar dan merasakan nafas Tono
             "Hening. Jiro tidak bisa mendengar maupun merasakan hembusan napas Tono.",
-            "Jiro sadar jalan napas bagian dalam Tono sudah tertutup pembengkakan akibat inhalasi asap panas.",
-
+            "Jiro melihat jalan napas bagian dalam Tono sudah tertutup pembengkakan akibat inhalasi asap panas.",
             // Ketika masuk sequence kalimat ini yang aktif adalah gambar tonoCloseUp
             // 7. Pada intinya Jiro tidak bisa menolong Tono lebih lanjut
-            "Tono berhenti bernapas dan Jiro tidak memiliki peralatan medis dan pengetahuan untuk menolongnya lebih lanjut.",
+            "Jiro tidak memiliki kemampuan ataupun peralatan untuk menolongnya lebih lanjut.",
             // 8. Tunjukkan keputusasaan dan kesedihan Jiro karena tidak bisa menolong Tono
             "Jiro hanya bisa terdiam menatap Tono.",
             "Jiro melepas tangan dari Tono, melabelinya sebagai Kategori Hitam, lalu berlari untuk membantu Budi menyelamatkan Siti."
