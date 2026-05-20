@@ -9,6 +9,8 @@ public class MinigameHeadtiltChinlift : MonoBehaviour, IMiniGame
     [SerializeField] private GameObject tonoCloseUp;
     [SerializeField] private GameObject tonoCloseHeadTilt;
     [SerializeField] private GameObject tonoCloseUpChinLift;
+    [SerializeField] private GameObject jiroLookListenFeel;
+    [SerializeField] private GameObject jiroLookAirway;
 
     [Header("Interactables")]
     [SerializeField] private Button AreaHeadTilt;
@@ -74,29 +76,35 @@ public class MinigameHeadtiltChinlift : MonoBehaviour, IMiniGame
     {
         string[] endingTexts = new string[]
         {
-            // 3. Jiro berhasil melakukan prosedur HeadTiltChinLift
+            
             "Jiro berhasil melakukan prosedur Head-Tilt Chin-Lift.",
-            // 4. Jiro melihat dada Tono yang tidak lagi bergerak
+            // disini yang aktif adalah gameobject jiroLookListenFeel
             "Jiro mengamati dada Tono yang sudah tidak lagi bergerak naik turun.",
-            // 5. Jiro menempelkan telinganya untuk mendengarkan suara nafas Tono
             "Jiro menempelkan telinganya ke dekat wajah Tono untuk mendengarkan suara napas.",
-            // 6. Jiro tidak bisa mendengar dan merasakan nafas Tono
             "Hening. Jiro tidak bisa mendengar maupun merasakan hembusan napas Tono.",
+            // disini yang aktif adalah gameobject jiroLookAirway
             "Jiro melihat jalan napas bagian dalam Tono sudah tertutup pembengkakan akibat inhalasi asap panas.",
-            // Ketika masuk sequence kalimat ini yang aktif adalah gambar tonoCloseUp
-            // 7. Pada intinya Jiro tidak bisa menolong Tono lebih lanjut
             "Jiro tidak memiliki kemampuan ataupun peralatan untuk menolongnya lebih lanjut.",
-            // 8. Tunjukkan keputusasaan dan kesedihan Jiro karena tidak bisa menolong Tono
+            // disini yang aktif adalah gameobject tonoCloseUp
             "Jiro hanya bisa terdiam menatap Tono.",
             "Jiro melepas tangan dari Tono, melabelinya sebagai Kategori Hitam, lalu berlari untuk membantu Budi menyelamatkan Siti."
         };
 
         for (int i = 0; i < endingTexts.Length; i++)
         {
-            if (i == 5)
+            if (i == 1)
             {
-                // Kembali mengaktifkan tonoCloseUp saat masuk ke kalimat "Tono berhenti bernapas..."
                 if (tonoCloseUpChinLift != null) tonoCloseUpChinLift.SetActive(false);
+                if (jiroLookListenFeel != null) jiroLookListenFeel.SetActive(true);
+            }
+            else if (i == 4)
+            {
+                if (jiroLookListenFeel != null) jiroLookListenFeel.SetActive(false);
+                if (jiroLookAirway != null) jiroLookAirway.SetActive(true);
+            }
+            else if (i == 6)
+            {
+                if (jiroLookAirway != null) jiroLookAirway.SetActive(false);
                 if (tonoCloseUp != null) tonoCloseUp.SetActive(true);
             }
 
