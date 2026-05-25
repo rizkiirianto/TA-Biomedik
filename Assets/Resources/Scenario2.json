@@ -141,20 +141,6 @@
       "options": []
     },
     {
-      "stepType": "dialog",
-      "speakerName": "Narrator",
-      "instruction": "Tutorial Minigame CPR",
-      "narrativeImage": "TutorialCPR1",
-      "options": []
-    },
-    {
-      "stepType": "dialog",
-      "speakerName": "Narrator",
-      "instruction": "Tutorial Minigame CPR",
-      "narrativeImage": "TutorialCPR2",
-      "options": []
-    },
-    {
       "stepType": "minigame",
       "instruction": "Jiro terus melakukan CPR dengan ritme dan kedalaman yang konsisten",
       "minigameID": "CPRCoreGameplay",
