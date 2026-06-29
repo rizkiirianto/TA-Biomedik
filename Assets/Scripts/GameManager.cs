@@ -164,12 +164,12 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha0) || Input.GetKeyDown(KeyCode.Keypad0))
+        if (Input.GetKeyDown(KeyCode.Alpha0) || Input.GetKeyDown(KeyCode.Keypad0) || Input.GetKeyDown(KeyCode.JoystickButton7))
         {
             OnSkipButtonClicked();
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha9) || Input.GetKeyDown(KeyCode.Keypad9))
+        if (Input.GetKeyDown(KeyCode.Alpha9) || Input.GetKeyDown(KeyCode.Keypad9) || Input.GetKeyDown(KeyCode.JoystickButton6))
         {
             OnPreviousButtonClicked();
         }
@@ -510,6 +510,12 @@ public class GameManager : MonoBehaviour
             // Specify UnityEngine here
             yield return new WaitForSeconds(UnityEngine.Random.Range(0.4f, 0.9f));
             activeOptionButtons[i].gameObject.SetActive(true);
+            
+            // Auto-select the first option for controller navigation
+            if (i == 0 && UnityEngine.EventSystems.EventSystem.current != null)
+            {
+                UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(activeOptionButtons[i].gameObject);
+            }
         }
 
         BeginQuizTimerIfNeeded();
@@ -952,13 +958,16 @@ public class GameManager : MonoBehaviour
         isWaitingForAdvance = true;
         SetOptionButtonsInteractable(false);
 
-        // Pastikan panel click/overlay aktif agar tombol advance bisa benar-benar diklik.
         if (clickAdvancePanel != null)
         {
             clickAdvancePanel.SetActive(showOverlayPanel);
         }
 
         clickAdvanceButton.gameObject.SetActive(true);
+        if (UnityEngine.EventSystems.EventSystem.current != null)
+        {
+            UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(clickAdvanceButton.gameObject);
+        }
         Debug.Log("PrepareToAdvance dipanggil - tombol advance aktif, menunggu klik pemain");
     }
 
@@ -1040,6 +1049,10 @@ public class GameManager : MonoBehaviour
             recapPanel.SetActive(true);
         }
         clickAdvanceButton.gameObject.SetActive(true); // Tampilkan tombol untuk kembali ke menu
+        if (UnityEngine.EventSystems.EventSystem.current != null)
+        {
+            UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(clickAdvanceButton.gameObject);
+        }
         isWaitingForAdvance = false; // Pastikan ini false agar tidak menjalankan GoToNextStep
 
         // Tampilkan recap episode

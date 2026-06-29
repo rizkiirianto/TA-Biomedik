@@ -740,6 +740,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PanelScenario: {fileID: 1427492162}
+  startButton: {fileID: 0}
+  firstScenarioButton: {fileID: 0}
 --- !u!1 &1107138189
 GameObject:
   m_ObjectHideFlags: 0
@@ -991,7 +993,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Project BME '
+  m_text: Golden hour
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
   m_sharedMaterial: {fileID: 2140032, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}

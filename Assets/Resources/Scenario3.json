@@ -247,7 +247,7 @@
       "instruction": "Kamu menyadari adanya gelembung berisi cairan (lepuhan) pada luka bakar Siti. Apa yang harus kamu lakukan terhadap lepuhan tersebut?",
       "quizTimeSeconds": 25,
       "lowTimeCueSeconds": 5,
-      "backgroundImage": "LukaBakarSitiBasah",
+      "backgroundImage": "LukaBakarSiti",
       "optionParentTarget": "optionParents2",
       "optionParentPosX": -150.0,
       "options": [
@@ -259,7 +259,7 @@
         {
           "text": "Membiarkannya utuh apa adanya",
           "isCorrect": true,
-          "narrativeImage": "LukaBakarSitiBasah",
+          "narrativeImage": "LukaBakarSiti",
           "narrative": "Tepat sekali. Lepuhan yang utuh berfungsi sebagai perban biologis alami yang melindungi luka dari infeksi bakteri. Dilarang keras memecahkannya."
         },
         {
