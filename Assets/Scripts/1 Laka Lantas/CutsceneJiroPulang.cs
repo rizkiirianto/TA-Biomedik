@@ -15,6 +15,7 @@ public class Cutscene1JiroPulang : MonoBehaviour, ICutscene
     [SerializeField] private RawImage videoRawImage;
     [SerializeField] private VideoPlayer videoPlayer;
     [SerializeField] private bool playVideoAtStart = true;
+    [SerializeField] private Button nextButton;
 
     [Header("Jiro Expressions")]
     [SerializeField] private Sprite jiroNormal;
@@ -50,6 +51,7 @@ public class Cutscene1JiroPulang : MonoBehaviour, ICutscene
     public void BeginCutscene(GameManager gm)
     {
         this.gameManager = gm;
+        HookNextButton();
         SetCutsceneContentVisible(false);
         jiroPortraitObj.SetActive(false);
         textNarasi.text = "";
@@ -81,19 +83,39 @@ public class Cutscene1JiroPulang : MonoBehaviour, ICutscene
 
     private void Update()
     {
-        // Mengecek input Spasi setiap frame
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space)) 
         {
-            if (isTyping)
-            {
-                // Kondisi 1: Teks sedang mengetik, paksa selesai
-                skipTyping = true;
-            }
-            else
-            {
-                // Kondisi 2: Teks sudah selesai, lewati waktu tunggu (delay)
-                skipDelay = true;
-            }
+            HandleAdvanceInput();
+        }
+    }
+
+    private void HookNextButton()
+    {
+        if (nextButton == null)
+        {
+            Debug.LogWarning("Cutscene1JiroPulang: nextButton belum di-assign.");
+            return;
+        }
+
+        nextButton.onClick.RemoveListener(OnNextButtonClicked);
+        nextButton.onClick.AddListener(OnNextButtonClicked);
+        nextButton.gameObject.SetActive(true);
+    }
+
+    private void OnNextButtonClicked()
+    {
+        HandleAdvanceInput();
+    }
+
+    private void HandleAdvanceInput()
+    {
+        if (isTyping)
+        {
+            skipTyping = true;
+        }
+        else
+        {
+            skipDelay = true;
         }
     }
 
@@ -192,6 +214,11 @@ public class Cutscene1JiroPulang : MonoBehaviour, ICutscene
         {
             StopCoroutine(videoRoutine);
             videoRoutine = null;
+        }
+
+        if (nextButton != null)
+        {
+            nextButton.onClick.RemoveListener(OnNextButtonClicked);
         }
 
         if (videoPlayer != null)

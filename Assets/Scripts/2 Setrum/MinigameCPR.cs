@@ -49,6 +49,11 @@ public class MinigameCPR : MonoBehaviour, IMiniGame
     [SerializeField] private float lateFadeDuration = 0.22f;
     [SerializeField] private Color lateColor = new Color(0.5f, 0.5f, 0.5f, 0.45f);
 
+    [Header("Tutorial")]
+    [SerializeField] private GameObject tutorialRoot;
+    [SerializeField] private Button tutorialAdvanceButton;
+    [SerializeField] private GameObject[] tutorialSteps = new GameObject[3];
+
     [Header("Audio")]
     [SerializeField] private AudioSource backingTrackSource;
     [SerializeField] private AudioSource sfxSource;
@@ -106,6 +111,9 @@ public class MinigameCPR : MonoBehaviour, IMiniGame
     private NoteRuntime heldNote;
     private int perfectCompressionCount;
     private bool hasTrackStarted;
+    private bool gameplayStarted;
+    private bool tutorialButtonBound;
+    private int tutorialStepIndex = -1;
     private int shallowCompressionCount;
     private int tooLongCompressionCount;
     private int missInputCount;
@@ -186,22 +194,16 @@ public class MinigameCPR : MonoBehaviour, IMiniGame
         uiCamera = ResolveUICamera();
         EnsureAudioSources();
 
-        if (laneRoot != null)
-        {
-            laneRoot.gameObject.SetActive(true);
-        }
-
-        if (depthBarFill != null)
-        {
-            depthBarFill.fillAmount = 0f;
-            depthBarFill.gameObject.SetActive(true);
-        }
-
+        gameplayStarted = false;
+        hasTrackStarted = false;
         SetCompressedVisual(false);
 
-        PrepareAndPlayTrack();
+        if (TryStartTutorial())
+        {
+            return;
+        }
 
-        SetFeedback(string.Empty, Color.white);
+        StartGameplay();
     }
 
     private Camera ResolveUICamera()
@@ -221,7 +223,7 @@ public class MinigameCPR : MonoBehaviour, IMiniGame
 
     private void Update()
     {
-        if (minigameFinished || !minigameInitialized)
+        if (minigameFinished || !minigameInitialized || !gameplayStarted)
         {
             return;
         }
@@ -748,6 +750,189 @@ public class MinigameCPR : MonoBehaviour, IMiniGame
         feedbackText.color = color;
     }
 
+    private bool TryStartTutorial()
+    {
+        GameObject resolvedTutorialRoot = ResolveTutorialRoot();
+        if (resolvedTutorialRoot == null && !HasAnyTutorialStep())
+        {
+            return false;
+        }
+
+        if (resolvedTutorialRoot != null)
+        {
+            resolvedTutorialRoot.SetActive(true);
+        }
+
+        if (laneRoot != null)
+        {
+            laneRoot.gameObject.SetActive(false);
+        }
+
+        if (depthBarFill != null)
+        {
+            depthBarFill.fillAmount = 0f;
+            depthBarFill.gameObject.SetActive(false);
+        }
+
+        BindTutorialButton();
+        tutorialStepIndex = 0;
+        ShowTutorialStep(tutorialStepIndex);
+        SetFeedback(string.Empty, Color.white);
+        return true;
+    }
+
+    private void BindTutorialButton()
+    {
+        if (tutorialButtonBound)
+        {
+            return;
+        }
+
+        if (tutorialAdvanceButton == null)
+        {
+            GameObject resolvedTutorialRoot = ResolveTutorialRoot();
+            if (resolvedTutorialRoot != null)
+            {
+                tutorialAdvanceButton = resolvedTutorialRoot.GetComponentInChildren<Button>(true);
+            }
+        }
+
+        if (tutorialAdvanceButton == null)
+        {
+            return;
+        }
+
+        tutorialAdvanceButton.onClick.AddListener(OnTutorialAdvanceClicked);
+        tutorialButtonBound = true;
+    }
+
+    private void OnTutorialAdvanceClicked()
+    {
+        if (minigameFinished || gameplayStarted || !minigameInitialized)
+        {
+            return;
+        }
+
+        int stepCount = GetTutorialStepCount();
+        if (stepCount <= 0)
+        {
+            CompleteTutorialAndStartGameplay();
+            return;
+        }
+
+        tutorialStepIndex++;
+        if (tutorialStepIndex >= stepCount)
+        {
+            CompleteTutorialAndStartGameplay();
+            return;
+        }
+
+        ShowTutorialStep(tutorialStepIndex);
+    }
+
+    private void ShowTutorialStep(int stepIndex)
+    {
+        if (!HasAnyTutorialStep())
+        {
+            return;
+        }
+
+        for (int i = 0; i < tutorialSteps.Length; i++)
+        {
+            if (tutorialSteps[i] != null)
+            {
+                tutorialSteps[i].SetActive(i == stepIndex);
+            }
+        }
+    }
+
+    private void CompleteTutorialAndStartGameplay()
+    {
+        GameObject resolvedTutorialRoot = ResolveTutorialRoot();
+        if (resolvedTutorialRoot != null)
+        {
+            resolvedTutorialRoot.SetActive(false);
+        }
+
+        StartGameplay();
+    }
+
+    private void StartGameplay()
+    {
+        if (gameplayStarted)
+        {
+            return;
+        }
+
+        gameplayStarted = true;
+
+        if (laneRoot != null)
+        {
+            laneRoot.gameObject.SetActive(true);
+        }
+
+        if (depthBarFill != null)
+        {
+            depthBarFill.fillAmount = 0f;
+            depthBarFill.gameObject.SetActive(true);
+        }
+
+        SetCompressedVisual(false);
+        PrepareAndPlayTrack();
+        SetFeedback(string.Empty, Color.white);
+    }
+
+    private GameObject ResolveTutorialRoot()
+    {
+        if (tutorialRoot != null)
+        {
+            return tutorialRoot;
+        }
+
+        for (int i = 0; i < tutorialSteps.Length; i++)
+        {
+            if (tutorialSteps[i] != null && tutorialSteps[i].transform.parent != null)
+            {
+                return tutorialSteps[i].transform.parent.gameObject;
+            }
+        }
+
+        if (tutorialAdvanceButton != null)
+        {
+            return tutorialAdvanceButton.gameObject;
+        }
+
+        return null;
+    }
+
+    private bool HasAnyTutorialStep()
+    {
+        for (int i = 0; i < tutorialSteps.Length; i++)
+        {
+            if (tutorialSteps[i] != null)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private int GetTutorialStepCount()
+    {
+        int count = 0;
+
+        for (int i = 0; i < tutorialSteps.Length; i++)
+        {
+            if (tutorialSteps[i] != null)
+            {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
     private void TryFinishMinigame()
     {
         if (!autoCompleteByPerfectCount)
@@ -836,7 +1021,14 @@ public class MinigameCPR : MonoBehaviour, IMiniGame
         }
 
         minigameFinished = true;
+        gameplayStarted = false;
         SetCompressedVisual(false);
+
+        GameObject resolvedTutorialRoot = ResolveTutorialRoot();
+        if (resolvedTutorialRoot != null)
+        {
+            resolvedTutorialRoot.SetActive(false);
+        }
 
         if (laneRoot != null)
         {
@@ -870,6 +1062,11 @@ public class MinigameCPR : MonoBehaviour, IMiniGame
 
     private void OnDestroy()
     {
+        if (tutorialAdvanceButton != null && tutorialButtonBound)
+        {
+            tutorialAdvanceButton.onClick.RemoveListener(OnTutorialAdvanceClicked);
+        }
+
         for (int i = 0; i < activeNotes.Count; i++)
         {
             if (activeNotes[i] != null && activeNotes[i].rect != null)
