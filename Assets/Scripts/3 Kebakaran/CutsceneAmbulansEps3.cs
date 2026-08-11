@@ -36,6 +36,22 @@ public class CutsceneAmbulansEps3 : MonoBehaviour, ICutscene
         "“Kamu mungkin tidak bisa menyelamatkan semua orang… tapi hari ini, kamu tetap berhasil menyelamatkan seseorang.”\n\n" +
         "Tangis Jiro pecah kembali, kali ini bukan hanya karena kehilangan, tetapi juga karena akhirnya ia menyadari bahwa keberanian terkadang bukan tentang memenangkan semuanya… melainkan tetap memilih menolong, bahkan di tengah rasa takut.";
 
+    [TextArea(10, 20)]
+    [SerializeField] private string narrationLineEN =
+        "Shortly after, the sound of ambulance sirens echoed throughout the ITS area, breaking the panic that had enveloped the scene.\n\n" +
+        "But unfortunately, there was nothing more that could be done for Tono.\n\n" +
+        "The burns he suffered were too severe. The hot smoke and injuries to his respiratory tract meant his body could no longer hold on. On that long day, Tono took his last breath.\n\n" +
+        "Siti, Jiro, and Budi were immediately rushed to the hospital for further treatment.\n\n" +
+        "In the corner of the ER hallway, Jiro could only sit limply, crying, his hands trembling and filled with guilt.\n\n" +
+        "“I failed to save him…”\n\n" +
+        "A paramedic slowly patted his shoulder.\n\n" +
+        "“No,” he said softly. “You did everything you could.”\n\n" +
+        "Jiro was silent, holding back his tears.\n\n" +
+        "“Your decision to go back and help them… that was a brave act. If you hadn't acted then, we might not have been able to save Siti either.”\n\n" +
+        "The paramedic looked at Jiro for a moment before continuing,\n\n" +
+        "“You might not be able to save everyone… but today, you still managed to save someone.”\n\n" +
+        "Jiro broke down crying again, this time not just from loss, but also because he finally realized that bravery is sometimes not about winning everything… but rather still choosing to help, even in the midst of fear.";
+
     private GameManager gameManager;
     private Coroutine routine;
     private bool finished;
@@ -93,11 +109,11 @@ public class CutsceneAmbulansEps3 : MonoBehaviour, ICutscene
         {
             for (int i = 0; i < lines.Length; i++)
             {
-                if (jiroNangisSendiri != null && lines[i].Contains("Di sudut lorong IGD"))
+                if (jiroNangisSendiri != null && (lines[i].Contains("Di sudut lorong IGD") || lines[i].Contains("In the corner of the ER hallway")))
                 {
                     jiroNangisSendiri.SetActive(true);
                 }
-                if (jiroNangis != null && lines[i].Contains("Seorang paramedis"))
+                if (jiroNangis != null && (lines[i].Contains("Seorang paramedis") || lines[i].Contains("A paramedic")))
                 {
                     jiroNangis.SetActive(true);
                 }
@@ -121,12 +137,14 @@ public class CutsceneAmbulansEps3 : MonoBehaviour, ICutscene
 
     private string[] GetNarrationLines()
     {
-        if (string.IsNullOrWhiteSpace(narrationLine))
+        string currentNarration = PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? narrationLineEN : narrationLine;
+        
+        if (string.IsNullOrWhiteSpace(currentNarration))
         {
             return new string[] { string.Empty };
         }
 
-        string[] rawLines = narrationLine.Split('\n');
+        string[] rawLines = currentNarration.Split('\n');
         System.Collections.Generic.List<string> cleaned = new System.Collections.Generic.List<string>();
 
         for (int i = 0; i < rawLines.Length; i++)
@@ -140,7 +158,7 @@ public class CutsceneAmbulansEps3 : MonoBehaviour, ICutscene
 
         if (cleaned.Count == 0)
         {
-            cleaned.Add(narrationLine.Trim());
+            cleaned.Add(currentNarration.Trim());
         }
 
         return cleaned.ToArray();

@@ -41,6 +41,17 @@ public class Cutscene_IntroEps3 : MonoBehaviour, ICutscene
         "Jiro: Aku harus segera keluar dari sini!"
     };
 
+    [TextArea(2, 5)]
+    [SerializeField] private string[] dialogLinesEN = new string[]
+    {
+        "One day, Jiro was at his campus building doing his assignment.",
+        "Jiro was in his major's lab when suddenly an explosion was heard and the fire alarm started ringing.",
+        "Jiro: Huh?! Was that an explosion?! The fire alarm is also on... I need to stay calm!",
+        "Jiro: I need to get out of here immediately!"
+    };
+
+    private string[] DialogLines => PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? dialogLinesEN : dialogLines;
+
     private GameManager gameManager;
     private Coroutine sequenceRoutine;
     private Coroutine alarmBlinkRoutine;
@@ -112,11 +123,11 @@ public class Cutscene_IntroEps3 : MonoBehaviour, ICutscene
 
     private IEnumerator PlaySequence()
     {
-        for (int stage = 0; stage < dialogLines.Length; stage++)
+        for (int stage = 0; stage < DialogLines.Length; stage++)
         {
             ApplyStage(stage);
 
-            yield return StartCoroutine(TypeLine(dialogLines[stage]));
+            yield return StartCoroutine(TypeLine(DialogLines[stage]));
             yield return StartCoroutine(WaitForAdvance());
         }
 

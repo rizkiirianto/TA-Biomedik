@@ -1,0 +1,296 @@
+{
+  "steps": [
+    {
+      "stepType": "cutscene",
+      "cutsceneID": "Intro_Episode3",
+      "instruction": "",
+      "options": []
+    },
+    {
+      "stepType": "quiz",
+      "instruction": "Where should we go?",
+      "minigameID": "",
+      "quizTimeSeconds": 18,
+      "lowTimeCueSeconds": 4,
+      "backgroundImage": "DepanLift",
+      "optionParentTarget": "optionParents2",
+      "optionParentPosX": -150.0,
+      "optionParentPosY": -225.0,
+      "options": [
+        {
+          "text": "Use the Elevator",
+          "isCorrect": false,
+          "feedback": "Very dangerous! Never use an elevator during a fire because of the risk of being trapped."
+        },
+        {
+          "text": "Take shelter in the lab",
+          "isCorrect": false,
+          "feedback": "Incorrect. In a fire, the top priority is to evacuate the building immediately."
+        },
+        {
+          "text": "Go straight to the emergency stairs",
+          "isCorrect": true,
+          "narrative": "The emergency door is blocked by debris and fire.",
+          "narrativeImage": "TanggaDarurat_Tertutup"
+        }
+      ]
+    },
+    {
+      "stepType": "cutscene",
+      "cutsceneID": "FoundAltStairs",
+      "instruction": "",
+      "narrativeImage": "TW_Kobong",
+      "options": []
+    },
+    {
+      "stepType": "dialog",
+      "speakerName": "Narrator",
+      "instruction": "Jiro hears a scream in the lower parking area of the building and sees a hysterical Siti sitting with glass shards stuck in her thigh and burns on her arm.",
+      "narrativeImage": "Siti_Teriak",
+      "dialogSfx": "Dialog/WomanCrying",
+      "options": []
+    },
+    {
+      "stepType": "dialog",
+      "speakerName": "Narrator",
+      "instruction": "From the lobby emerges a student named Budi, coughing from inhaling smoke from the raging fire.",
+      "narrativeImage": "BudiMuncul",
+      "dialogSfx": "Dialog/BudiBatuk",
+      "options": []
+    },
+    {
+      "stepType": "dialog",
+      "speakerName": "Narrator",
+      "instruction": "A man suddenly jumps from the top of the burning building, it's Tono from the next department.",
+      "narrativeImage": "Tono_Lompat",
+      "dialogSfx": "Dialog/TonoLompat",
+      "options": []
+    },
+    {
+      "stepType": "dialog",
+      "speakerName": "Narrator",
+      "instruction": "Tono is lying there with a broken leg and severe burns. His face is covered in soot, and his breathing is hoarse and wheezing—signs of severe inhalation injury.",
+      "narrativeImage": "Tono_Terkapar",
+      "dialogSfx": "Dialog/TonoLanding",
+      "options": []
+    },
+    {
+      "stepType": "minigame",
+      "minigameID": "Call112_Episode3",
+      "instruction": "Call for backup.",
+      "narrativeImage": "TigaKorban",
+      "goldTime": 12,
+      "silverTime": 18,
+      "options": []
+    },
+    {
+      "stepType": "minigame",
+      "minigameID": "TriageQuick",
+      "instruction": "Prioritize aid: identify extensive burns, signs of inhalation injury, and choose the victim with the highest risk of rapid death.",
+      "narrativeImage": "TigaKorban",
+      "goldTime": 18,
+      "silverTime": 25,
+      "options": []
+    },
+    {
+      "stepType": "quiz",
+      "instruction": "What assignment do we give Budi to help Siti?",
+      "quizTimeSeconds": 15,
+      "lowTimeCueSeconds": 3,
+      "backgroundImage": "BudidanSiti",
+      "optionParentTarget": "optionParents2",
+      "optionParentPosX": -150.0,
+      "optionParentPosY": -220.0,
+      "options": [
+        {
+          "text": "Pull out the glass shards",
+          "isCorrect": false,
+          "feedback": "Do not pull out sharp objects — it can worsen the bleeding."
+        },
+        {
+          "text": "Apply a dressing and pressure to the bleeding area",
+          "isCorrect": true,
+          "narrative": "Correct. Direct pressure and a bandage effectively stop arterial bleeding temporarily. Make sure Budi DOES NOT touch the glass, let alone pull it out.",
+          "narrativeImage": "BudiTolongSitiBaru"
+        },
+        {
+          "text": "Give her water to drink",
+          "isCorrect": false,
+          "feedback": "Dangerous. Do not give drinks to trauma victims."
+        }
+      ]
+    },
+    {
+      "stepType": "quiz",
+      "instruction": "Tono has many dangerous injuries, but which of his injuries is the most urgent to treat?",
+      "quizTimeSeconds": 21,
+      "lowTimeCueSeconds": 5,
+      "backgroundImage": "Tono_Terkapar",
+      "optionParentTarget": "optionParents2",
+      "optionParentPosX": -150.0,
+      "optionParentPosY": 350.0,
+      "options": [
+        {
+          "text": "The severe burns all over his body",
+          "isCorrect": false,
+          "feedback": "Incorrect."
+        },
+        {
+          "text": "Inhalation injury that is blocking his airway",
+          "isCorrect": true,
+          "narrativeImage": "Tono_Terkapar",
+          "narrative": "Tono has now stopped breathing and needs help immediately!"
+        },
+        {
+          "text": "The fracture in Tono's leg",
+          "isCorrect": false,
+          "feedback": "Incorrect."
+        }
+      ]
+    },
+    {
+      "stepType": "minigame",
+      "minigameID": "HeadTiltChinLift",
+      "instruction": "Open the airway with a head-tilt/chin-lift because there is no neck injury, then check if air can still pass through.",
+      "narrativeImage": "BudiTolongSitiBaru",
+      "goldTime": 14,
+      "silverTime": 20,
+      "options": []
+    },
+    {
+      "stepType": "quiz",
+      "instruction": "The bleeding in Siti's thigh has significantly reduced. What is the best action for the arterial bleeding in Siti's thigh?",
+      "quizTimeSeconds": 15,
+      "lowTimeCueSeconds": 3,
+      "backgroundImage": "BudiTolongSitiBaru",
+      "optionParentTarget": "optionParents2",
+      "optionParentPosX": -150.0,
+      "optionParentPosY": -220.0,
+      "options": [
+        {
+          "text": "Apply a makeshift tourniquet with a belt or rope",
+          "isCorrect": false,
+          "feedback": "Incorrect. An emergency tourniquet is a last resort. Direct pressure around the wound is much more prioritized!"
+        },
+        {
+          "text": "Continue maintaining the dressing and pressure on the bleeding area",
+          "isCorrect": true,
+          "narrativeImage": "BudiTolongSiti",
+          "narrative": "Exactly! The embedded sharp object must not be pulled out. Strong pressure around it is enough to control the arterial bleeding temporarily."
+        },
+        {
+          "text": "Slowly and carefully pull out the glass shards",
+          "isCorrect": false,
+          "feedback": "Very dangerous! Pulling out the glass shards will open the natural plug of the wound and trigger fatal massive bleeding."
+        }
+      ]
+    },
+    {
+      "stepType": "quiz",
+      "instruction": "Siti's burn is at the level of...",
+      "quizTimeSeconds": 15,
+      "lowTimeCueSeconds": 3,
+      "backgroundImage": "LukaBakarSititanya",
+      "optionParentTarget": "optionParents2",
+      "optionParentPosX": -465.0,
+      "optionParentPosY": -250.0,
+      "scale": 0.8,
+      "options": [
+        {
+          "text": "First degree",
+          "isCorrect": false,
+          "feedback": "Incorrect. Siti's burn appears more severe than just mild redness."
+        },
+        {
+          "text": "Second degree",
+          "isCorrect": true,
+          "narrativeImage": "LukaBakarSitidanjawaban",
+          "narrative": "Correct. Siti's burn is more consistent with a 2nd-degree burn, thus needing cooling and proper wound covering."
+        },
+        {
+          "text": "Third degree",
+          "isCorrect": false,
+          "feedback": "Does not match. The characteristic of a 3rd-degree burn is white/charred and stiff skin, which is not Siti's condition in this story."
+        }
+      ]
+    },
+    {
+      "stepType": "quiz",
+      "instruction": "Budi offers toothpaste to apply to Siti's burn so it cools down quickly. What is your action?",
+      "quizTimeSeconds": 25,
+      "lowTimeCueSeconds": 5,
+      "backgroundImage": "LukaBakarSiti",
+      "optionParentTarget": "optionParents2",
+      "optionParentPosX": -150.0,
+      "optionParentPosY": -220.0,
+      "options": [
+        {
+          "text": "Accept Budi's advice and apply toothpaste",
+          "isCorrect": false,
+          "feedback": "Very dangerous! Toothpaste contains chemicals that can irritate the wound."
+        },
+        {
+          "text": "Forbid it, because household items will worsen the wound",
+          "isCorrect": true,
+          "narrativeImage": "LukaBakarSiti",
+          "narrative": "A very appropriate step! Household items like toothpaste or butter will trap heat, worsen the wound condition, and make medical cleaning at the hospital later more difficult."
+        },
+        {
+          "text": "Apply butter because it can absorb heat",
+          "isCorrect": false,
+          "feedback": "Wrong. Butter is fat-based and will actually trap heat inside the wound."
+        }
+      ]
+    },
+    {
+      "stepType": "quiz",
+      "instruction": "You notice fluid-filled blisters on Siti's burn. What should you do with those blisters?",
+      "quizTimeSeconds": 25,
+      "lowTimeCueSeconds": 5,
+      "backgroundImage": "LukaBakarSiti",
+      "optionParentTarget": "optionParents2",
+      "optionParentPosX": -150.0,
+      "options": [
+        {
+          "text": "Pop them so the fluid comes out and they dry quickly",
+          "isCorrect": false,
+          "feedback": "Wrong. Popping the blisters will open a path for bacteria and cause infection."
+        },
+        {
+          "text": "Leave them intact as they are",
+          "isCorrect": true,
+          "narrativeImage": "LukaBakarSiti",
+          "narrative": "Exactly. Intact blisters act as a natural biological bandage that protects the wound from bacterial infection. It is strictly forbidden to pop them."
+        },
+        {
+          "text": "Apply ointment and press until they pop",
+          "isCorrect": false,
+          "feedback": "Incorrect. Blisters must not be intentionally popped using any method."
+        }
+      ]
+    },
+    {
+      "stepType": "minigame",
+      "minigameID": "BurnTreatment2",
+      "instruction": "Siti suffered 2nd-degree burns on her arm. Cool the wound with running room-temperature water (not ice) to stop the burning process and relieve pain. Then, immediately remove a watch or jewelry around the wound before tissue swelling (edema) occurs.",
+      "narrativeImage": "LukaBakarSitiBasah",
+      "goldTime": 15,
+      "silverTime": 22,
+      "options": []
+    },
+    {
+      "stepType": "dialog",
+      "speakerName": "Narrator",
+      "instruction": "Continue pouring running water on Siti's burn for 15-20 minutes or until medics arrive.",
+      "narrativeImage": "LukaBakarSitiBasah",
+      "options": []
+    },
+    {
+      "stepType": "cutscene",
+      "cutsceneID": "MedicsArriveEps3",
+      "instruction": "",
+      "narrativeImage": "AmbulanceArrive",
+      "options": []
+    }
+  ]
+}

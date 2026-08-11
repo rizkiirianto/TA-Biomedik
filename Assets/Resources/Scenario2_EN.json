@@ -1,0 +1,159 @@
+{
+  "steps": [
+    {
+      "stepType": "cutscene",
+      "cutsceneID": "LampFlickerRainNight",
+      "instruction": "",
+      "options": []
+    },
+    {
+      "stepType": "dialog",
+      "speakerName": "Narrator",
+      "instruction": "Heavy rain is falling tonight. The living room light suddenly flickers and goes out.",
+      "narrativeImage": "Lamp Flicker",
+      "options": []
+    },
+    {
+      "stepType": "cutscene",
+      "cutsceneID": "CallTechnician",
+      "instruction": "",
+      "narrativeImage": "Korban Jatuh",
+      "options": []
+    },
+    {
+      "stepType": "dialog",
+      "speakerName": "Narrator",
+      "instruction": "Suddenly his body tenses... then he falls to the floor.",
+      "narrativeImage": "Korban Jatuh",
+      "options": []
+    },
+    {
+      "stepType": "minigame",
+      "instruction": "The electricity has been turned off. It is now safe to approach the victim.",
+      "minigameID": "HazardRecognitionElectric",
+      "narrativeImage": "LampuMatiTotaldanKorban",
+      "goldTime": 3,
+      "silverTime": 5,
+      "options": []
+    },
+    {
+      "stepType": "quiz",
+      "instruction": "The victim is unresponsive when called. What is the next step?",
+      "quizTimeSeconds": 15,
+      "lowTimeCueSeconds": 3,
+      "backgroundImage": "Korban Jatuh",
+      "optionParentTarget": "optionParents2",
+      "optionParentPosX": -150.0,
+      "optionParentPosY": -230.0,
+      "options": [
+        {
+          "text": "Immediately perform CPR",
+          "isCorrect": false,
+          "feedback": "Check breathing condition first before CPR."
+        },
+        {
+          "text": "Check the victim's breathing",
+          "isCorrect": true,
+          "narrative": "Correct! Check if the victim is breathing normally.",
+          "narrativeImage": "Tidak Bernapas"
+        },
+        {
+          "text": "Give the victim a drink",
+          "isCorrect": false,
+          "feedback": "Dangerous! An unconscious victim could choke."
+        }
+      ]
+    },
+    {
+      "stepType": "dialog",
+      "speakerName": "Narrator",
+      "instruction": "You don't see the victim's chest rising and falling. The victim is not breathing.",
+      "narrativeImage": "Tidak Bernapas",
+      "options": []
+    },
+    {
+      "stepType": "minigame",
+      "instruction": "There is no more time, I have tried my best to give the information.",
+      "minigameID": "Call112Sequence",
+      "narrativeImage": "Korban Terbaring",
+      "goldTime": 10,
+      "silverTime": 15,
+      "options": []
+    },
+    {
+      "stepType": "quiz",
+      "instruction": "The victim is not breathing and is unconscious. What is your action?",
+      "quizTimeSeconds": 15,
+      "lowTimeCueSeconds": 3,
+      "backgroundImage": "Korban Terbaring",
+      "optionParentTarget": "optionParents2",
+      "optionParentPosX": -150.0,
+      "optionParentPosY": -230.0,
+      "options": [
+        {
+          "text": "Wait for the ambulance to arrive",
+          "isCorrect": false,
+          "feedback": "Too long! Every second counts."
+        },
+        {
+          "text": "Immediately start CPR",
+          "isCorrect": true,
+          "narrative": "Exactly! CPR must be done immediately.",
+          "narrativeImage": "Korban Terbaring"
+        },
+        {
+          "text": "Move the victim to the sofa",
+          "isCorrect": false,
+          "feedback": "Not necessary. Focus on CPR."
+        }
+      ]
+    },
+    {
+      "stepType": "dialog",
+      "speakerName": "Jiro",
+      "instruction": "I remember watching a guide to follow a 100-120BPM beat.",
+      "narrativeImage": "Korban Terbaring",
+      "gambarPortrait": 0,
+      "options": []
+    },
+    {
+      "stepType": "dialog",
+      "speakerName": "Jiro",
+      "instruction": "I'll set a 120BPM metronome so I have to do 2 CPR compressions per second.",
+      "narrativeImage": "Korban Terbaring",
+      "gambarPortrait": 0,
+      "options": []
+    },
+    {
+      "stepType": "dialog",
+      "speakerName": "Jiro",
+      "instruction": "Press 5-6cm deep, it doesn't matter if the ribs break, the important thing is Mr. Raka can survive.",
+      "narrativeImage": "Korban Terbaring",
+      "gambarPortrait": 0,
+      "options": []
+    },
+    {
+      "stepType": "dialog",
+      "speakerName": "Jiro",
+      "instruction": "Come on Jiro, you can DO THIS!!!",
+      "narrativeImage": "Korban Terbaring",
+      "gambarPortrait": 0,
+      "options": []
+    },
+    {
+      "stepType": "minigame",
+      "instruction": "Jiro continues to perform CPR with a consistent rhythm and depth.",
+      "minigameID": "CPRCoreGameplay",
+      "narrativeImage": "Korban Terbaring",
+      "goldTime": 30,
+      "silverTime": 45,
+      "options": []
+    },
+    {
+      "stepType": "cutscene",
+      "cutsceneID": "AmbulanceArrivalNight",
+      "instruction": "",
+      "options": []
+    }
+  ]
+}

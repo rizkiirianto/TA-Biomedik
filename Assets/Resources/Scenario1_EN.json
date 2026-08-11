@@ -1,0 +1,449 @@
+{
+  "steps": [
+    {
+      "stepType": "cutscene",
+      "cutsceneID": "JiroPulang",
+      "instruction": "",
+      "options": []
+    },
+    {
+      "stepType": "minigame",
+      "minigameID": "Walking",
+      "narrativeImage": "Rizal_Berdarah_Dialogue",
+      "goldTime": 10,
+      "silverTime": 15,
+      "dialogSfx": "Dialog/Male Groan",
+      "options": []
+    },
+    {
+      "stepType": "cutscene",
+      "cutsceneID": "RizalBerdarah",
+      "instruction": "",
+      "options": []
+    },
+    {
+      "stepType": "quiz",
+      "instruction": "You just arrived at the scene. What is the FIRST thing you should do?",
+      "minigameID": "",
+      "quizTimeSeconds": 18,
+      "lowTimeCueSeconds": 4,
+      "backgroundImage": "JiroQuiz1",
+      "optionParentTarget": "optionParents",
+      "optionParentPosX": -165.0,
+      "optionParentPosY": 300.0,
+      "options": [
+        {
+          "text": "Run straight to the victim",
+          "isCorrect": false,
+          "isFatal": true,
+          "fatalCutsceneID": "JiroTertabrak",
+          "feedback": "Danger! You could be hit by other passing vehicles."
+        },
+        {
+          "text": "Move the victim to the sidewalk",
+          "isCorrect": false,
+          "feedback": "Do not move the victim carelessly! We don't know what their injuries are."
+        },
+        {
+          "text": "Look left and right before crossing",
+          "isCorrect": true,
+          "narrative": "Correct! Ensure the area is safe first. We don't want to become the second victim.",
+          "narrativeImage": "Mobil_Speeding_Polos"
+        }
+      ]
+    },
+    {
+      "stepType": "dialog",
+      "speakerName": "Jiro",
+      "instruction": "Turns out it is true, the first priority is to make sure the area is safe so the rescuer doesn't become the second victim.",
+      "narrativeImage": "Mobil_Speeding_Polos",
+      "gambarPortrait": 2,
+      "dialogSfx": "Dialog/Mobil_Speeding",
+      "options": []
+    },
+    {
+      "stepType": "dialog",
+      "speakerName": "Maya (Witness)",
+      "instruction": "Oh my... h-his leg is bleeding... I can't bear to look. Please, what should we do?!",
+      "gambarPortrait": 3,
+      "narrativeImage": "Maya Panik",
+      "dialogSfx": "Dialog/Maya_Panik",
+      "options": []
+    },
+    {
+      "stepType": "quiz",
+      "instruction": "The witness (Maya) is panicking but wants to help. What is the most appropriate task to delegate to her?",
+      "minigameID": "",
+      "quizTimeSeconds": 21,
+      "lowTimeCueSeconds": 5,
+      "backgroundImage": "Maya Panik",
+      "optionParentTarget": "optionParents2",
+      "optionParentPosX": -150.0,
+      "optionParentPosY": 300.0,
+      "options": [
+        {
+          "text": "Tell her to find some drinking water",
+          "isCorrect": false,
+          "feedback": "Not a priority. The victim needs medical attention, not water."
+        },
+        {
+          "text": "Ask her to help apply pressure to the wound",
+          "isCorrect": false,
+          "feedback": "She's afraid of blood, she might faint. Give her a task away from the wound."
+        },
+        {
+          "text": "Ask her to call 112 right now",
+          "isCorrect": true,
+          "feedback": "Smart! Delegate the task of calling for help so you can focus on treating the victim.",
+          "narrative": "Maya nods, feeling a bit calmer because she has a clear task, and immediately calls for help.",
+          "narrativeImage": "Maya Calling"
+        }
+      ]
+    },
+    {
+      "stepType": "dialog",
+      "speakerName": "Narrator",
+      "instruction": "Delegate the witness to call 112 so you can stay focused on handling the victim.",
+      "narrativeImage": "Maya Calling",
+      "dialogSfx": "Dialog/Call_911",
+      "options": []
+    },
+    {
+      "stepType": "dialog",
+      "speakerName": "112 Operator",
+      "instruction": "112, how can we help you?",
+      "narrativeImage": "Maya Calling",
+      "options": []
+    },
+    {
+      "stepType": "quiz",
+      "instruction": "When calling 112, what is the VERY first piece of information you should provide?",
+      "minigameID": "",
+      "quizTimeSeconds": 15,
+      "lowTimeCueSeconds": 4,
+      "backgroundImage": "Maya Calling",
+      "optionParentTarget": "optionParents2",
+      "optionParentPosX": -150.0,
+      "options": [
+        {
+          "text": "The victim's full name",
+          "isCorrect": false,
+          "feedback": "Not a priority yet. The operator needs the location first before administrative details."
+        },
+        {
+          "text": "The specific location of the incident",
+          "isCorrect": true,
+          "feedback": "Correct! The location is the top priority so help can be dispatched immediately.",
+          "narrative": "Maya: Hello, I'm Maya. There's an accident at the intersection of Ahmad Yani Street and Kenanga Street, near the corner minimarket. Please send an ambulance immediately.",
+          "gambarPortrait": 4,
+          "narrativeImage": "Maya Calling"
+        },
+        {
+          "text": "A long chronology from the beginning",
+          "isCorrect": false,
+          "feedback": "Too long for the start. Begin with the location and type of incident briefly."
+        }
+      ]
+    },
+    {
+      "stepType": "quiz",
+      "instruction": "Select the most effective report for the 112 operator.",
+      "minigameID": "",
+      "quizTimeSeconds": 24,
+      "lowTimeCueSeconds": 6,
+      "backgroundImage": "Maya Calling",
+      "optionParentTarget": "optionParents2",
+      "optionParentPosX": -150.0,
+      "options": [
+        {
+          "text": "Please hurry here, someone is bleeding badly!",
+          "isCorrect": false,
+          "feedback": "Incomplete. The operator still needs the location and the victim's condition for an appropriate response."
+        },
+        {
+          "text": "He's my friend, please help, I'm so panicked!",
+          "isCorrect": false,
+          "feedback": "Your feelings are valid, but the operator needs actionable core data."
+        },
+        {
+          "text": "Type of accident, number and condition of victims.",
+          "isCorrect": true,
+          "feedback": "There's a single motorcycle accident, 1 victim with a bleeding thigh, still conscious, we are applying pressure to the wound.",
+          "narrative": "Maya: There's a single motorcycle accident, 1 victim with leg bleeding, still conscious, we are applying pressure to the wound.",
+          "gambarPortrait": 4,
+          "narrativeImage": "Maya Calling"
+        }
+      ]
+    },
+    {
+      "stepType": "quiz",
+      "instruction": "Operator: Are there any hazards around?",
+      "minigameID": "",
+      "quizTimeSeconds": 15,
+      "lowTimeCueSeconds": 3,
+      "backgroundImage": "Maya Calling",
+      "optionParentTarget": "optionParents2",
+      "optionParentPosX": -150.0,
+      "options": [
+        {
+          "text": "It's safe, there's nothing.",
+          "isCorrect": false,
+          "feedback": "Don't guess. If there are any potential hazards, they must be mentioned."
+        },
+        {
+          "text": "The accident scene is on the shoulder of the road.",
+          "isCorrect": true,
+          "gambarPortrait": 4,
+          "narrative": "Exactly! Information about hazards helps the operator give correct safety instructions.",
+          "narrativeImage": "Maya Calling"
+        },
+        {
+          "text": "I don't know, just come quickly.",
+          "isCorrect": false,
+          "feedback": "Not very helpful. Specific answers speed up the operator's decision."
+        }
+      ]
+    },
+    {
+      "stepType": "dialog",
+      "speakerName": "112 Operator",
+      "instruction": "Help is on the way. Stay on the line, continue applying direct pressure to the wound, and let us know if the victim's condition changes.",
+      "narrativeImage": "Maya Calling",
+      "options": []
+    },
+    {
+      "stepType": "dialog",
+      "speakerName": "Jiro",
+      "instruction": "Sir, can you hear me? What is your name? (I'm asking this to check if there is any damage to his Airway)",
+      "gambarPortrait": 0,
+      "narrativeImage": "Rizal_Berdarah",
+      "dialogSfx": "Dialog/heartbeat2",
+      "options": []
+    },
+    {
+      "stepType": "dialog",
+      "speakerName": "Riko (Victim)",
+      "instruction": "Yes... I hear you... my name is Riko...",
+      "gambarPortrait": 5,
+      "narrativeImage": "Rizal_Berdarah",
+      "dialogSfx": "Dialog/Light Pain Groan",
+      "options": []
+    },
+    {
+      "stepType": "quiz",
+      "instruction": "The victim answers clearly when called. What does this mean for the A (Airway) assessment?",
+      "minigameID": "",
+      "quizTimeSeconds": 18,
+      "lowTimeCueSeconds": 4,
+      "backgroundImage": "Rizal_Berdarah",
+      "optionParentTarget": "optionParents2",
+      "optionParentPosX": -150.0,
+      "optionParentPosY": 300,
+      "options": [
+        {
+          "text": "The airway is definitely blocked",
+          "isCorrect": false,
+          "feedback": "Incorrect. A clear verbal response actually indicates an open airway."
+        },
+        {
+          "text": "Airway is open, proceed to the next assessment",
+          "isCorrect": true,
+          "quizTimeSeconds": 18,
+          "lowTimeCueSeconds": 4,
+          "narrative": "Correct. A clear vocal response indicates an open airway and a minimum consciousness level of Voice (AVPU).",
+          "narrativeImage": "Rizal_Berdarah"
+        },
+        {
+          "text": "Immediately give water to check breathing",
+          "isCorrect": false,
+          "feedback": "Do not give water to trauma victims. Continue the ABCDE assessment safely."
+        }
+      ]
+    },
+    {
+      "stepType": "quiz",
+      "instruction": "What is the most appropriate way for a lay rescuer to perform the B (Breathing) assessment?",
+      "minigameID": "",
+      "quizTimeSeconds": 18,
+      "lowTimeCueSeconds": 4,
+      "backgroundImage": "Rizal_Berdarah",
+      "optionParentTarget": "optionParents2",
+      "optionParentPosX": -150.0,
+      "optionParentPosY": 300.0,
+      "options": [
+        {
+          "text": "Repeatedly press the chest to ensure breathing",
+          "isCorrect": false,
+          "feedback": "No need to press the chest. This could increase pain for a trauma victim."
+        },
+        {
+          "text": "Visual observation of the chest rising and falling (look)",
+          "isCorrect": true,
+          "narrative": "You notice Riko's chest is still rising and falling, so the assessment can proceed.",
+          "narrativeImage": "Rizal_Berdarah"
+        },
+        {
+          "text": "Move the victim so their breathing can be heard",
+          "isCorrect": false,
+          "feedback": "Avoid moving a trauma victim without a strong indication."
+        }
+      ]
+    },
+    {
+      "stepType": "quiz",
+      "instruction": "Blood is pouring heavily from the victim's thigh and knee. What is your first step?",
+      "minigameID": "",
+      "quizTimeSeconds": 15,
+      "lowTimeCueSeconds": 3,
+      "backgroundImage": "dengkul korban",
+      "optionParentTarget": "optionParents2",
+      "optionParentPosX": -150.0,
+      "optionParentPosY": -230.0,
+      "options": [
+        {
+          "text": "Tie the leg with a rope",
+          "isCorrect": false,
+          "feedback": "A makeshift tourniquet can damage nerve tissue if applied incorrectly."
+        },
+        {
+          "text": "Apply Direct Pressure",
+          "isCorrect": true,
+          "feedback": "Good! Press the source of bleeding as hard as possible.",
+          "narrative": "Jiro: Right, I need to find something I can use.",
+          "narrativeImage": "dengkul korban"
+        },
+        {
+          "text": "Give a drink to prevent shock",
+          "isCorrect": false,
+          "feedback": "Never give food/drink to a trauma victim! They could choke if they faint."
+        }
+      ]
+    },
+    {
+      "stepType": "dialog",
+      "speakerName": "Narrator",
+      "instruction": "Begin bleeding control with direct pressure on the wound source as hard and consistently as possible.",
+      "narrativeImage": "dengkul korban",
+      "options": []
+    },
+    {
+      "stepType": "minigame",
+      "instruction": "Take an item that can be used.",
+      "minigameID": "AmbilBarangdariTas",
+      "narrativeImage": "saputangan",
+      "goldTime": 10,
+      "silverTime": 15,
+      "options": []
+    },
+    {
+      "stepType": "minigame",
+      "instruction": "Press the victim's wound continuously!",
+      "minigameID": "BleedControl",
+      "narrativeImage": "minigamebleeding",
+      "goldTime": 10,
+      "silverTime": 15,
+      "options": []
+    },
+    {
+      "stepType": "quiz",
+      "instruction": "Blood is still seeping through the first cloth. What should be done?",
+      "minigameID": "",
+      "quizTimeSeconds": 15,
+      "lowTimeCueSeconds": 3,
+      "backgroundImage": "bocorlagi",
+      "optionParentTarget": "optionParents2",
+      "optionParentPosX": 50.0,
+      "optionParentPosY": -230.0,
+      "options": [
+        {
+          "text": "Remove the old cloth, replace with a new one",
+          "isCorrect": false,
+          "isFatal": true,
+          "fatalCutsceneID": "KainDilepas",
+          "feedback": "Don't remove it! That will tear any blood clots that have already formed."
+        },
+        {
+          "text": "Stack a new cloth on top of it",
+          "isCorrect": true,
+          "feedback": "Correct! Do not remove the first cloth so the blood clotting is not disturbed.",
+          "narrative": "You grab an extra cloth, stack it on top, and press again.",
+          "narrativeImage": "bocorditumpuk"
+        }
+      ]
+    },
+    {
+      "stepType": "dialog",
+      "speakerName": "Narrator",
+      "instruction": "If blood still seeps through, stack a new cloth on top of the old dressing. Do not remove the first cloth.",
+      "narrativeImage": "bocorditumpuk",
+      "options": []
+    },
+    {
+      "stepType": "dialog",
+      "speakerName": "Narrator",
+      "instruction": "Since the bleeding is on a limb, leg elevation is performed to raise it above the heart level.",
+      "narrativeImage": "KakiElevasi",
+      "options": []
+    },
+    {
+      "stepType": "dialog",
+      "speakerName": "Narrator",
+      "instruction": "After adding cloth and maintaining pressure for some time, the bleeding appears to have decreased.",
+      "narrativeImage": "KakiElevasi",
+      "options": []
+    },
+    {
+      "stepType": "dialog",
+      "speakerName": "Rizal (Victim)",
+      "instruction": "I'm... dizzy... cold... I feel sleepy...",
+      "gambarPortrait": 5,
+      "narrativeImage": "KakiElevasi",
+      "dialogSfx": "Dialog/heartbeat2",
+      "options": []
+    },
+    {
+      "stepType": "quiz",
+      "instruction": "The victim is pale, cold, and dizzy. These are signs of SHOCK. What is the best position for them?",
+      "minigameID": "",
+      "quizTimeSeconds": 18,
+      "lowTimeCueSeconds": 4,
+      "gambarPortrait": 5,
+      "backgroundImage": "KakiElevasi",
+      "optionParentTarget": "optionParents2",
+      "optionParentPosX": -150.0,
+      "optionParentPosY": 300.0,
+      "options": [
+        {
+          "text": "Sit the victim up",
+          "isCorrect": false,
+          "feedback": "Don't sit them up, blood flow to the brain could decrease."
+        },
+        {
+          "text": "Elevate the other leg as high as possible too (Shock Position)",
+          "isCorrect": false,
+          "feedback": "Incorrect. In a motorcycle accident victim like this where there could be other injuries, avoid moving the victim's pelvic area."
+        },
+        {
+          "text": "Cover with a blanket & lay them flat on their back (Supine)",
+          "isCorrect": true,
+          "feedback": "Exactly. Maintain body temperature and allow blood to flow smoothly to the brain.",
+          "narrative": "You cover Riko with a jacket to keep him warm and lay him flat.",
+          "narrativeImage": "KorbanSyokBaru"
+        }
+      ]
+    },
+    {
+      "stepType": "dialog",
+      "speakerName": "Narrator",
+      "instruction": "Treat shock by keeping the victim warm and lying flat while waiting for the ambulance.",
+      "narrativeImage": "KorbanSyokBaru",
+      "options": []
+    },
+    {
+      "stepType": "cutscene",
+      "cutsceneID": "AmbulanDatang",
+      "instruction": "",
+      "options": []
+    }
+  ]
+}

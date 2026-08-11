@@ -179,7 +179,8 @@ public class GameManager : MonoBehaviour
     {
         if (scoreText != null)
         {
-            scoreText.text = "Skor Quiz: " + totalScore;
+            string prefix = PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? "Quiz Score: " : "Skor Quiz: ";
+            scoreText.text = prefix + totalScore;
         }
     }
 
@@ -243,14 +244,22 @@ public class GameManager : MonoBehaviour
         ResetEpisodeRecapData();
 
         string scenarioName = PlayerPrefs.GetString("SelectedScenario", "Scenario1");
-        TextAsset jsonFile = Resources.Load<TextAsset>(scenarioName);
+        string selectedLang = PlayerPrefs.GetString("SelectedLanguage", "ID");
+        string fileToLoad = scenarioName;
+        
+        if (selectedLang == "EN")
+        {
+            fileToLoad += "_EN";
+        }
+
+        TextAsset jsonFile = Resources.Load<TextAsset>(fileToLoad);
         if (jsonFile != null)
         {
             quizData = JsonUtility.FromJson<QuizData>(jsonFile.text);
         }
         else
         {
-            Debug.LogError($"Gagal memuat file '{scenarioName}.json' dari folder Resources!");
+            Debug.LogError($"Gagal memuat file '{fileToLoad}.json' dari folder Resources!");
         }
         
         PlayAmbianceForScenario(scenarioName);
@@ -1057,7 +1066,7 @@ public class GameManager : MonoBehaviour
 
         // Tampilkan recap episode
         narrativeText.text = $"Kamu berhasil! Skenario selesai. Skor akhir kamu: {finalNormalizedScore}/100. Berikut recap keputusanmu.";
-        questionText.text = "Recap Episode";
+        questionText.text = PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? "Episode Recap" : "Recap Episode";
         feedbackPanel.SetActive(false);
         HideAllOptionButtons();
         if (scoreText != null)
@@ -1462,6 +1471,29 @@ public class GameManager : MonoBehaviour
         episodeRecaps.Add(recap);
     }
 
+    private void ShowEpisodeRecap()
+    {
+        // 1. Sembunyikan UI yang tidak diperlukan
+        quizUIParent.SetActive(false);
+        feedbackPanel.SetActive(false);
+        clickAdvancePanel.SetActive(false);
+        if (activeMiniGameInstance != null) activeMiniGameInstance.SetActive(false);
+        if (activeCutsceneInstance != null) activeCutsceneInstance.SetActive(false);
+
+        // 2. Tampilkan Panel Recap
+        if (recapPanel != null)
+        {
+            recapPanel.SetActive(true);
+        }
+        else
+        {
+            // Fallback jika tidak ada panel khusus, gunakan area narasi/kuis
+            quizUIParent.SetActive(true);
+            questionText.text = PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? "Episode Recap" : "Recap Episode";
+            HideAllOptionButtons();
+        }
+    }
+
     private void BuildAndShowEpisodeRecap()
     {
         if (recapKeyPointsText == null)
@@ -1538,7 +1570,7 @@ public class GameManager : MonoBehaviour
 
             if (narrativeText != null)
             {
-                narrativeText.text = "Recap berhasil diexport ke: " + exportPath;
+                narrativeText.text = PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? "Recap exported successfully to: " + exportPath : "Recap berhasil diexport ke: " + exportPath;
             }
 
             Debug.Log("Recap berhasil diexport: " + exportPath);
@@ -1548,7 +1580,7 @@ public class GameManager : MonoBehaviour
             Debug.LogError("Gagal export recap: " + ex.Message);
             if (narrativeText != null)
             {
-                narrativeText.text = "Export recap gagal. Cek Console untuk detail error.";
+                narrativeText.text = PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? "Failed to export recap. Check Console for details." : "Export recap gagal. Cek Console untuk detail error.";
             }
         }
     }

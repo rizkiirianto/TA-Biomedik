@@ -54,6 +54,15 @@ public class MinigameCPR : MonoBehaviour, IMiniGame
     [SerializeField] private Button tutorialAdvanceButton;
     [SerializeField] private GameObject[] tutorialSteps = new GameObject[3];
 
+    [Header("Tutorial EN")]
+    [SerializeField] private GameObject tutorialRootEN;
+    [SerializeField] private Button tutorialAdvanceButtonEN;
+    [SerializeField] private GameObject[] tutorialStepsEN = new GameObject[3];
+
+    private GameObject ActiveTutorialRoot => PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? tutorialRootEN : tutorialRoot;
+    private Button ActiveTutorialAdvanceButton => PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? tutorialAdvanceButtonEN : tutorialAdvanceButton;
+    private GameObject[] ActiveTutorialSteps => PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? tutorialStepsEN : tutorialSteps;
+
     [Header("Audio")]
     [SerializeField] private AudioSource backingTrackSource;
     [SerializeField] private AudioSource sfxSource;
@@ -788,21 +797,23 @@ public class MinigameCPR : MonoBehaviour, IMiniGame
             return;
         }
 
-        if (tutorialAdvanceButton == null)
+        Button activeBtn = ActiveTutorialAdvanceButton;
+
+        if (activeBtn == null)
         {
             GameObject resolvedTutorialRoot = ResolveTutorialRoot();
             if (resolvedTutorialRoot != null)
             {
-                tutorialAdvanceButton = resolvedTutorialRoot.GetComponentInChildren<Button>(true);
+                activeBtn = resolvedTutorialRoot.GetComponentInChildren<Button>(true);
             }
         }
 
-        if (tutorialAdvanceButton == null)
+        if (activeBtn == null)
         {
             return;
         }
 
-        tutorialAdvanceButton.onClick.AddListener(OnTutorialAdvanceClicked);
+        activeBtn.onClick.AddListener(OnTutorialAdvanceClicked);
         tutorialButtonBound = true;
     }
 
@@ -837,11 +848,11 @@ public class MinigameCPR : MonoBehaviour, IMiniGame
             return;
         }
 
-        for (int i = 0; i < tutorialSteps.Length; i++)
+        for (int i = 0; i < ActiveTutorialSteps.Length; i++)
         {
-            if (tutorialSteps[i] != null)
+            if (ActiveTutorialSteps[i] != null)
             {
-                tutorialSteps[i].SetActive(i == stepIndex);
+                ActiveTutorialSteps[i].SetActive(i == stepIndex);
             }
         }
     }
@@ -884,22 +895,22 @@ public class MinigameCPR : MonoBehaviour, IMiniGame
 
     private GameObject ResolveTutorialRoot()
     {
-        if (tutorialRoot != null)
+        if (ActiveTutorialRoot != null)
         {
-            return tutorialRoot;
+            return ActiveTutorialRoot;
         }
 
-        for (int i = 0; i < tutorialSteps.Length; i++)
+        for (int i = 0; i < ActiveTutorialSteps.Length; i++)
         {
-            if (tutorialSteps[i] != null && tutorialSteps[i].transform.parent != null)
+            if (ActiveTutorialSteps[i] != null && ActiveTutorialSteps[i].transform.parent != null)
             {
-                return tutorialSteps[i].transform.parent.gameObject;
+                return ActiveTutorialSteps[i].transform.parent.gameObject;
             }
         }
 
-        if (tutorialAdvanceButton != null)
+        if (ActiveTutorialAdvanceButton != null)
         {
-            return tutorialAdvanceButton.gameObject;
+            return ActiveTutorialAdvanceButton.gameObject;
         }
 
         return null;
@@ -907,9 +918,9 @@ public class MinigameCPR : MonoBehaviour, IMiniGame
 
     private bool HasAnyTutorialStep()
     {
-        for (int i = 0; i < tutorialSteps.Length; i++)
+        for (int i = 0; i < ActiveTutorialSteps.Length; i++)
         {
-            if (tutorialSteps[i] != null)
+            if (ActiveTutorialSteps[i] != null)
             {
                 return true;
             }
@@ -922,9 +933,9 @@ public class MinigameCPR : MonoBehaviour, IMiniGame
     {
         int count = 0;
 
-        for (int i = 0; i < tutorialSteps.Length; i++)
+        for (int i = 0; i < ActiveTutorialSteps.Length; i++)
         {
-            if (tutorialSteps[i] != null)
+            if (ActiveTutorialSteps[i] != null)
             {
                 count++;
             }
@@ -1056,7 +1067,7 @@ public class MinigameCPR : MonoBehaviour, IMiniGame
 
         if (gameManager != null)
         {
-            gameManager.OnMiniGameComplete(minigameSuccessFeedback);
+            gameManager.OnMiniGameComplete(PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? "CPR completed with correct rhythm." : minigameSuccessFeedback);
         }
     }
 

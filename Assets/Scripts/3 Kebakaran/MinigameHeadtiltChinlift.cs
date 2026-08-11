@@ -39,7 +39,7 @@ public class MinigameHeadtiltChinlift : MonoBehaviour, IMiniGame
         AreaChinLift.gameObject.SetActive(false);
 
         // 1. Kalimat panduan untuk head tilt
-        if (text != null) text.text = "Tekan dahi korban dan dorong ke belakang perlahan (Head Tilt).";
+        if (text != null) text.text = PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? "Press the victim's forehead and push it back slowly (Head Tilt)." : "Tekan dahi korban dan dorong ke belakang perlahan (Head Tilt).";
 
         AreaHeadTilt.onClick.RemoveAllListeners();
         AreaHeadTilt.onClick.AddListener(OnHeadTiltClicked);
@@ -56,7 +56,7 @@ public class MinigameHeadtiltChinlift : MonoBehaviour, IMiniGame
         AreaHeadTilt.gameObject.SetActive(false);
 
         // 2. Kalimat panduan untuk chin lift
-        if (text != null) text.text = "Sekarang angkat dagu korban ke atas untuk membuka jalan napas (Chin Lift).";
+        if (text != null) text.text = PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? "Now lift the victim's chin upwards to open the airway (Chin Lift)." : "Sekarang angkat dagu korban ke atas untuk membuka jalan napas (Chin Lift).";
 
         // 2. Pemain harus klik areaChinLift 
         AreaChinLift.gameObject.SetActive(true);
@@ -74,7 +74,17 @@ public class MinigameHeadtiltChinlift : MonoBehaviour, IMiniGame
 
     private IEnumerator EndingSequence()
     {
-        string[] endingTexts = new string[]
+        string[] endingTexts = PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? new string[]
+        {
+            "Jiro successfully performed the Head-Tilt Chin-Lift procedure.",
+            "Jiro observes Tono's chest, which is no longer rising and falling.",
+            "Jiro places his ear close to Tono's face to listen for breathing sounds.",
+            "Silence. Jiro cannot hear or feel Tono's breath.",
+            "Jiro sees Tono's inner airway is blocked by swelling due to hot smoke inhalation.",
+            "Jiro does not have the skills or equipment to help him further.",
+            "Jiro can only stand silently looking at Tono.",
+            "Jiro takes his hands off Tono, labels him as Black Category, and runs to help Budi save Siti."
+        } : new string[]
         {
             
             "Jiro berhasil melakukan prosedur Head-Tilt Chin-Lift.",
@@ -115,7 +125,7 @@ public class MinigameHeadtiltChinlift : MonoBehaviour, IMiniGame
 
         if (gameManager != null)
         {
-            gameManager.OnMiniGameComplete("Kamu telah berusaha semampumu, namun Tono tidak dapat diselamatkan.");
+            gameManager.OnMiniGameComplete(PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? "You have tried your best, but Tono could not be saved." : "Kamu telah berusaha semampumu, namun Tono tidak dapat diselamatkan.");
         }
     }
 

@@ -141,7 +141,7 @@ public class WoundPackingMiniGame : MonoBehaviour, IMiniGame
         this.gameObject.SetActive(false);
         if (gameManager != null)
         {
-            gameManager.OnMiniGameComplete("Luka berhasil disumbat dan dibalut!");
+            gameManager.OnMiniGameComplete(PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? "Wound successfully packed and bandaged!" : "Luka berhasil disumbat dan dibalut!");
         }
     }
 }

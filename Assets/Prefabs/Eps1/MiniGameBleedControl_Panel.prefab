@@ -1222,6 +1222,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   progressBar: {fileID: 5684935365313232653}
+  instructionText: {fileID: 8875075317536851}
+  instructionID: Tekan dan tahan pada bagian yang mengalami perdarahan.
+  instructionEN: Press and hold on the bleeding knee.
   timeToHold: 7
   correctZoneRect: {fileID: 1368977923705324569}
   gambarHidungMimisan:

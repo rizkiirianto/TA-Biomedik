@@ -7,7 +7,13 @@ public class NosePressMiniGame : MonoBehaviour, IMiniGame
 {
     [Header("Referensi UI")]
     public Slider progressBar;
-    //public TextMeshProUGUI feedbackText; // Kita bisa pakai feedbackText dari GameManager
+    public TextMeshProUGUI instructionText; // Drag text instruksi ke sini di Inspector
+
+    [Header("Instruction Texts")]
+    [TextArea(2, 4)]
+    public string instructionID = "Tekan dan tahan pada bagian pangkal hidung.";
+    [TextArea(2, 4)]
+    public string instructionEN = "Press and hold on the bridge of the nose.";
 
     [Header("Pengaturan Mini-game")]
     [SerializeField] private float timeToHold = 10f; // Berapa detik harus menahan
@@ -49,6 +55,12 @@ public class NosePressMiniGame : MonoBehaviour, IMiniGame
         audioPlayed90 = false;
         
         this.gameObject.SetActive(true); 
+        
+        if (instructionText != null)
+        {
+            instructionText.text = PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? instructionEN : instructionID;
+        }
+
         SetHidungAktif(0);
         SetTanganAktif(0);
         
@@ -72,7 +84,7 @@ public class NosePressMiniGame : MonoBehaviour, IMiniGame
         {
             if (!IsPointerInsideCorrectZone())
             {
-                OnFailure("Kursor keluar dari area tekan. Coba lagi dan tahan tetap di pangkal hidung.");
+                OnFailure(PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? "Cursor left the press area. Try again and keep holding on the bridge of the nose." : "Kursor keluar dari area tekan. Coba lagi dan tahan tetap di pangkal hidung.");
                 jawabanSalah.Play();
                 return;
             }
@@ -199,7 +211,7 @@ public class NosePressMiniGame : MonoBehaviour, IMiniGame
         if (isHoldingCorrectArea && currentHoldTime < timeToHold)
         {
             // Jika dilepas terlalu cepat
-            OnFailure("Coba lagi, kamu harus menahan tekanan di pangkal hidung ya!");
+            OnFailure(PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? "Try again, you need to hold the pressure on the bridge of the nose!" : "Coba lagi, kamu harus menahan tekanan di pangkal hidung ya!");
             jawabanSalah.Play();
         }
         isHoldingCorrectArea = false;
@@ -208,7 +220,7 @@ public class NosePressMiniGame : MonoBehaviour, IMiniGame
     public void OnIncorrectZonePointerDown()
     {
         // Dipanggil saat menekan zona yang salah
-        OnFailure("Bukan di situ! Coba tekan di bagian pangkal hidung.");
+        OnFailure(PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? "Not there! Try pressing on the bridge of the nose." : "Bukan di situ! Coba tekan di bagian pangkal hidung.");
         jawabanSalah.Play();
     }
 
@@ -238,7 +250,7 @@ public class NosePressMiniGame : MonoBehaviour, IMiniGame
         
         // Non-aktifkan mini-game dan beritahu GameManager untuk lanjut
         this.gameObject.SetActive(false);
-        gameManager.OnMiniGameComplete("Hebat! Tekanan di pangkal hidung bisa menghentikan perdarahan.");
+        gameManager.OnMiniGameComplete(PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? "Great! Pressure on the bridge of the nose can stop the bleeding." : "Hebat! Tekanan di pangkal hidung bisa menghentikan perdarahan.");
     }
 
     private void OnFailure(string feedbackMessage)

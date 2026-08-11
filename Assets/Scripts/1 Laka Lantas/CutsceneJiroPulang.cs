@@ -124,16 +124,16 @@ public class Cutscene1JiroPulang : MonoBehaviour, ICutscene
         // --- Urutan Cerita ---
         // Format: yield return StartCoroutine(PlayDialog("Teks", EkspresiSprite, SembunyikanPortrait?, SuaraSpesial?, CustomDelay?));
         
-        yield return StartCoroutine(PlayDialog("Malam yang sunyi. Jiro berjalan pulang dengan langkah gontai setelah hari yang panjang.", null, true));
+        yield return StartCoroutine(PlayDialog(PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? "A quiet night. Jiro walks home dragging his feet after a long day." : "Malam yang sunyi. Jiro berjalan pulang dengan langkah gontai setelah hari yang panjang.", null, true));
 
-        yield return StartCoroutine(PlayDialog("Jiro: \"Hah... lelahnya. Aku cuma mau cepat rebahan di kasur...\"", jiroNormal));
+        yield return StartCoroutine(PlayDialog(PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? "Jiro: \"Hah... so tired. I just want to lay down on my bed quickly...\"" : "Jiro: \"Hah... lelahnya. Aku cuma mau cepat rebahan di kasur...\"", jiroNormal));
 
         // Memasukkan crashSound sebagai parameter ke-4, dan angka 7f sebagai custom delay (parameter ke-5)
         yield return StartCoroutine(PlayDialog("*CKIIIIITTT!!! BRAAAAKKKK!!!*", null, true, crashSound, 7.0f));
 
-        yield return StartCoroutine(PlayDialog("Jiro: \"Astaga! Suara apa itu?! Keras sekali dari arah perempatan!\"", jiroKaget));
+        yield return StartCoroutine(PlayDialog(PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? "Jiro: \"Oh my god! What was that sound?! It was so loud from the intersection!\"" : "Jiro: \"Astaga! Suara apa itu?! Keras sekali dari arah perempatan!\"", jiroKaget));
 
-        yield return StartCoroutine(PlayDialog("Jiro: \"Kecelakaan...? A-aku takut... Tapi jalanan ini sepi. Aku harus menolongnya!\"", jiroTakut));
+        yield return StartCoroutine(PlayDialog(PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? "Jiro: \"An accident...? I-I'm scared... But this street is deserted. I must help!\"" : "Jiro: \"Kecelakaan...? A-aku takut... Tapi jalanan ini sepi. Aku harus menolongnya!\"", jiroTakut));
 
         // --- Selesai ---
         Complete();

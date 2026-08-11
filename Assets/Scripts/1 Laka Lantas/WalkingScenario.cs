@@ -172,7 +172,7 @@ public class WalkingScenario : MonoBehaviour, IMiniGame
         
         if (gameManager != null)
         {
-            gameManager.OnMiniGameComplete("Player reach target");
+            gameManager.OnMiniGameComplete(PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? "Player reached target" : "Player reach target");
         }
     }
 }

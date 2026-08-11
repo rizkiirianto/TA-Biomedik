@@ -60,12 +60,48 @@ public class CutsceneCallTechnician : MonoBehaviour, ICutscene
         // gambarJiroBiasa on, gambarPakRaka off
         "Jiro : Eh pak mending keringkan badan dulu ga sih pak daripada resiko kesetr-",
         //gambarLampuKonslet on, gambarRuangTamuMatiTengah off, panel off
+    };
+
+    [TextArea(2, 4)]
+    [SerializeField] private string[] dialogueLinesEN = new string[]
+    {
+        "Jiro : Try calling Mr. Raka, the next-door neighbor. He usually understands electricity.",
+        "*dial tone heard amidst the heavy rain*",
+        "Mr. Raka (phone): Hello, Jiro? Unusual for you to call this late, what's up?",
+        "Jiro : Sorry for bothering you, Sir. The light in my workspace has been flickering.",
+        "Mr. Raka (phone): Just one light or the whole house?",
+        "Jiro : Just the living room light, Sir.",
+        "Mr. Raka : Oh alright, I'll go there to check.",
+        "Jiro : Understood Sir, thank you very much.",
+        "10 minutes later",
+        "Mr. Raka : Wow, the rain is pouring hard.",
+        "Jiro : Please come in Sir, I'll get you a towel.",
+        "Mr. Raka : It's fine Jiro, I'll just check the light directly.",
+        "Jiro : Do I need to turn off the electricity first, Sir?",
+        "Mr. Raka : Relax, it's probably just a loose wire.",
+        "Jiro : Eh Sir, shouldn't you dry yourself first to avoid the risk of electro-",
+    };
+
+    private string[] DialogueLines => PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? dialogueLinesEN : dialogueLines;
+
+    [Header("Ending Lines")]
+    [TextArea(2, 4)]
+    [SerializeField] private string[] endingLines = new string[]
+    {
         //sfx suara listrik
         //sfx orang teriak tersetrum
         //gambarRuangTamuMatiTengah on, gambarPerbaikiLampu on, gambarTersetrum on 
         //gambarJiroKaget on, gambarJiroBiasa on
         "Jiro : PAK RAKAA!!!"
     };
+
+    [TextArea(2, 4)]
+    [SerializeField] private string[] endingLinesEN = new string[]
+    {
+        "Jiro : MR. RAKA!!!"
+    };
+
+    private string[] EndingLines => PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? endingLinesEN : endingLines;
 
     [Header("Typewriter")]
     [SerializeField] private float typingSpeed = 0.035f;
@@ -149,11 +185,11 @@ public class CutsceneCallTechnician : MonoBehaviour, ICutscene
             yield break;
         }
 
-        for (int i = 0; i < dialogueLines.Length; i++)
+        for (int i = 0; i < DialogueLines.Length; i++)
         {
             ApplyVisualState(i);
 
-            yield return StartCoroutine(TypeLine(dialogueLines[i]));
+            yield return StartCoroutine(TypeLine(DialogueLines[i]));
             yield return StartCoroutine(WaitForAdvance());
         }
 

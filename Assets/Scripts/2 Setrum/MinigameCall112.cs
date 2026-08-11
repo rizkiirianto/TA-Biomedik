@@ -38,13 +38,13 @@ public class MinigameCall112 : MonoBehaviour, IMiniGame
     [SerializeField] private AudioClip mainkanKartuSound;
     [SerializeField] private AudioClip hangupSound;
 
-    private const string StartDialogText = "Aku harus memanggil bantuan";
+    private string StartDialogText => PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? "I must call for help" : "Aku harus memanggil bantuan";
     private const string EmergencyNumber112 = "112";
-    private const string OperatorReplyText = "112, layanan apa yang bisa kami bantu?";
-    private const string WrongNumberText = "Nomor darurat salah";
+    private string OperatorReplyText => PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? "112, how can we help you?" : "112, layanan apa yang bisa kami bantu?";
+    private string WrongNumberText => PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? "Wrong emergency number" : "Nomor darurat salah";
     private const string WaitingText = ". . . . .";
-    private const string CallDisconnectedText = "--telepon terputus";
-    private const string BatteryOutText = "SIAL KENAPA SEKARANG HABISNYA BATERAIKU!!!!";
+    private string CallDisconnectedText => PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? "--call disconnected" : "--telepon terputus";
+    private string BatteryOutText => PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? "DAMN WHY DID MY BATTERY DIE NOW!!!!" : "SIAL KENAPA SEKARANG HABISNYA BATERAIKU!!!!";
     private const int RequiredCardSelections = 3;
     private const int IdleHandIndex = 0;
     private const int CallHandIndex = 1;
@@ -268,7 +268,7 @@ public class MinigameCall112 : MonoBehaviour, IMiniGame
 
         if (textLayarHP != null)
         {
-            textLayarHP.text = "Calling";
+            textLayarHP.text = PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? "Calling" : "Calling";
             StartDialLoopIfCallingText();
         }
 
@@ -586,7 +586,7 @@ public class MinigameCall112 : MonoBehaviour, IMiniGame
         if (gameManager != null)
         {
             gameManager.RegisterMinigameCall112Result(correctSelectedCardCount, RequiredCardSelections);
-            gameManager.OnMiniGameComplete(minigameSuccessFeedback);
+            gameManager.OnMiniGameComplete(PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? "112 Call completed." : minigameSuccessFeedback);
         }
         else if (nextStepRoot != null)
         {

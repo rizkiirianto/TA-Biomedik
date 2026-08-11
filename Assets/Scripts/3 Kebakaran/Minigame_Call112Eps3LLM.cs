@@ -826,7 +826,7 @@ public class Minigame_Call112Eps3LLM : MonoBehaviour, IMiniGame
     private IEnumerator FinishAfterDelay()
     {
         yield return new WaitForSeconds(finishDelaySeconds);
-        if (gameManager != null) gameManager.OnMiniGameComplete(completionFeedback);
+        if (gameManager != null) gameManager.OnMiniGameComplete(PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? "112 call completed. Help is on the way. Provide first aid immediately." : completionFeedback);
         finishRoutine = null;
     }
 

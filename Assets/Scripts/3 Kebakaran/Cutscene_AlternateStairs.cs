@@ -56,6 +56,21 @@ public class Cutscene_AlternateStairs : MonoBehaviour, ICutscene
         "Jiro: Lihat... gedung itu terbakar dan ada bekas ledakan. Semoga semua orang sudah keluar."
     };
 
+    [TextArea(2,4)]
+    [SerializeField] private string[] dialogueLinesEN = new string[]
+    {
+        "After choosing the emergency stairs, it turns out the nearest one is on fire and blocked by debris.",
+        "Jiro: I need to find another way—to the side of the building!",
+        "The other emergency stairs look safe. Jiro quickly switches to those stairs and starts descending.",
+        "Jiro: Go down fast, don't stop!",
+        "The smoke is getting thicker on some floors, but these stairs are still quite safe to pass.",
+        "Jiro reaches the end of the emergency stairs. The exit to the lobby is near.",
+        "Jiro: I've reached the lobby. It looks empty here — gotta head to the front parking lot quickly!",
+        "Jiro: Look... the building is on fire and there are blast marks. I hope everyone got out safely."
+    };
+
+    private string[] DialogueLines => PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? dialogueLinesEN : dialogueLines;
+
     // parallel arrays for speaker handling: if true, line is narrator (no Jiro shown)
     [SerializeField] private bool[] isNarrator = new bool[] { true, false, true, false, true, true, false, false };
     // for Jiro lines, whether to use the 'takut' expression
@@ -126,12 +141,12 @@ public class Cutscene_AlternateStairs : MonoBehaviour, ICutscene
 
     private IEnumerator PlaySequence()
     {
-        int stages = dialogueLines.Length;
+        int stages = DialogueLines.Length;
         for (int stage = 0; stage < stages; stage++)
         {
             ApplyStage(stage);
 
-            yield return StartCoroutine(TypeLine(dialogueLines[stage]));
+            yield return StartCoroutine(TypeLine(DialogueLines[stage]));
             yield return StartCoroutine(WaitForAdvance());
         }
 

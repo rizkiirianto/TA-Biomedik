@@ -20,6 +20,14 @@ public class MinigameHazardElectric : MonoBehaviour, IMiniGame
         "Apa yang harus kamu lakukan pertama kali?",
         "Gunakan mouse untuk berinteraksi",
     };
+
+    [SerializeField] private string[] dialogueLinesEN = new string[]
+    {
+        "What should you do first?",
+        "Use your mouse to interact",
+    };
+
+    private string[] DialogueLines => PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? dialogueLinesEN : dialogueLines;
     [SerializeField] private Button hitboxTangga;
     [SerializeField] private Button hitboxTetangga;
     [SerializeField] private Button hitboxPintu;
@@ -47,6 +55,29 @@ public class MinigameHazardElectric : MonoBehaviour, IMiniGame
     [SerializeField] private string wrongRuangSampingMessage = "Bukan ruang samping. Pilih bagian yang memutus arus listrik.";
     [TextArea]
     [SerializeField] private string wrongLampuMessage = "Lampu bukan sumber utama yang harus dimatikan.";
+
+    [TextArea]
+    [SerializeField] private string wrongTanggaMessageEN = "Not that. Try to focus on the correct electrical source.";
+    [TextArea]
+    [SerializeField] private string wrongTetanggaMessageEN = "Not the neighbor. Focus on the devices inside the house.";
+    [TextArea]
+    [SerializeField] private string wrongPintuMessageEN = "The door is not the right answer. Look for the electrical source.";
+    [TextArea]
+    [SerializeField] private string correctBreakerMessageEN = "Exactly, turn off the electricity at the breaker.";
+    [TextArea]
+    [SerializeField] private string wrongJamMessageEN = "The clock has nothing to do with this electrical hazard.";
+    [TextArea]
+    [SerializeField] private string wrongRuangSampingMessageEN = "Not the side room. Pick the one that cuts off the electrical current.";
+    [TextArea]
+    [SerializeField] private string wrongLampuMessageEN = "The light is not the main source that needs to be turned off.";
+
+    private string WrongTanggaMessage => PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? wrongTanggaMessageEN : wrongTanggaMessage;
+    private string WrongTetanggaMessage => PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? wrongTetanggaMessageEN : wrongTetanggaMessage;
+    private string WrongPintuMessage => PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? wrongPintuMessageEN : wrongPintuMessage;
+    private string CorrectBreakerMessage => PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? correctBreakerMessageEN : correctBreakerMessage;
+    private string WrongJamMessage => PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? wrongJamMessageEN : wrongJamMessage;
+    private string WrongRuangSampingMessage => PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? wrongRuangSampingMessageEN : wrongRuangSampingMessage;
+    private string WrongLampuMessage => PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? wrongLampuMessageEN : wrongLampuMessage;
     
     private int currentDialogIndex = 0;
     private bool isTyping = false;
@@ -126,7 +157,7 @@ public class MinigameHazardElectric : MonoBehaviour, IMiniGame
 
     private void DisplayDialog(int index)
     {
-        if (index >= dialogueLines.Length)
+        if (index >= DialogueLines.Length)
         {
             EnterInteractionPhase();
             return;
@@ -151,7 +182,7 @@ public class MinigameHazardElectric : MonoBehaviour, IMiniGame
         }
 
         // Mulai typing effect
-        typingCoroutine = StartCoroutine(TypeDialog(dialogueLines[index]));
+        typingCoroutine = StartCoroutine(TypeDialog(DialogueLines[index]));
     }
 
     private void EnterInteractionPhase()
@@ -213,7 +244,7 @@ public class MinigameHazardElectric : MonoBehaviour, IMiniGame
         {
             // Jika masih typing, tampilkan teks lengkap sekaligus
             StopCoroutine(typingCoroutine);
-            dialogText.text = dialogueLines[currentDialogIndex];
+            dialogText.text = DialogueLines[currentDialogIndex];
             isTyping = false;
             typingCoroutine = null;
             ScheduleAutoAdvance();
@@ -302,7 +333,7 @@ public class MinigameHazardElectric : MonoBehaviour, IMiniGame
             return;
         }
 
-        HandleWrongChoice(wrongTanggaMessage);
+        HandleWrongChoice(WrongTanggaMessage);
     }
 
     private void OnHitboxTetanggaClicked()
@@ -313,12 +344,12 @@ public class MinigameHazardElectric : MonoBehaviour, IMiniGame
             return;
         }
 
-        HandleWrongChoice(wrongTetanggaMessage);
+        HandleWrongChoice(WrongTetanggaMessage);
     }
 
     private void OnHitboxPintuClicked()
     {
-        HandleWrongChoice(wrongPintuMessage);
+        HandleWrongChoice(WrongPintuMessage);
     }
 
     private void OnHitboxBreakerClicked()
@@ -417,17 +448,17 @@ public class MinigameHazardElectric : MonoBehaviour, IMiniGame
 
     private void OnHitboxJamClicked()
     {
-        HandleWrongChoice(wrongJamMessage);
+        HandleWrongChoice(WrongJamMessage);
     }
 
     private void OnHitboxRuangSampingClicked()
     {
-        HandleWrongChoice(wrongRuangSampingMessage);
+        HandleWrongChoice(WrongRuangSampingMessage);
     }
 
     private void OnHitboxLampuClicked()
     {
-        HandleWrongChoice(wrongLampuMessage);
+        HandleWrongChoice(WrongLampuMessage);
     }
 
     private void CompleteMinigame()
@@ -475,7 +506,7 @@ public class MinigameHazardElectric : MonoBehaviour, IMiniGame
         // Notify GameManager jika ada
         if (gameManager != null)
         {
-            gameManager.OnMiniGameComplete("Listrik rumah sudah dimatikan");
+            gameManager.OnMiniGameComplete(PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? "House electricity has been turned off" : "Listrik rumah sudah dimatikan");
         }
 
         // Sembunyikan dan hapus instance prefab minigame ini agar tidak tertinggal di scene
@@ -536,7 +567,7 @@ public class MinigameHazardElectric : MonoBehaviour, IMiniGame
     private void CompleteBreakerPanel()
     {
         minigameCompleted = true;
-        ShowDialogPanel(correctBreakerMessage);
+        ShowDialogPanel(CorrectBreakerMessage);
         //HideDialogPanel();
         EnableHitboxButtons(false);
         CompleteMinigame();

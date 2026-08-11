@@ -62,14 +62,14 @@ public class Minigame_Triage : MonoBehaviour, IMiniGame
         // Set initial UI text
         if (textUtama != null)
         {
-            textUtama.text = "tentukan prioritas korban berdasarkan jenis jenis kategori triase";
+            textUtama.text = PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? "Determine victim priority based on triage categories" : "tentukan prioritas korban berdasarkan jenis jenis kategori triase";
             textUtama.gameObject.SetActive(true);
         }
         if (textFeedback != null) textFeedback.text = "";
 
         // Panel Kategori awal
         if (panelKategoriTriage != null) panelKategoriTriage.SetActive(false);
-        if (textButtonKategori != null) textButtonKategori.text = "Kategori Triase";
+        if (textButtonKategori != null) textButtonKategori.text = PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? "Triage Category" : "Kategori Triase";
         if (buttonSet != null) buttonSet.SetActive(false);
 
         // Prepare patient buttons
@@ -98,7 +98,7 @@ public class Minigame_Triage : MonoBehaviour, IMiniGame
         {
             kategoriTriageButton.onClick.RemoveAllListeners();
             kategoriTriageButton.onClick.AddListener(ToggleKategoriPanel);
-            if (textButtonKategori != null) textButtonKategori.text = panelKategoriTriage != null && panelKategoriTriage.activeSelf ? "Tutup Panel" : "Kategori Triase";
+            if (textButtonKategori != null) textButtonKategori.text = panelKategoriTriage != null && panelKategoriTriage.activeSelf ? (PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? "Close Panel" : "Tutup Panel") : (PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? "Triage Category" : "Kategori Triase");
         }
 
         // Category buttons
@@ -131,7 +131,7 @@ public class Minigame_Triage : MonoBehaviour, IMiniGame
         if (panelKategoriTriage == null || textButtonKategori == null) return;
         bool newState = !panelKategoriTriage.activeSelf;
         panelKategoriTriage.SetActive(newState);
-        textButtonKategori.text = newState ? "Tutup Panel" : "Kategori Triase";
+        textButtonKategori.text = newState ? (PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? "Close Panel" : "Tutup Panel") : (PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? "Triage Category" : "Kategori Triase");
     }
 
     private void OnPatientClicked(Patient p)
@@ -142,7 +142,7 @@ public class Minigame_Triage : MonoBehaviour, IMiniGame
             {
                 if (p == Patient.Siti)
                 {
-                    gameManager.OnMiniGameComplete("Budi ditugaskan menolong Siti. Minigame selesai.");
+                    gameManager.OnMiniGameComplete(PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? "Budi is assigned to help Siti. Minigame completed." : "Budi ditugaskan menolong Siti. Minigame selesai.");
                 }
                 else if (p == Patient.Tono)
                 {
@@ -155,12 +155,12 @@ public class Minigame_Triage : MonoBehaviour, IMiniGame
                 if (p == Patient.Budi)
                 {
                     awaitingBudiAssignment = true;
-                    if (textUtama != null) textUtama.text = "Budi tidak memiliki basic pertolongan pertama. Kita tugaskan Budi untuk menolong siapa?";
+                    if (textUtama != null) textUtama.text = PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? "Budi has no basic first aid skills. Who do we assign Budi to help?" : "Budi tidak memiliki basic pertolongan pertama. Kita tugaskan Budi untuk menolong siapa?";
                     if (btnBudi != null) btnBudi.interactable = false; // Disable Budi since choice is between Tono and Siti
                 }
                 else
                 {
-                    if (textFeedback != null) textFeedback.text = "Jiro tidak bisa menolong dua orang disaat bersamaan";
+                    if (textFeedback != null) textFeedback.text = PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? "Jiro cannot help two people at the same time" : "Jiro tidak bisa menolong dua orang disaat bersamaan";
                 }
             }
             return;
@@ -168,7 +168,7 @@ public class Minigame_Triage : MonoBehaviour, IMiniGame
 
         if (completedPatients.Contains(p))
         {
-            if (textFeedback != null) textFeedback.text = "Sudah dikategorikan.";
+            if (textFeedback != null) textFeedback.text = PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? "Already categorized." : "Sudah dikategorikan.";
             return;
         }
 
@@ -230,7 +230,7 @@ public class Minigame_Triage : MonoBehaviour, IMiniGame
             // Check completion
             if (completedPatients.Count >= 3)
             {
-                if (textUtama != null) textUtama.text = "Apa yang harus Jiro lakukan sekarang?";
+                if (textUtama != null) textUtama.text = PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? "What should Jiro do now?" : "Apa yang harus Jiro lakukan sekarang?";
                 awaitingFinalAction = true;
 
                 
@@ -242,10 +242,10 @@ public class Minigame_Triage : MonoBehaviour, IMiniGame
         else
         {
             // Wrong answer: feedback and hint
-            string hint = "Coba periksa tanda vital dan tanda bahaya pasien.";
-            if (currentPatient == Patient.Budi) hint = "Budi tampak lebih stabil dibanding yang lainnya.";
+            string hint = PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? "Try checking the patient's vital and danger signs." : "Coba periksa tanda vital dan tanda bahaya pasien.";
+            if (currentPatient == Patient.Budi) hint = PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? "Budi looks more stable than the others." : "Budi tampak lebih stabil dibanding yang lainnya.";
 
-            if (textFeedback != null) textFeedback.text = "Salah. " + hint;
+            if (textFeedback != null) textFeedback.text = (PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? "Incorrect. " : "Salah. ") + hint;
 
             // Disable category buttons briefly so player cannot progress until they see the feedback
             SetCategoryButtonsInteractable(false);

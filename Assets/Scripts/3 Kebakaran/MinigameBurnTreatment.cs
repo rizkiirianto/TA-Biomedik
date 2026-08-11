@@ -169,7 +169,7 @@ public class MinigameBurnTreatment : MonoBehaviour, IMiniGame
         yield return new WaitForSeconds(1.5f);
         if (gameManager != null)
         {
-            gameManager.OnMiniGameComplete("Aksesoris telah dilepas dan area luka bakar berhasil didinginkan.");
+            gameManager.OnMiniGameComplete(PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? "Accessories have been removed and the burn area successfully cooled." : "Aksesoris telah dilepas dan area luka bakar berhasil didinginkan.");
         }
     }
 }

@@ -9,13 +9,20 @@ using UnityEditor;
 public class MainMenuManager : MonoBehaviour
 {
     public GameObject PanelScenario;
+    public GameObject PanelScenarioEnglish;
     public Button startButton; // Optional: Drag the start button here in Inspector
     public Button firstScenarioButton; // Optional: Drag the first scenario button here
+
+    [Header("Language Menus")]
+    public GameObject EnglishMenu;
+    public GameObject BahasaMenu;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        PanelScenario.SetActive(false);
+        if (PanelScenario != null) PanelScenario.SetActive(false);
+        if (PanelScenarioEnglish != null) PanelScenarioEnglish.SetActive(false);
+        UpdateLanguageMenuUI();
         
         // Auto-select Start Button for controller navigation
         if (startButton != null && EventSystem.current != null)
@@ -30,6 +37,38 @@ public class MainMenuManager : MonoBehaviour
         }
     }
 
+    public void SelectLanguageEnglish()
+    {
+        PlayerPrefs.SetString("SelectedLanguage", "EN");
+        PlayerPrefs.Save();
+        UpdateLanguageMenuUI();
+    }
+
+    public void SelectLanguageIndonesian()
+    {
+        PlayerPrefs.SetString("SelectedLanguage", "ID");
+        PlayerPrefs.Save();
+        UpdateLanguageMenuUI();
+    }
+
+    private void UpdateLanguageMenuUI()
+    {
+        string lang = PlayerPrefs.GetString("SelectedLanguage", "ID");
+        if (EnglishMenu != null && BahasaMenu != null)
+        {
+            if (lang == "EN")
+            {
+                EnglishMenu.SetActive(true);
+                BahasaMenu.SetActive(false);
+            }
+            else
+            {
+                EnglishMenu.SetActive(false);
+                BahasaMenu.SetActive(true);
+            }
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -38,17 +77,23 @@ public class MainMenuManager : MonoBehaviour
 
     public void StartButtonClicked()
     {
-        PanelScenario.SetActive(true);
+        string lang = PlayerPrefs.GetString("SelectedLanguage", "ID");
+        GameObject activePanel = (lang == "EN" && PanelScenarioEnglish != null) ? PanelScenarioEnglish : PanelScenario;
         
-        // Auto-select first scenario button for controller navigation
-        if (firstScenarioButton != null && EventSystem.current != null)
+        if (activePanel != null)
         {
-            EventSystem.current.SetSelectedGameObject(firstScenarioButton.gameObject);
-        }
-        else if (EventSystem.current != null)
-        {
-            Button firstScenarioBtn = PanelScenario.GetComponentInChildren<Button>();
-            if (firstScenarioBtn != null) EventSystem.current.SetSelectedGameObject(firstScenarioBtn.gameObject);
+            activePanel.SetActive(true);
+            
+            // Auto-select first scenario button for controller navigation
+            if (firstScenarioButton != null && EventSystem.current != null)
+            {
+                EventSystem.current.SetSelectedGameObject(firstScenarioButton.gameObject);
+            }
+            else if (EventSystem.current != null)
+            {
+                Button firstScenarioBtn = activePanel.GetComponentInChildren<Button>();
+                if (firstScenarioBtn != null) EventSystem.current.SetSelectedGameObject(firstScenarioBtn.gameObject);
+            }
         }
     }
 

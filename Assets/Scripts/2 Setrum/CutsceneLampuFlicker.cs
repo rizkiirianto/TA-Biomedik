@@ -31,6 +31,16 @@ public class CutsceneLampuFlicker : MonoBehaviour, ICutscene
         "Aduhh kenapa lagi inii....baru juga sampai rumah udah ada masalah lagi"
     };
 
+    [TextArea(2, 4)]
+    [SerializeField] private string[] dialogueLinesEN = new string[]
+    {
+        "Ahh finally home, almost got caught in that heavy rain.",
+        "*living room light flickering*",
+        "Ouch what's happening now... just got home and already there's another problem"
+    };
+
+    private string[] DialogueLines => PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? dialogueLinesEN : dialogueLines;
+
     [Header("Typewriter")]
     [SerializeField] private float typingSpeed = 0.035f;
     [SerializeField] private float flickerMinInterval = 0.04f;
@@ -138,7 +148,7 @@ public class CutsceneLampuFlicker : MonoBehaviour, ICutscene
             yield break;
         }
 
-        for (int i = 0; i < dialogueLines.Length; i++)
+        for (int i = 0; i < DialogueLines.Length; i++)
         {
             if (i == 1)
             {
@@ -148,7 +158,7 @@ public class CutsceneLampuFlicker : MonoBehaviour, ICutscene
                 audioSourceFlicker.PlayOneShot(lampFlickerSound);
             }
 
-            yield return StartCoroutine(TypeLine(dialogueLines[i]));
+            yield return StartCoroutine(TypeLine(DialogueLines[i]));
             yield return StartCoroutine(WaitForAdvance());
         }
 

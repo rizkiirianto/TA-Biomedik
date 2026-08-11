@@ -90,12 +90,18 @@ public class CutsceneAmbulans : MonoBehaviour, ICutscene
 
     private string[] GetNarrationLines()
     {
-        if (string.IsNullOrWhiteSpace(narrationLine))
+        string currentNarrationLine = PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ?
+            "From a distance, the sound of an approaching siren is heard, and shortly after, an ambulance arrives.\n\n" +
+            "The medical personnel immediately take the victim into the ambulance for further treatment.\n" +
+            "Thanks to the quick and proper actions taken, the victim's condition could be handled before it gets worse."
+            : narrationLine;
+            
+        if (string.IsNullOrWhiteSpace(currentNarrationLine))
         {
             return new string[] { string.Empty };
         }
 
-        string[] rawLines = narrationLine.Split('\n');
+        string[] rawLines = currentNarrationLine.Split('\n');
         System.Collections.Generic.List<string> cleaned = new System.Collections.Generic.List<string>();
 
         for (int i = 0; i < rawLines.Length; i++)
@@ -109,7 +115,7 @@ public class CutsceneAmbulans : MonoBehaviour, ICutscene
 
         if (cleaned.Count == 0)
         {
-            cleaned.Add(narrationLine.Trim());
+            cleaned.Add(currentNarrationLine.Trim());
         }
 
         return cleaned.ToArray();

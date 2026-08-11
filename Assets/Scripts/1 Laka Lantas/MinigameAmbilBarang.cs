@@ -90,7 +90,7 @@ public class MinigameAmbilBarang : MonoBehaviour, IMiniGame
         // STEP 1: Tampilkan monolog awal Jiro
         yield return StartCoroutine(ShowMonologue(
             "Jiro",
-            "Aku perlu mencari sesuatu di tasku yang bisa membantu menghentikan perdarahan... Mari kita lihat apa yang ada di sini."
+            PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? "I need to find something in my bag that can help stop the bleeding... Let's see what's in here." : "Aku perlu mencari sesuatu di tasku yang bisa membantu menghentikan perdarahan... Mari kita lihat apa yang ada di sini."
         ));
 
         // STEP 2: Tunggu pemain klik tombol lanjut
@@ -333,7 +333,7 @@ public class MinigameAmbilBarang : MonoBehaviour, IMiniGame
         string outcomeText;
         if (isCorrect)
         {
-            outcomeText = "Ya! Ini dia yang aku cari. Ini bisa membantu menghentikan perdarahan!";
+            outcomeText = PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? "Yes! This is what I'm looking for. This can help stop the bleeding!" : "Ya! Ini dia yang aku cari. Ini bisa membantu menghentikan perdarahan!";
         }
         else
         {
@@ -354,20 +354,21 @@ public class MinigameAmbilBarang : MonoBehaviour, IMiniGame
 
     private string GetWrongItemMonologue(int itemIndex)
     {
+        bool isEN = PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN";
         switch (itemIndex)
         {
             case 0: // headphone
-                return "Headphone? Ini tidak bisa dipakai buat menghentikan perdarahan.";
+                return isEN ? "Headphone? This can't be used to stop the bleeding." : "Headphone? Ini tidak bisa dipakai buat menghentikan perdarahan.";
             case 1: // pencilcase
-                return "Tempat pensil juga bukan yang aku butuhkan sekarang.";
+                return isEN ? "A pencil case is also not what I need right now." : "Tempat pensil juga bukan yang aku butuhkan sekarang.";
             case 2: // buku
-                return "Buku ini tidak membantu untuk pertolongan pertama.";
+                return isEN ? "This book won't help for first aid." : "Buku ini tidak membantu untuk pertolongan pertama.";
             case 3: // switch
-                return "Sekarang bukan waktunya bermain main.";
+                return isEN ? "Now is not the time to play around." : "Sekarang bukan waktunya bermain main.";
             case 5: // botol
-                return "Botol ini jelas bukan item utama untuk menghentikan perdarahan.";
+                return isEN ? "This bottle is definitely not the main item to stop the bleeding." : "Botol ini jelas bukan item utama untuk menghentikan perdarahan.";
             default:
-                return "Hmm, sepertinya bukan ini. Aku harus pilih item yang lebih tepat.";
+                return isEN ? "Hmm, seems like this isn't it. I need to pick a more suitable item." : "Hmm, sepertinya bukan ini. Aku harus pilih item yang lebih tepat.";
         }
     }
 
@@ -379,7 +380,7 @@ public class MinigameAmbilBarang : MonoBehaviour, IMiniGame
         // STEP 1: Tampilkan monolog awal Jiro
         yield return StartCoroutine(ShowMonologue(
             "Jiro",
-            "Aku perlu mencari sesuatu di tasku yang bisa membantu menghentikan perdarahan... Mari kita lihat apa yang ada di sini."
+            PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? "I need to find something in my bag that can help stop the bleeding... Let's see what's in here." : "Aku perlu mencari sesuatu di tasku yang bisa membantu menghentikan perdarahan... Mari kita lihat apa yang ada di sini."
         ));
 
         // STEP 2: Tunggu pemain klik tombol lanjut
@@ -414,7 +415,7 @@ public class MinigameAmbilBarang : MonoBehaviour, IMiniGame
 
         if (gameManager != null)
         {
-            gameManager.OnMiniGameComplete("Berhasil menemukan item yang tepat!");
+            gameManager.OnMiniGameComplete(PlayerPrefs.GetString("SelectedLanguage", "ID") == "EN" ? "Successfully found the right item!" : "Berhasil menemukan item yang tepat!");
         }
     }
 }
