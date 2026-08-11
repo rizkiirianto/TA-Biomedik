@@ -1,0 +1,114 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[indonesian]{babel}
+\usepackage{geometry}
+\geometry{a4paper, margin=3cm}
+\usepackage{graphicx}
+\usepackage{titlesec}
+\usepackage{setspace}
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Setup untuk style kode
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+% Definisi bahasa JSON sederhana untuk listing
+\lstdefinelanguage{json}{
+    basicstyle=\normalfont\ttfamily\footnotesize,
+    numbers=left,
+    numberstyle=\tiny\color{codegray},
+    stepnumber=1,
+    numbersep=5pt,
+    showstringspaces=false,
+    breaklines=true,
+    string=[s]{"}{"},
+    stringstyle=\color{codepurple},
+    comment=[l]{:},
+    commentstyle=\color{black},
+}
+
+\begin{document}
+
+% ------------------ COVER PAGE ------------------
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+    
+    {\Large \textbf{Source Code Hak Cipta}\par}
+    \vspace{0.5cm}
+    {\large \textbf{(PROGRAM KOMPUTER)}\par}
+    
+    \vspace{2.5cm}
+    
+    {\Large \textbf{Golden Hour: Sistem Game Simulasi Edukasi Pertolongan Pertama Pasien Trauma Fisik Berbasis Keputusan dan Aksi}\par}
+    
+    \vspace{3cm}
+    
+    {\large \textbf{TIM PENYUSUN}\par}
+    \vspace{0.5cm}
+    \begin{center}
+    1. Achmad Arifin S.T., M.Eng., Ph.D. \\
+    2. Rasyida Shabihah Zukro Aini, S.T., M.T. \\
+    3. Dr. Norma Hermawan, S.T., M.T., M.Sc. \\
+    4. Rizki Tetuko Irianto \\
+    \end{center}
+    
+    \vfill
+    
+    {\large \textbf{INSTITUT TEKNOLOGI SEPULUH NOPEMBER SURABAYA}\par}
+    {\large \textbf{2026}\par}
+    
+    \vspace*{1cm}
+\end{titlepage}
+
+% ------------------ CONTENT ------------------
+\newpage
+\tableofcontents
+\newpage
+
+\section{Deskripsi Sistem}
+Sistem perangkat lunak ini merupakan bagian dari aplikasi game simulasi edukasi medis "Golden Hour". Kode sumber utama yang menyusun Hak Cipta Program Komputer ini terdiri dari arsitektur \textit{Game Manager} yang mengontrol aliran logika permainan, \textit{OllamaManager} untuk pemrosesan interaksi cerdas, \textit{QuizData} sebagai struktur cetak biru skenario, dan file konfigurasi JSON sebagai pangkalan data cerita dan aksi medis interaktif.
+
+\section{Arsitektur Inti: GameManager.cs}
+Modul ini adalah otak dari seluruh simulasi. Mengelola pergantian skenario, validasi kuis, mekanisme \textit{cutscene}, dan transisi UI interaktif.
+\lstinputlisting[language={[Sharp]C}]{Assets/Scripts/GameManager.cs}
+
+\newpage
+\section{Struktur Data: QuizData.cs}
+Modul ini mendefinisikan kelas serialisasi yang menjembatani data skenario (JSON) ke dalam objek C\# yang diproses oleh \textit{engine} Unity.
+\lstinputlisting[language={[Sharp]C}]{Assets/Scripts/QuizData.cs}
+
+\newpage
+\section{Integrasi AI: OllamaManager.cs}
+Modul inovatif yang menangani komunikasi HTTP asinkron ke server model bahasa lokal (Ollama) untuk menghasilkan percakapan atau sistem \textit{feedback} yang dinamis di dalam simulasi.
+\lstinputlisting[language={[Sharp]C}]{Assets/Scripts/OllamaManager.cs}
+
+\newpage
+\section{Basis Data Skenario Medis: Scenario1.json}
+File struktur data yang menyimpan urutan instruksi medis, paramater kuis (seperti ambang batas waktu dan tingkat fatalitas kesalahan), serta penentu aset visual untuk setiap transisi simulasi.
+\lstinputlisting[language=json]{Assets/Resources/Scenario1.json}
+
+\end{document}
